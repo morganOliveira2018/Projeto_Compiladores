@@ -1,0 +1,31 @@
+real a
+real area <<< 5.5, result
+int num <<< 7.3, var <<< "dia"
+
+Inicio
+
+  escreva("Calculo da area do retângulo:")
+  escreva("") @@ escrevendo vazio na tela
+
+  escreva("Digite a base: ")
+  leia(B)
+
+  escreva("Digite a altura: ")
+  leia(H)
+
+  escreva("")
+  escreva("A area do retangulo é: ")
+  area <<< h * b
+  escreva(area)
+
+  escreva("Calculo de Bhaskara:")
+  escreva("Digite o valor de a: ")
+  leia(a)
+  escreva("Digite o valor de b: ")
+  leia(b)
+  escreva("Digite o valor de c: ")
+  leia(c)
+  result <<< -b + raiz(b^2-4*2*c)/2*a
+  escreva(result)
+
+Fim do programa
