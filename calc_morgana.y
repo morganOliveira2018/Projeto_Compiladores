@@ -58,8 +58,8 @@ var: TIPO variacoes {printf("DECLARACAO: %s %s\n", $1, $2); }
 
 variacoes: VARIAVEL ',' variacoes {sprintf($$, "%s, %s", $1, $3); }
         | VARIAVEL {sprintf($$, "%s", $1); }
-        | VARIAVEL ATRIB variavel ',' variacoes {sprintf($$, "%s <<< %s, %s", $1, $3, $5); }
-        | VARIAVEL ATRIB variavel {sprintf($$, "%s <<< %s", $1, $3); }
+        | VARIAVEL ATRIB variavel ',' variacoes {sprintf($$, "%s << %s, %s", $1, $3, $5); }
+        | VARIAVEL ATRIB variavel {sprintf($$, "%s << %s", $1, $3); }
         ;
 variavel: STRING  {sprintf($$, "%s", $1); }
         | NUM_INTEGER  {sprintf($$, "%d", $1); }

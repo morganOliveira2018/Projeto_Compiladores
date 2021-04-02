@@ -13,7 +13,7 @@ RAIZ "raiz"
 
 VARIAVEL {LETRA}({LETRA}|{NUM_REAL}|"-"|"_")*
 COMENTARIO "@@".*
-ATRIB "<<<"
+ATRIB "<<"
 
 LEITURA "leia"
 ESCREVER "escreva"

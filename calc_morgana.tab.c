@@ -1212,13 +1212,13 @@ yyreduce:
 
   case 7: /* variacoes: VARIAVEL ATRIB variavel ',' variacoes  */
 #line 61 "calc_morgana.y"
-                                                {sprintf((yyval.texto), "%s <<< %s, %s", (yyvsp[-4].texto), (yyvsp[-2].texto), (yyvsp[0].texto)); }
+                                                {sprintf((yyval.texto), "%s << %s, %s", (yyvsp[-4].texto), (yyvsp[-2].texto), (yyvsp[0].texto)); }
 #line 1217 "calc_morgana.tab.c"
     break;
 
   case 8: /* variacoes: VARIAVEL ATRIB variavel  */
 #line 62 "calc_morgana.y"
-                                  {sprintf((yyval.texto), "%s <<< %s", (yyvsp[-2].texto), (yyvsp[0].texto)); }
+                                  {sprintf((yyval.texto), "%s << %s", (yyvsp[-2].texto), (yyvsp[0].texto)); }
 #line 1223 "calc_morgana.tab.c"
     break;
 
