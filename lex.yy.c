@@ -370,8 +370,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 17
-#define YY_END_OF_BUFFER 18
+#define YY_NUM_RULES 18
+#define YY_END_OF_BUFFER 19
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -381,7 +381,7 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[75] =
     {   0,
-        0,    0,   18,   17,   16,    3,   17,    1,    2,    8,
+        0,    0,   19,   17,   16,    3,   17,    1,    2,    8,
        17,   17,   13,   13,   13,   13,   13,   13,   13,   13,
         0,   15,    9,    8,    7,   14,   13,   13,   13,   13,
        13,   13,   13,   13,   13,   13,    9,   14,   13,   13,
@@ -541,9 +541,9 @@ static const flex_int16_t yy_chk[342] =
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[18] =
+static const flex_int32_t yy_rule_can_match_eol[19] =
     {   0,
-0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,     };
+0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -962,19 +962,25 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case 16:
-/* rule 16 can match eol */
 YY_RULE_SETUP
 #line 79 "calc_morgana.l"
 {
-  /* ignore */
+    /* ignore */
 }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 82 "calc_morgana.l"
+{
+    /* ignore */
+}
+	YY_BREAK
+case 18:
+YY_RULE_SETUP
+#line 85 "calc_morgana.l"
 ECHO;
 	YY_BREAK
-#line 977 "lex.yy.c"
+#line 983 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1991,5 +1997,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 82 "calc_morgana.l"
+#line 85 "calc_morgana.l"
 

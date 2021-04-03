@@ -21,9 +21,9 @@ ESCREVER "escreva"
 INICIO "Inicio"
 FINAL "Fim do programa"
 
-IGNORAR [\ \n\t\s]
+IGNORAR [\ \t\s]
 
-INVALIDO .*
+INVALIDO .
 %%
 
 [:;,()] {
@@ -77,6 +77,9 @@ INVALIDO .*
     return STRING;
 }
 {IGNORAR} {
-  /* ignore */
+    /* ignore */
+}
+{INVALIDO} {
+    /* ignore */
 }
 %%
