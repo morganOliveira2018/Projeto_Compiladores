@@ -1,8 +1,9 @@
-real a, b, c, B, H
+real a, b, c
 real area1 << 5.5, result
 int num << 7.3, day << "dia", var1 << "m"
 
 Inicio
+  real B, H
 
   escreva("Calculo da area do retângulo:")
   escreva("") @@ escrevendo vazio na tela

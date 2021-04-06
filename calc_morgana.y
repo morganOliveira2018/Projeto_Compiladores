@@ -88,7 +88,9 @@ input_output:
     | COMENTARIO {
         printf("Comentario!\n");
     }
+    | var 
     ;
+    
 expre:    
     RAIZ '(' expre ')' { 
         $$ = sqrt($3); 

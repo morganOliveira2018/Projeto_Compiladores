@@ -515,16 +515,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   82
+#define YYLAST   84
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  25
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  10
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  32
+#define YYNRULES  33
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  62
+#define YYNSTATES  63
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   270
@@ -577,8 +577,8 @@ static const yytype_uint8 yyrline[] =
 {
        0,    53,    53,    53,    56,    59,    60,    61,    62,    64,
       65,    66,    69,    72,    72,    76,    79,    82,    85,    88,
-      93,    97,   101,   105,   109,   113,   117,   120,   124,   127,
-     130,   132,   135
+      91,    95,    99,   103,   107,   111,   115,   119,   122,   126,
+     129,   132,   134,   137
 };
 #endif
 
@@ -619,7 +619,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-27)
+#define YYPACT_NINF (-28)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -633,13 +633,13 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       2,    23,   -27,    31,     2,   -27,    -7,   -27,    28,   -27,
-     -27,    -1,    23,    39,   -27,    18,    55,   -27,   -27,   -27,
-     -27,   -27,    27,   -27,    22,    72,     8,    23,   -27,   -27,
-     -27,    57,    22,    22,    22,    56,   -27,    59,    60,    38,
-     -27,    22,   -27,    44,    30,    22,    22,    22,    22,    22,
-     -27,   -27,   -27,    50,   -27,   -27,    17,    17,    62,    62,
-      62,   -27
+      -3,     4,   -28,     2,    -3,   -28,    -8,   -28,    28,   -28,
+     -28,    73,     4,    -1,   -28,     7,    10,   -28,   -28,   -28,
+     -28,   -28,   -28,    12,   -28,    22,    29,     8,     4,   -28,
+     -28,   -28,    18,    22,    22,    22,    56,   -28,    31,    58,
+      38,   -28,    22,   -28,    44,    30,    22,    22,    22,    22,
+      22,   -28,   -28,   -28,    50,   -28,   -28,    63,    63,    64,
+      64,    64,   -28
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -648,24 +648,24 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     0,    14,     0,     0,     3,     6,     4,     0,     1,
-       2,     0,     0,     0,    12,     0,     0,    19,    13,    11,
-      10,     9,     8,     5,     0,     0,     0,     0,    32,    31,
-      30,     0,     0,     0,     0,    18,    29,     0,     0,     0,
-       7,     0,    28,     0,     0,     0,     0,     0,     0,     0,
-      17,    15,    16,     0,    26,    25,    21,    22,    23,    24,
-      27,    20
+       2,     0,     0,     0,    12,     0,     0,    19,    20,    13,
+      11,    10,     9,     8,     5,     0,     0,     0,     0,    33,
+      32,    31,     0,     0,     0,     0,    18,    30,     0,     0,
+       0,     7,     0,    29,     0,     0,     0,     0,     0,     0,
+       0,    17,    15,    16,     0,    27,    26,    22,    23,    24,
+      25,    28,    21
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -27,    78,   -27,   -11,   -27,   -27,   -27,   -27,   -26,   -27
+     -28,    46,    76,   -11,   -28,   -28,   -28,   -28,   -27,   -28
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     3,     4,     7,    22,     5,     8,    18,    35,    36
+      -1,     3,     4,     7,    23,     5,     8,    19,    36,    37
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -673,28 +673,28 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      39,    23,    19,    20,    11,    21,    42,    43,    44,     1,
-       2,    28,    29,    30,    38,    53,    40,    12,    31,    56,
-      57,    58,    59,    60,    32,    28,    29,    30,     6,    33,
-      34,     9,    31,    13,    47,    48,    49,    14,    32,    25,
-      15,    16,    17,    33,    34,    45,    46,    47,    48,    49,
-      24,    27,    55,    45,    46,    47,    48,    49,    52,    45,
-      46,    47,    48,    49,    54,    45,    46,    47,    48,    49,
-      61,    45,    46,    47,    48,    49,    26,    37,    41,    50,
-      51,    49,    10
+      40,    24,     9,    11,     1,     2,    43,    44,    45,     6,
+      25,    29,    30,    31,    39,    54,    12,    41,    32,    57,
+      58,    59,    60,    61,    33,    29,    30,    31,    26,    34,
+      35,    27,    32,    13,    38,     1,    28,    14,    33,    42,
+      15,    16,    17,    34,    35,    46,    47,    48,    49,    50,
+      10,    51,    56,    46,    47,    48,    49,    50,    53,    46,
+      47,    48,    49,    50,    55,    46,    47,    48,    49,    50,
+      62,    46,    47,    48,    49,    50,    20,    21,    52,    22,
+      48,    49,    50,    50,    18
 };
 
 static const yytype_int8 yycheck[] =
 {
-      26,    12,     3,     4,    11,     6,    32,    33,    34,     7,
-       8,     3,     4,     5,     6,    41,    27,    24,    10,    45,
-      46,    47,    48,    49,    16,     3,     4,     5,     5,    21,
-      22,     0,    10,     5,    17,    18,    19,     9,    16,    21,
+      27,    12,     0,    11,     7,     8,    33,    34,    35,     5,
+      11,     3,     4,     5,     6,    42,    24,    28,    10,    46,
+      47,    48,    49,    50,    16,     3,     4,     5,    21,    21,
+      22,    21,    10,     5,     5,     7,    24,     9,    16,    21,
       12,    13,    14,    21,    22,    15,    16,    17,    18,    19,
-      11,    24,    22,    15,    16,    17,    18,    19,    20,    15,
+       4,    20,    22,    15,    16,    17,    18,    19,    20,    15,
       16,    17,    18,    19,    20,    15,    16,    17,    18,    19,
-      20,    15,    16,    17,    18,    19,    21,     5,    21,    20,
-      20,    19,     4
+      20,    15,    16,    17,    18,    19,     3,     4,    20,     6,
+      17,    18,    19,    19,     8
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -702,12 +702,12 @@ static const yytype_int8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,     7,     8,    26,    27,    30,     5,    28,    31,     0,
-      26,    11,    24,     5,     9,    12,    13,    14,    32,     3,
-       4,     6,    29,    28,    11,    21,    21,    24,     3,     4,
-       5,    10,    16,    21,    22,    33,    34,     5,     6,    33,
-      28,    21,    33,    33,    33,    15,    16,    17,    18,    19,
-      20,    20,    20,    33,    20,    22,    33,    33,    33,    33,
-      33,    20
+      26,    11,    24,     5,     9,    12,    13,    14,    27,    32,
+       3,     4,     6,    29,    28,    11,    21,    21,    24,     3,
+       4,     5,    10,    16,    21,    22,    33,    34,     5,     6,
+      33,    28,    21,    33,    33,    33,    15,    16,    17,    18,
+      19,    20,    20,    20,    33,    20,    22,    33,    33,    33,
+      33,    33,    20
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -715,8 +715,8 @@ static const yytype_int8 yyr1[] =
 {
        0,    25,    26,    26,    27,    28,    28,    28,    28,    29,
       29,    29,    30,    31,    31,    32,    32,    32,    32,    32,
-      33,    33,    33,    33,    33,    33,    33,    33,    33,    33,
-      33,    34,    34
+      32,    33,    33,    33,    33,    33,    33,    33,    33,    33,
+      33,    33,    34,    34
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -724,8 +724,8 @@ static const yytype_int8 yyr2[] =
 {
        0,     2,     2,     1,     2,     3,     1,     5,     3,     1,
        1,     1,     3,     2,     0,     4,     4,     4,     3,     1,
-       4,     3,     3,     3,     3,     3,     3,     3,     2,     1,
-       1,     1,     1
+       1,     4,     3,     3,     3,     3,     3,     3,     3,     2,
+       1,     1,     1,     1
 };
 
 
@@ -1280,8 +1280,8 @@ yyreduce:
 #line 1281 "calc_morgana.tab.c"
     break;
 
-  case 20: /* expre: RAIZ '(' expre ')'  */
-#line 93 "calc_morgana.y"
+  case 21: /* expre: RAIZ '(' expre ')'  */
+#line 95 "calc_morgana.y"
                        { 
         (yyval.real) = sqrt((yyvsp[-1].real)); 
         printf("Efetuando raiz(%f):\n", (yyvsp[-1].real));
@@ -1289,8 +1289,8 @@ yyreduce:
 #line 1290 "calc_morgana.tab.c"
     break;
 
-  case 21: /* expre: expre '+' expre  */
-#line 97 "calc_morgana.y"
+  case 22: /* expre: expre '+' expre  */
+#line 99 "calc_morgana.y"
                       {
         (yyval.real) = (yyvsp[-2].real) + (yyvsp[0].real);
         printf("Calculo da Soma: %.1f + %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
@@ -1298,8 +1298,8 @@ yyreduce:
 #line 1299 "calc_morgana.tab.c"
     break;
 
-  case 22: /* expre: expre '-' expre  */
-#line 101 "calc_morgana.y"
+  case 23: /* expre: expre '-' expre  */
+#line 103 "calc_morgana.y"
                       {
         (yyval.real) = (yyvsp[-2].real) - (yyvsp[0].real);
         printf("Calculo da Subtracao: %.1f - %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
@@ -1307,8 +1307,8 @@ yyreduce:
 #line 1308 "calc_morgana.tab.c"
     break;
 
-  case 23: /* expre: expre '*' expre  */
-#line 105 "calc_morgana.y"
+  case 24: /* expre: expre '*' expre  */
+#line 107 "calc_morgana.y"
                       {
         (yyval.real) = (yyvsp[-2].real) * (yyvsp[0].real);
         printf("Calculo do Produto: %.1f * %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
@@ -1316,8 +1316,8 @@ yyreduce:
 #line 1317 "calc_morgana.tab.c"
     break;
 
-  case 24: /* expre: expre '/' expre  */
-#line 109 "calc_morgana.y"
+  case 25: /* expre: expre '/' expre  */
+#line 111 "calc_morgana.y"
                       {
         (yyval.real) = (yyvsp[-2].real) / (yyvsp[0].real);
         printf("Calculo da Divisao: %.1f / %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
@@ -1325,8 +1325,8 @@ yyreduce:
 #line 1326 "calc_morgana.tab.c"
     break;
 
-  case 25: /* expre: '|' expre '|'  */
-#line 113 "calc_morgana.y"
+  case 26: /* expre: '|' expre '|'  */
+#line 115 "calc_morgana.y"
                     {
         (yyval.real) = fabs((yyvsp[-1].real));
         printf("Calculo do modulo: %f = %f\n", (yyvsp[-1].real), (yyval.real));
@@ -1334,16 +1334,16 @@ yyreduce:
 #line 1335 "calc_morgana.tab.c"
     break;
 
-  case 26: /* expre: '(' expre ')'  */
-#line 117 "calc_morgana.y"
+  case 27: /* expre: '(' expre ')'  */
+#line 119 "calc_morgana.y"
                     {
         (yyval.real) = (yyvsp[-1].real);
     }
 #line 1343 "calc_morgana.tab.c"
     break;
 
-  case 27: /* expre: expre '^' expre  */
-#line 120 "calc_morgana.y"
+  case 28: /* expre: expre '^' expre  */
+#line 122 "calc_morgana.y"
                       {
         (yyval.real) = pow((yyvsp[-2].real), (yyvsp[0].real));
         printf("Calculo de Exponenciacao: %.1f ^ %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
@@ -1351,38 +1351,38 @@ yyreduce:
 #line 1352 "calc_morgana.tab.c"
     break;
 
-  case 28: /* expre: '-' expre  */
-#line 124 "calc_morgana.y"
+  case 29: /* expre: '-' expre  */
+#line 126 "calc_morgana.y"
                              {
         (yyval.real) = -(yyvsp[0].real);
     }
 #line 1360 "calc_morgana.tab.c"
     break;
 
-  case 29: /* expre: valor  */
-#line 127 "calc_morgana.y"
+  case 30: /* expre: valor  */
+#line 129 "calc_morgana.y"
             { 
         (yyval.real) = (yyvsp[0].real); 
     }
 #line 1368 "calc_morgana.tab.c"
     break;
 
-  case 30: /* expre: VARIAVEL  */
-#line 130 "calc_morgana.y"
+  case 31: /* expre: VARIAVEL  */
+#line 132 "calc_morgana.y"
                {}
 #line 1374 "calc_morgana.tab.c"
     break;
 
-  case 31: /* valor: NUM_INTEGER  */
-#line 132 "calc_morgana.y"
+  case 32: /* valor: NUM_INTEGER  */
+#line 134 "calc_morgana.y"
                        { 
         (yyval.real) = (yyvsp[0].integer); 
     }
 #line 1382 "calc_morgana.tab.c"
     break;
 
-  case 32: /* valor: "real"  */
-#line 135 "calc_morgana.y"
+  case 33: /* valor: "real"  */
+#line 137 "calc_morgana.y"
                {
         (yyval.real) = (yyvsp[0].real);
     }
@@ -1584,7 +1584,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 140 "calc_morgana.y"
+#line 142 "calc_morgana.y"
 
 
 #include "lex.yy.c"
