@@ -70,12 +70,14 @@
 #line 1 "calc_morgana.y"
 
     //Codigo C
-    // https://stackoverflow.com/questions/18049349/1-of-has-no-declared-type/18049801
     // https://stackoverflow.com/questions/22407730/bison-line-number-included-in-the-error-messages
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
     #include <math.h>
+    #include <math.h>
+    #include <ctype.h>
+    #include<stdbool.h>
     extern int yylineno;
     
     int yylex();
@@ -83,9 +85,53 @@
     {
         fprintf(stderr,"Error: %s\n Linha: %d\n", str, yylineno);
     }
+    // Construção de uma struct para receber o nome e o valor para cada variavel do tipo real
+    typedef struct vars {
+		char name[50];
+		float value;
+		struct vars * prox;
+	} VARS;
+    
+    // Adicionar nova variavel na lista
+    VARS * ins(VARS *l, char n[]){
+		VARS *new =(VARS*)malloc(sizeof(VARS));
+		strcpy(new->name, n);
+		new->prox = l;
+		return new;
+	}
+    // Busca uma variável na lista de variáveis
+	VARS *srch(VARS *l, char n[]){
+		VARS *aux = l;
+		while(aux != NULL){
+			if(strcmp(n, aux->name)==0){
+				return aux;
+			}
+			aux = aux->prox;
+		}
+		return aux;
+	}
+    // Verificar se o valor dado é real
+    bool is_real(char test[]){
+        int i = 0;
+        int ponto = 0;
+        do{
+            if(isdigit(test[i])!=0 || test[i] == '.'){
+                if(test[i]=='.')
+                    ponto = ponto + 1;
+                if(ponto>1)
+                    return false;
+                i=i+1;
+            }
+            else
+                return false;
+        }while(test[i]!='\0');
+        
+        return true;
+    }
 
+	VARS *rvar;
 
-#line 89 "calc_morgana.tab.c"
+#line 135 "calc_morgana.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -126,19 +172,18 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    NUM_REAL = 258,                /* "real"  */
-    NUM_INTEGER = 259,             /* NUM_INTEGER  */
-    VARIAVEL = 260,                /* VARIAVEL  */
-    STRING = 261,                  /* STRING  */
-    TIPO = 262,                    /* TIPO  */
-    INICIO = 263,                  /* INICIO  */
-    FINAL = 264,                   /* FINAL  */
-    RAIZ = 265,                    /* RAIZ  */
-    ATRIB = 266,                   /* ATRIB  */
-    LEITURA = 267,                 /* LEITURA  */
-    ESCREVER = 268,                /* ESCREVER  */
-    COMENTARIO = 269,              /* COMENTARIO  */
-    UMINUS = 270                   /* UMINUS  */
+    NUM_REAL = 258,                /* NUM_REAL  */
+    VARIAVEL = 259,                /* VARIAVEL  */
+    STRING = 260,                  /* STRING  */
+    TIPO_REAL = 261,               /* TIPO_REAL  */
+    INICIO = 262,                  /* INICIO  */
+    FINAL = 263,                   /* FINAL  */
+    RAIZ = 264,                    /* RAIZ  */
+    ATRIB = 265,                   /* ATRIB  */
+    LEITURA = 266,                 /* LEITURA  */
+    ESCREVER = 267,                /* ESCREVER  */
+    COMENTARIO = 268,              /* COMENTARIO  */
+    UMINUS = 269                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -147,13 +192,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 19 "calc_morgana.y"
+#line 65 "calc_morgana.y"
 
     char texto[50];
     double real;
-    int integer;
 
-#line 157 "calc_morgana.tab.c"
+#line 201 "calc_morgana.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -174,38 +218,37 @@ enum yysymbol_kind_t
   YYSYMBOL_YYEOF = 0,                      /* "end of file"  */
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
-  YYSYMBOL_NUM_REAL = 3,                   /* "real"  */
-  YYSYMBOL_NUM_INTEGER = 4,                /* NUM_INTEGER  */
-  YYSYMBOL_VARIAVEL = 5,                   /* VARIAVEL  */
-  YYSYMBOL_STRING = 6,                     /* STRING  */
-  YYSYMBOL_TIPO = 7,                       /* TIPO  */
-  YYSYMBOL_INICIO = 8,                     /* INICIO  */
-  YYSYMBOL_FINAL = 9,                      /* FINAL  */
-  YYSYMBOL_RAIZ = 10,                      /* RAIZ  */
-  YYSYMBOL_ATRIB = 11,                     /* ATRIB  */
-  YYSYMBOL_LEITURA = 12,                   /* LEITURA  */
-  YYSYMBOL_ESCREVER = 13,                  /* ESCREVER  */
-  YYSYMBOL_COMENTARIO = 14,                /* COMENTARIO  */
-  YYSYMBOL_15_ = 15,                       /* '+'  */
-  YYSYMBOL_16_ = 16,                       /* '-'  */
-  YYSYMBOL_17_ = 17,                       /* '*'  */
-  YYSYMBOL_18_ = 18,                       /* '/'  */
-  YYSYMBOL_19_ = 19,                       /* '^'  */
-  YYSYMBOL_20_ = 20,                       /* ')'  */
-  YYSYMBOL_21_ = 21,                       /* '('  */
-  YYSYMBOL_22_ = 22,                       /* '|'  */
-  YYSYMBOL_UMINUS = 23,                    /* UMINUS  */
-  YYSYMBOL_24_ = 24,                       /* ','  */
-  YYSYMBOL_YYACCEPT = 25,                  /* $accept  */
-  YYSYMBOL_begin = 26,                     /* begin  */
-  YYSYMBOL_var = 27,                       /* var  */
-  YYSYMBOL_variacoes = 28,                 /* variacoes  */
-  YYSYMBOL_variavel = 29,                  /* variavel  */
-  YYSYMBOL_ini = 30,                       /* ini  */
-  YYSYMBOL_cod = 31,                       /* cod  */
-  YYSYMBOL_input_output = 32,              /* input_output  */
-  YYSYMBOL_expre = 33,                     /* expre  */
-  YYSYMBOL_valor = 34                      /* valor  */
+  YYSYMBOL_NUM_REAL = 3,                   /* NUM_REAL  */
+  YYSYMBOL_VARIAVEL = 4,                   /* VARIAVEL  */
+  YYSYMBOL_STRING = 5,                     /* STRING  */
+  YYSYMBOL_TIPO_REAL = 6,                  /* TIPO_REAL  */
+  YYSYMBOL_INICIO = 7,                     /* INICIO  */
+  YYSYMBOL_FINAL = 8,                      /* FINAL  */
+  YYSYMBOL_RAIZ = 9,                       /* RAIZ  */
+  YYSYMBOL_ATRIB = 10,                     /* ATRIB  */
+  YYSYMBOL_LEITURA = 11,                   /* LEITURA  */
+  YYSYMBOL_ESCREVER = 12,                  /* ESCREVER  */
+  YYSYMBOL_COMENTARIO = 13,                /* COMENTARIO  */
+  YYSYMBOL_14_ = 14,                       /* '+'  */
+  YYSYMBOL_15_ = 15,                       /* '-'  */
+  YYSYMBOL_16_ = 16,                       /* '*'  */
+  YYSYMBOL_17_ = 17,                       /* '/'  */
+  YYSYMBOL_18_ = 18,                       /* '^'  */
+  YYSYMBOL_19_ = 19,                       /* ')'  */
+  YYSYMBOL_20_ = 20,                       /* '('  */
+  YYSYMBOL_21_ = 21,                       /* '|'  */
+  YYSYMBOL_UMINUS = 22,                    /* UMINUS  */
+  YYSYMBOL_23_ = 23,                       /* ','  */
+  YYSYMBOL_YYACCEPT = 24,                  /* $accept  */
+  YYSYMBOL_begin = 25,                     /* begin  */
+  YYSYMBOL_var = 26,                       /* var  */
+  YYSYMBOL_variacoes = 27,                 /* variacoes  */
+  YYSYMBOL_variacoes2 = 28,                /* variacoes2  */
+  YYSYMBOL_ini = 29,                       /* ini  */
+  YYSYMBOL_cod = 30,                       /* cod  */
+  YYSYMBOL_input_output = 31,              /* input_output  */
+  YYSYMBOL_expre = 32,                     /* expre  */
+  YYSYMBOL_valor = 33                      /* valor  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -513,21 +556,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  9
+#define YYFINAL  10
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   84
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  25
+#define YYNTOKENS  24
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  10
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  33
+#define YYNRULES  30
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  63
+#define YYNSTATES  59
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   270
+#define YYMAXUTOK   269
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -545,15 +588,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      21,    20,    17,    15,    24,    16,     2,    18,     2,     2,
+      20,    19,    16,    14,    23,    15,     2,    17,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    19,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    18,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    22,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    21,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -567,18 +610,17 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      23
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    22
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    53,    53,    53,    56,    59,    60,    61,    62,    64,
-      65,    66,    69,    72,    72,    76,    79,    82,    85,    88,
-      91,    95,    99,   103,   107,   111,   115,   119,   122,   126,
-     129,   132,   134,   137
+       0,   100,   100,   100,   103,   106,   107,   109,   121,   144,
+     147,   147,   151,   153,   156,   159,   186,   197,   200,   206,
+     210,   214,   218,   222,   226,   230,   233,   237,   240,   244,
+     252
 };
 #endif
 
@@ -594,11 +636,11 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "\"end of file\"", "error", "\"invalid token\"", "\"real\"",
-  "NUM_INTEGER", "VARIAVEL", "STRING", "TIPO", "INICIO", "FINAL", "RAIZ",
-  "ATRIB", "LEITURA", "ESCREVER", "COMENTARIO", "'+'", "'-'", "'*'", "'/'",
-  "'^'", "')'", "'('", "'|'", "UMINUS", "','", "$accept", "begin", "var",
-  "variacoes", "variavel", "ini", "cod", "input_output", "expre", "valor", YY_NULLPTR
+  "\"end of file\"", "error", "\"invalid token\"", "NUM_REAL", "VARIAVEL",
+  "STRING", "TIPO_REAL", "INICIO", "FINAL", "RAIZ", "ATRIB", "LEITURA",
+  "ESCREVER", "COMENTARIO", "'+'", "'-'", "'*'", "'/'", "'^'", "')'",
+  "'('", "'|'", "UMINUS", "','", "$accept", "begin", "var", "variacoes",
+  "variacoes2", "ini", "cod", "input_output", "expre", "valor", YY_NULLPTR
 };
 
 static const char *
@@ -614,12 +656,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 static const yytype_int16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,    43,    45,    42,    47,    94,
-      41,    40,   124,   270,    44
+     265,   266,   267,   268,    43,    45,    42,    47,    94,    41,
+      40,   124,   269,    44
 };
 #endif
 
-#define YYPACT_NINF (-28)
+#define YYPACT_NINF (-14)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -633,13 +675,12 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,     4,   -28,     2,    -3,   -28,    -8,   -28,    28,   -28,
-     -28,    73,     4,    -1,   -28,     7,    10,   -28,   -28,   -28,
-     -28,   -28,   -28,    12,   -28,    22,    29,     8,     4,   -28,
-     -28,   -28,    18,    22,    22,    22,    56,   -28,    31,    58,
-      38,   -28,    22,   -28,    44,    30,    22,    22,    22,    22,
-      22,   -28,   -28,   -28,    50,   -28,   -28,    63,    63,    64,
-      64,    64,   -28
+      10,    17,   -14,    25,    10,   -14,    23,    12,   -14,    28,
+     -14,   -14,    41,    17,   -14,    32,   -14,    18,    26,    27,
+     -14,    41,    41,    41,   -14,   -14,   -13,   -14,   -14,   -13,
+     -14,    41,    41,    53,     3,   -14,    49,    37,    41,    41,
+      41,    41,    41,   -13,    55,    40,    62,    61,   -14,   -14,
+      -3,    -3,    42,    42,    42,   -14,   -14,   -14,   -14
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -647,25 +688,24 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,    14,     0,     0,     3,     6,     4,     0,     1,
-       2,     0,     0,     0,    12,     0,     0,    19,    20,    13,
-      11,    10,     9,     8,     5,     0,     0,     0,     0,    33,
-      32,    31,     0,     0,     0,     0,    18,    30,     0,     0,
-       0,     7,     0,    29,     0,     0,     0,     0,     0,     0,
-       0,    17,    15,    16,     0,    27,    26,    22,    23,    24,
-      25,    28,    21
+       0,     0,    11,     0,     0,     3,     7,     4,     6,     0,
+       1,     2,     0,     0,    30,    29,     9,     0,     0,     0,
+      17,     0,     0,     0,    12,    10,    18,    28,    29,     8,
+       5,     0,     0,     0,     0,    27,     0,     0,     0,     0,
+       0,     0,     0,    16,     0,     0,     0,     0,    25,    24,
+      20,    21,    22,    23,    26,    19,    15,    13,    14
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -28,    46,    76,   -11,   -28,   -28,   -28,   -28,   -27,   -28
+     -14,    78,    74,   -14,    71,   -14,   -14,   -14,   -12,   -14
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     3,     4,     7,    23,     5,     8,    19,    36,    37
+      -1,     3,     4,     7,     8,     5,     9,    25,    26,    27
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -673,59 +713,58 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      40,    24,     9,    11,     1,     2,    43,    44,    45,     6,
-      25,    29,    30,    31,    39,    54,    12,    41,    32,    57,
-      58,    59,    60,    61,    33,    29,    30,    31,    26,    34,
-      35,    27,    32,    13,    38,     1,    28,    14,    33,    42,
-      15,    16,    17,    34,    35,    46,    47,    48,    49,    50,
-      10,    51,    56,    46,    47,    48,    49,    50,    53,    46,
-      47,    48,    49,    50,    55,    46,    47,    48,    49,    50,
-      62,    46,    47,    48,    49,    50,    20,    21,    52,    22,
-      48,    49,    50,    50,    18
+      29,    38,    39,    40,    41,    42,    14,    28,    46,    35,
+      36,    37,    17,    40,    41,    42,     1,     2,    21,    43,
+      44,     6,    47,    22,    23,    10,    50,    51,    52,    53,
+      54,    14,    15,    12,     1,    13,    16,    17,    32,    18,
+      19,    20,    31,    21,    14,    28,    33,    34,    22,    23,
+      17,    38,    39,    40,    41,    42,    21,    45,    49,    56,
+      42,    22,    23,    38,    39,    40,    41,    42,    48,    38,
+      39,    40,    41,    42,    55,    38,    39,    40,    41,    42,
+      58,    57,    11,    24,    30
 };
 
 static const yytype_int8 yycheck[] =
 {
-      27,    12,     0,    11,     7,     8,    33,    34,    35,     5,
-      11,     3,     4,     5,     6,    42,    24,    28,    10,    46,
-      47,    48,    49,    50,    16,     3,     4,     5,    21,    21,
-      22,    21,    10,     5,     5,     7,    24,     9,    16,    21,
-      12,    13,    14,    21,    22,    15,    16,    17,    18,    19,
-       4,    20,    22,    15,    16,    17,    18,    19,    20,    15,
-      16,    17,    18,    19,    20,    15,    16,    17,    18,    19,
-      20,    15,    16,    17,    18,    19,     3,     4,    20,     6,
-      17,    18,    19,    19,     8
+      12,    14,    15,    16,    17,    18,     3,     4,     5,    21,
+      22,    23,     9,    16,    17,    18,     6,     7,    15,    31,
+      32,     4,    34,    20,    21,     0,    38,    39,    40,    41,
+      42,     3,     4,    10,     6,    23,     8,     9,    20,    11,
+      12,    13,    10,    15,     3,     4,    20,    20,    20,    21,
+       9,    14,    15,    16,    17,    18,    15,     4,    21,    19,
+      18,    20,    21,    14,    15,    16,    17,    18,    19,    14,
+      15,    16,    17,    18,    19,    14,    15,    16,    17,    18,
+      19,    19,     4,     9,    13
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     7,     8,    26,    27,    30,     5,    28,    31,     0,
-      26,    11,    24,     5,     9,    12,    13,    14,    27,    32,
-       3,     4,     6,    29,    28,    11,    21,    21,    24,     3,
-       4,     5,    10,    16,    21,    22,    33,    34,     5,     6,
-      33,    28,    21,    33,    33,    33,    15,    16,    17,    18,
-      19,    20,    20,    20,    33,    20,    22,    33,    33,    33,
-      33,    33,    20
+       0,     6,     7,    25,    26,    29,     4,    27,    28,    30,
+       0,    25,    10,    23,     3,     4,     8,     9,    11,    12,
+      13,    15,    20,    21,    26,    31,    32,    33,     4,    32,
+      28,    10,    20,    20,    20,    32,    32,    32,    14,    15,
+      16,    17,    18,    32,    32,     4,     5,    32,    19,    21,
+      32,    32,    32,    32,    32,    19,    19,    19,    19
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    25,    26,    26,    27,    28,    28,    28,    28,    29,
-      29,    29,    30,    31,    31,    32,    32,    32,    32,    32,
-      32,    33,    33,    33,    33,    33,    33,    33,    33,    33,
-      33,    33,    34,    34
+       0,    24,    25,    25,    26,    27,    27,    28,    28,    29,
+      30,    30,    31,    31,    31,    31,    31,    31,    31,    32,
+      32,    32,    32,    32,    32,    32,    32,    32,    32,    33,
+      33
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     2,     1,     2,     3,     1,     5,     3,     1,
-       1,     1,     3,     2,     0,     4,     4,     4,     3,     1,
-       1,     4,     3,     3,     3,     3,     3,     3,     3,     2,
-       1,     1,     1,     1
+       0,     2,     2,     1,     2,     3,     1,     1,     3,     3,
+       2,     0,     1,     4,     4,     4,     3,     1,     1,     4,
+       3,     3,     3,     3,     3,     3,     3,     2,     1,     1,
+       1
 };
 
 
@@ -1192,205 +1231,263 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 4: /* var: TIPO variacoes  */
-#line 56 "calc_morgana.y"
-                    {printf("DECLARACAO: %s %s\n", (yyvsp[-1].texto), (yyvsp[0].texto)); }
-#line 1199 "calc_morgana.tab.c"
+  case 4: /* var: TIPO_REAL variacoes  */
+#line 103 "calc_morgana.y"
+                         {;}
+#line 1238 "calc_morgana.tab.c"
     break;
 
-  case 5: /* variacoes: VARIAVEL ',' variacoes  */
-#line 59 "calc_morgana.y"
-                                  {sprintf((yyval.texto), "%s, %s", (yyvsp[-2].texto), (yyvsp[0].texto)); }
-#line 1205 "calc_morgana.tab.c"
+  case 5: /* variacoes: variacoes ',' variacoes2  */
+#line 106 "calc_morgana.y"
+                                    {sprintf((yyval.texto), "%s, %s", (yyvsp[-2].texto), (yyvsp[0].texto)); }
+#line 1244 "calc_morgana.tab.c"
     break;
 
-  case 6: /* variacoes: VARIAVEL  */
-#line 60 "calc_morgana.y"
-                   {sprintf((yyval.texto), "%s", (yyvsp[0].texto)); }
-#line 1211 "calc_morgana.tab.c"
+  case 6: /* variacoes: variacoes2  */
+#line 107 "calc_morgana.y"
+                     {sprintf((yyval.texto), "%s", (yyvsp[0].texto)); }
+#line 1250 "calc_morgana.tab.c"
     break;
 
-  case 7: /* variacoes: VARIAVEL ATRIB variavel ',' variacoes  */
-#line 61 "calc_morgana.y"
-                                                {sprintf((yyval.texto), "%s << %s, %s", (yyvsp[-4].texto), (yyvsp[-2].texto), (yyvsp[0].texto)); }
-#line 1217 "calc_morgana.tab.c"
+  case 7: /* variacoes2: VARIAVEL  */
+#line 109 "calc_morgana.y"
+                     {            
+            VARS * aux = srch(rvar, (yyvsp[0].texto));
+            if (aux == NULL){
+                // Se ainda nao existe variavel com esse nome, se cria uma
+                rvar = ins(rvar, (yyvsp[0].texto));
+                sprintf((yyval.texto), "%s", (yyvsp[0].texto));
+            }
+            else{
+                // Se já existe variavel com esse no, informar mensagem de erro
+                printf ("A variável '%s' já existe.\n", (yyvsp[0].texto));
+            }
+        }
+#line 1267 "calc_morgana.tab.c"
     break;
 
-  case 8: /* variacoes: VARIAVEL ATRIB variavel  */
-#line 62 "calc_morgana.y"
-                                  {sprintf((yyval.texto), "%s << %s", (yyvsp[-2].texto), (yyvsp[0].texto)); }
-#line 1223 "calc_morgana.tab.c"
+  case 8: /* variacoes2: VARIAVEL ATRIB expre  */
+#line 121 "calc_morgana.y"
+                               {
+            VARS * aux = srch(rvar, (yyvsp[-2].texto));
+            if (aux == NULL){
+                // Se ainda nao existe variavel com esse nome, se cria uma
+                rvar = ins(rvar, (yyvsp[-2].texto));
+            
+                VARS * aux2 = srch(rvar, (yyvsp[-2].texto));
+                if (aux2 == NULL){
+                    printf ("Variavel '%s' ainda nao declarada.\n", (yyvsp[-2].texto));
+                }
+                else {
+                    // Atribuindo valor a variavel criada
+                    aux2->value = (yyvsp[0].real);
+                    sprintf((yyval.texto), "%s << %f", (yyvsp[-2].texto), (yyvsp[0].real));
+                }
+            }
+            else{
+                // Se já existe variavel com esse no, informar mensagem de erro
+                printf ("A variavel '%s' ja existe.\n", (yyvsp[-2].texto));
+            }
+        }
+#line 1293 "calc_morgana.tab.c"
     break;
 
-  case 9: /* variavel: STRING  */
-#line 64 "calc_morgana.y"
-                  {sprintf((yyval.texto), "%s", (yyvsp[0].texto)); }
-#line 1229 "calc_morgana.tab.c"
-    break;
-
-  case 10: /* variavel: NUM_INTEGER  */
-#line 65 "calc_morgana.y"
-                       {sprintf((yyval.texto), "%d", (yyvsp[0].integer)); }
-#line 1235 "calc_morgana.tab.c"
-    break;
-
-  case 11: /* variavel: "real"  */
-#line 66 "calc_morgana.y"
-                   {sprintf((yyval.texto), "%f", (yyvsp[0].real)); }
-#line 1241 "calc_morgana.tab.c"
-    break;
-
-  case 15: /* input_output: ESCREVER '(' STRING ')'  */
-#line 76 "calc_morgana.y"
-                            {
-        printf("Funcionou o escrever("") no codigo\n");
-    }
-#line 1249 "calc_morgana.tab.c"
-    break;
-
-  case 16: /* input_output: ESCREVER '(' expre ')'  */
-#line 79 "calc_morgana.y"
-                           {
-        printf("Calculei uma expressao aritmetica!");
-    }
-#line 1257 "calc_morgana.tab.c"
-    break;
-
-  case 17: /* input_output: LEITURA '(' VARIAVEL ')'  */
-#line 82 "calc_morgana.y"
-                             {
-        printf("Token de LEITURA\n");
-    }
-#line 1265 "calc_morgana.tab.c"
-    break;
-
-  case 18: /* input_output: VARIAVEL ATRIB expre  */
-#line 85 "calc_morgana.y"
-                         {
-        printf("%.2f\n", (yyvsp[0].real));
-    }
-#line 1273 "calc_morgana.tab.c"
-    break;
-
-  case 19: /* input_output: COMENTARIO  */
-#line 88 "calc_morgana.y"
-                 {
-        printf("Comentario!\n");
-    }
-#line 1281 "calc_morgana.tab.c"
-    break;
-
-  case 21: /* expre: RAIZ '(' expre ')'  */
-#line 95 "calc_morgana.y"
-                       { 
-        (yyval.real) = sqrt((yyvsp[-1].real)); 
-        printf("Efetuando raiz(%f):\n", (yyvsp[-1].real));
-    }
-#line 1290 "calc_morgana.tab.c"
-    break;
-
-  case 22: /* expre: expre '+' expre  */
-#line 99 "calc_morgana.y"
-                      {
-        (yyval.real) = (yyvsp[-2].real) + (yyvsp[0].real);
-        printf("Calculo da Soma: %.1f + %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
-    }
+  case 9: /* ini: INICIO cod FINAL  */
+#line 144 "calc_morgana.y"
+                      {printf("PROGRAMA FINALIZADO!\n"); }
 #line 1299 "calc_morgana.tab.c"
     break;
 
-  case 23: /* expre: expre '-' expre  */
-#line 103 "calc_morgana.y"
+  case 13: /* input_output: ESCREVER '(' STRING ')'  */
+#line 153 "calc_morgana.y"
+                            {
+        printf("%s\n", (yyvsp[-1].texto));
+    }
+#line 1307 "calc_morgana.tab.c"
+    break;
+
+  case 14: /* input_output: ESCREVER '(' expre ')'  */
+#line 156 "calc_morgana.y"
+                           {
+        printf("%.1f\n", (yyvsp[-1].real));
+    }
+#line 1315 "calc_morgana.tab.c"
+    break;
+
+  case 15: /* input_output: LEITURA '(' VARIAVEL ')'  */
+#line 159 "calc_morgana.y"
+                             {
+        VARS * aux = srch(rvar, (yyvsp[-1].texto));
+        if (aux == NULL){
+            // se nao existe variavel declarada
+            printf ("Variavel '%s' ainda nao foi declarada\n", (yyvsp[-1].texto));
+        }
+        else {
+            //se for variavel real
+            //verificar se o valor corresponde ao tipo real
+            char test[100];
+            do{
+                int i = 0;
+                do{
+                    test[i] = '\0';
+                    i++;
+                }while(test[i]!='\0');
+
+                scanf("%s", &test);
+                if( is_real(test)==false )
+                    printf ("Valor '%s' deve ser real\n", (yyvsp[-1].texto));
+                
+            }while( is_real(test)==false );
+            
+            aux->value = atof(test);
+            printf("Token de LEITURA: %.1f\n", aux->value);
+        }
+    }
+#line 1347 "calc_morgana.tab.c"
+    break;
+
+  case 16: /* input_output: VARIAVEL ATRIB expre  */
+#line 186 "calc_morgana.y"
+                         {
+        // atribuição de variavel
+        VARS * aux = srch(rvar, (yyvsp[-2].texto));
+        if (aux == NULL)
+            // se nao existe variavel declarada, mensagem de erro
+            printf ("Variável '%s' não foi declarada\n", (yyvsp[-2].texto));
+        else {
+            aux->value = (yyvsp[0].real);
+            //printf("%.2f\n", $3);
+        }
+    }
+#line 1363 "calc_morgana.tab.c"
+    break;
+
+  case 17: /* input_output: COMENTARIO  */
+#line 197 "calc_morgana.y"
+                 {
+        printf("Comentario: %s\n", (yyvsp[0].texto));
+    }
+#line 1371 "calc_morgana.tab.c"
+    break;
+
+  case 18: /* input_output: expre  */
+#line 200 "calc_morgana.y"
+            {
+        printf("Valor: %f\n", (yyvsp[0].real));
+    }
+#line 1379 "calc_morgana.tab.c"
+    break;
+
+  case 19: /* expre: RAIZ '(' expre ')'  */
+#line 206 "calc_morgana.y"
+                       { 
+        (yyval.real) = sqrt((yyvsp[-1].real)); 
+        /* printf("Efetuando raiz(%f):\n", $3);*/
+    }
+#line 1388 "calc_morgana.tab.c"
+    break;
+
+  case 20: /* expre: expre '+' expre  */
+#line 210 "calc_morgana.y"
+                      {
+        (yyval.real) = (yyvsp[-2].real) + (yyvsp[0].real);
+        /* printf("%.1f + %.1f = %.1f\n", $1, $3, $$);*/
+    }
+#line 1397 "calc_morgana.tab.c"
+    break;
+
+  case 21: /* expre: expre '-' expre  */
+#line 214 "calc_morgana.y"
                       {
         (yyval.real) = (yyvsp[-2].real) - (yyvsp[0].real);
-        printf("Calculo da Subtracao: %.1f - %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
+        /* printf("%.1f - %.1f = %.1f\n", $1, $3, $$); */
     }
-#line 1308 "calc_morgana.tab.c"
+#line 1406 "calc_morgana.tab.c"
     break;
 
-  case 24: /* expre: expre '*' expre  */
-#line 107 "calc_morgana.y"
+  case 22: /* expre: expre '*' expre  */
+#line 218 "calc_morgana.y"
                       {
         (yyval.real) = (yyvsp[-2].real) * (yyvsp[0].real);
-        printf("Calculo do Produto: %.1f * %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
+        /* printf("%.1f * %.1f = %.1f\n", $1, $3, $$); */
     }
-#line 1317 "calc_morgana.tab.c"
+#line 1415 "calc_morgana.tab.c"
     break;
 
-  case 25: /* expre: expre '/' expre  */
-#line 111 "calc_morgana.y"
+  case 23: /* expre: expre '/' expre  */
+#line 222 "calc_morgana.y"
                       {
         (yyval.real) = (yyvsp[-2].real) / (yyvsp[0].real);
-        printf("Calculo da Divisao: %.1f / %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
+        /* printf("%.1f / %.1f = %.1f\n", $1, $3, $$); */
     }
-#line 1326 "calc_morgana.tab.c"
+#line 1424 "calc_morgana.tab.c"
     break;
 
-  case 26: /* expre: '|' expre '|'  */
-#line 115 "calc_morgana.y"
+  case 24: /* expre: '|' expre '|'  */
+#line 226 "calc_morgana.y"
                     {
         (yyval.real) = fabs((yyvsp[-1].real));
-        printf("Calculo do modulo: %f = %f\n", (yyvsp[-1].real), (yyval.real));
+        /* printf("%.1f = %.1f\n", $2, $$); */
     }
-#line 1335 "calc_morgana.tab.c"
+#line 1433 "calc_morgana.tab.c"
     break;
 
-  case 27: /* expre: '(' expre ')'  */
-#line 119 "calc_morgana.y"
+  case 25: /* expre: '(' expre ')'  */
+#line 230 "calc_morgana.y"
                     {
         (yyval.real) = (yyvsp[-1].real);
     }
-#line 1343 "calc_morgana.tab.c"
+#line 1441 "calc_morgana.tab.c"
     break;
 
-  case 28: /* expre: expre '^' expre  */
-#line 122 "calc_morgana.y"
+  case 26: /* expre: expre '^' expre  */
+#line 233 "calc_morgana.y"
                       {
         (yyval.real) = pow((yyvsp[-2].real), (yyvsp[0].real));
-        printf("Calculo de Exponenciacao: %.1f ^ %.1f = %.1f\n", (yyvsp[-2].real), (yyvsp[0].real), (yyval.real));
+        /* printf("%.1f ^ %.1f = %.1f\n", $1, $3, $$); */
     }
-#line 1352 "calc_morgana.tab.c"
+#line 1450 "calc_morgana.tab.c"
     break;
 
-  case 29: /* expre: '-' expre  */
-#line 126 "calc_morgana.y"
+  case 27: /* expre: '-' expre  */
+#line 237 "calc_morgana.y"
                              {
         (yyval.real) = -(yyvsp[0].real);
     }
-#line 1360 "calc_morgana.tab.c"
+#line 1458 "calc_morgana.tab.c"
     break;
 
-  case 30: /* expre: valor  */
-#line 129 "calc_morgana.y"
+  case 28: /* expre: valor  */
+#line 240 "calc_morgana.y"
             { 
         (yyval.real) = (yyvsp[0].real); 
     }
-#line 1368 "calc_morgana.tab.c"
+#line 1466 "calc_morgana.tab.c"
     break;
 
-  case 31: /* expre: VARIAVEL  */
-#line 132 "calc_morgana.y"
-               {}
-#line 1374 "calc_morgana.tab.c"
-    break;
-
-  case 32: /* valor: NUM_INTEGER  */
-#line 134 "calc_morgana.y"
-                       { 
-        (yyval.real) = (yyvsp[0].integer); 
+  case 29: /* valor: VARIAVEL  */
+#line 244 "calc_morgana.y"
+                    {    
+        VARS * aux = srch(rvar, (yyvsp[0].texto));
+        if (aux == NULL)
+            printf ("Variável '%s' não foi declarada\n", (yyvsp[0].texto));
+        else {
+            (yyval.real) = aux->value;
+        }
     }
-#line 1382 "calc_morgana.tab.c"
+#line 1479 "calc_morgana.tab.c"
     break;
 
-  case 33: /* valor: "real"  */
-#line 137 "calc_morgana.y"
+  case 30: /* valor: NUM_REAL  */
+#line 252 "calc_morgana.y"
                {
         (yyval.real) = (yyvsp[0].real);
     }
-#line 1390 "calc_morgana.tab.c"
+#line 1487 "calc_morgana.tab.c"
     break;
 
 
-#line 1394 "calc_morgana.tab.c"
+#line 1491 "calc_morgana.tab.c"
 
       default: break;
     }
@@ -1584,14 +1681,14 @@ yyreturn:
   return yyresult;
 }
 
-#line 142 "calc_morgana.y"
+#line 257 "calc_morgana.y"
 
 
 #include "lex.yy.c"
 
 int main(){
 
-    yyin=fopen("entrada_morg.txt", "r");
+    yyin=fopen("entrada_morg_semantico.txt", "r");
     do { yyparse(); }
     while (!feof(yyin));
     //yyparse();

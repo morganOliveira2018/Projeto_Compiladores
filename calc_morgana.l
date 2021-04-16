@@ -3,10 +3,9 @@
     
 %}
 
-TIPO "int"|"real"|"texto"
+TIPO_REAL "real"
 
 LETRA [a-zA-Z]+
-NUM_INTEGER [0-9]+
 NUM_REAL [0-9]+\.?[0-9]*
 STRING \".*\"
 RAIZ "raiz"
@@ -26,6 +25,9 @@ IGNORAR [\ \t\s]
 INVALIDO .
 %%
 
+{TIPO_REAL} {
+    return TIPO_REAL;
+}
 [:;,()] {
     return yytext[0];
 }
@@ -33,6 +35,7 @@ INVALIDO .
   return *yytext;
 }
 [\n] {
+    /* CONTADOR PARA SALTO DE LINHAS */
     yylineno++;
 }
 {INICIO} {
@@ -41,16 +44,8 @@ INVALIDO .
 {FINAL} {
     return FINAL;
 }
-{TIPO} {
-    strcpy(yylval.texto, yytext);
-    return TIPO;
-}
 {ATRIB} {
     return ATRIB;
-}
-{NUM_INTEGER} {
-    yylval.integer = atoi(yytext);
-    return NUM_INTEGER;
 }
 {NUM_REAL} {
     yylval.real = atof(yytext);
@@ -70,10 +65,15 @@ INVALIDO .
     return VARIAVEL;
 }
 {COMENTARIO} {
+    strcpy(yylval.texto, yytext);
     return COMENTARIO;
 }
 {STRING} {
-    strcpy(yylval.texto,yytext);
+    for(int x=0; x<strlen(yytext); x++){
+        yytext[x] = yytext[x+1];
+    }
+    yytext[strlen(yytext)-1] = '\0';
+    strcpy(yylval.texto, yytext);
     return STRING;
 }
 {IGNORAR} {

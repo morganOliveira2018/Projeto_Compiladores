@@ -1,11 +1,13 @@
 %{
     //Codigo C
-    // https://stackoverflow.com/questions/18049349/1-of-has-no-declared-type/18049801
     // https://stackoverflow.com/questions/22407730/bison-line-number-included-in-the-error-messages
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
     #include <math.h>
+    #include <math.h>
+    #include <ctype.h>
+    #include<stdbool.h>
     extern int yylineno;
     
     int yylex();
@@ -13,30 +15,75 @@
     {
         fprintf(stderr,"Error: %s\n Linha: %d\n", str, yylineno);
     }
+    // Construção de uma struct para receber o nome e o valor para cada variavel do tipo real
+    typedef struct vars {
+		char name[50];
+		float value;
+		struct vars * prox;
+	} VARS;
+    
+    // Adicionar nova variavel na lista
+    VARS * ins(VARS *l, char n[]){
+		VARS *new =(VARS*)malloc(sizeof(VARS));
+		strcpy(new->name, n);
+		new->prox = l;
+		return new;
+	}
+    // Busca uma variável na lista de variáveis
+	VARS *srch(VARS *l, char n[]){
+		VARS *aux = l;
+		while(aux != NULL){
+			if(strcmp(n, aux->name)==0){
+				return aux;
+			}
+			aux = aux->prox;
+		}
+		return aux;
+	}
+    // Verificar se o valor dado é real
+    bool is_real(char test[]){
+        int i = 0;
+        int ponto = 0;
+        do{
+            if(isdigit(test[i])!=0 || test[i] == '.'){
+                if(test[i]=='.')
+                    ponto = ponto + 1;
+                if(ponto>1)
+                    return false;
+                i=i+1;
+            }
+            else
+                return false;
+        }while(test[i]!='\0');
+        
+        return true;
+    }
 
+	VARS *rvar;
 %}
 
 %union {
     char texto[50];
     double real;
-    int integer;
 }
 
-%token <real> NUM_REAL "real"
-%token <integer> NUM_INTEGER
+// Declaração dos tokens 
+%token <real> NUM_REAL 
 %token <texto> VARIAVEL
 %token <texto> STRING
-%token <texto> TIPO
+%token <texto> TIPO_REAL
 %token INICIO
 %token FINAL
 %token RAIZ
 %token ATRIB
 %token LEITURA
 %token ESCREVER
-%token COMENTARIO
-%type <real> expre valor
-%type <texto> variavel variacoes
+%token <texto> COMENTARIO
 
+%type <real> expre valor
+%type <texto> variacoes variacoes2
+
+// Declaração de precedência dos operadores
 %left '+' '-'
 %left '*' '/' 
 %right '^'
@@ -53,75 +100,139 @@
 begin: var begin | ini
      ;
 
-var: TIPO variacoes {printf("DECLARACAO: %s %s\n", $1, $2); }
+var: TIPO_REAL variacoes {;}
     ;
 
-variacoes: VARIAVEL ',' variacoes {sprintf($$, "%s, %s", $1, $3); }
-        | VARIAVEL {sprintf($$, "%s", $1); }
-        | VARIAVEL ATRIB variavel ',' variacoes {sprintf($$, "%s << %s, %s", $1, $3, $5); }
-        | VARIAVEL ATRIB variavel {sprintf($$, "%s << %s", $1, $3); }
+variacoes: variacoes ',' variacoes2 {sprintf($$, "%s, %s", $1, $3); }
+        | variacoes2 {sprintf($$, "%s", $1); }
         ;
-variavel: STRING  {sprintf($$, "%s", $1); }
-        | NUM_INTEGER  {sprintf($$, "%d", $1); }
-        | NUM_REAL {sprintf($$, "%f", $1); }
+variacoes2: VARIAVEL {            
+            VARS * aux = srch(rvar, $1);
+            if (aux == NULL){
+                // Se ainda nao existe variavel com esse nome, se cria uma
+                rvar = ins(rvar, $1);
+                sprintf($$, "%s", $1);
+            }
+            else{
+                // Se já existe variavel com esse no, informar mensagem de erro
+                printf ("A variável '%s' já existe.\n", $1);
+            }
+        }
+        | VARIAVEL ATRIB expre {
+            VARS * aux = srch(rvar, $1);
+            if (aux == NULL){
+                // Se ainda nao existe variavel com esse nome, se cria uma
+                rvar = ins(rvar, $1);
+            
+                VARS * aux2 = srch(rvar, $1);
+                if (aux2 == NULL){
+                    printf ("Variavel '%s' ainda nao declarada.\n", $1);
+                }
+                else {
+                    // Atribuindo valor a variavel criada
+                    aux2->value = $3;
+                    sprintf($$, "%s << %f", $1, $3);
+                }
+            }
+            else{
+                // Se já existe variavel com esse no, informar mensagem de erro
+                printf ("A variavel '%s' ja existe.\n", $1);
+            }
+        }
         ;
 
-ini: INICIO cod FINAL  
+ini: INICIO cod FINAL {printf("PROGRAMA FINALIZADO!\n"); }
     ;
 
 cod: cod input_output | 
     ;
 
-input_output:  
+input_output: 
+    var 
+    |
     ESCREVER '(' STRING ')' {
-        printf("Funcionou o escrever("") no codigo\n");
+        printf("%s\n", $3);
     } |
     ESCREVER '(' expre ')' {
-        printf("Calculei uma expressao aritmetica!");
+        printf("%.1f\n", $3);
     } |
     LEITURA '(' VARIAVEL ')' {
-        printf("Token de LEITURA\n");
+        VARS * aux = srch(rvar, $3);
+        if (aux == NULL){
+            // se nao existe variavel declarada
+            printf ("Variavel '%s' ainda nao foi declarada\n", $3);
+        }
+        else {
+            //se for variavel real
+            //verificar se o valor corresponde ao tipo real
+            char test[100];
+            do{
+                int i = 0;
+                do{
+                    test[i] = '\0';
+                    i++;
+                }while(test[i]!='\0');
+
+                scanf("%s", &test);
+                if( is_real(test)==false )
+                    printf ("Valor '%s' deve ser real\n", $3);
+                
+            }while( is_real(test)==false );
+            
+            aux->value = atof(test);
+            printf("Token de LEITURA: %.1f\n", aux->value);
+        }
     } |
     VARIAVEL ATRIB expre {
-        printf("%.2f\n", $3);
+        // atribuição de variavel
+        VARS * aux = srch(rvar, $1);
+        if (aux == NULL)
+            // se nao existe variavel declarada, mensagem de erro
+            printf ("Variável '%s' não foi declarada\n", $1);
+        else {
+            aux->value = $3;
+            //printf("%.2f\n", $3);
+        }
     }
     | COMENTARIO {
-        printf("Comentario!\n");
+        printf("Comentario: %s\n", $1);
     }
-    | var 
+    | expre {
+        printf("Valor: %f\n", $1);
+    }
     ;
     
-expre:    
+expre: 
     RAIZ '(' expre ')' { 
         $$ = sqrt($3); 
-        printf("Efetuando raiz(%f):\n", $3);
+        /* printf("Efetuando raiz(%f):\n", $3);*/
     }
     | expre '+' expre {
         $$ = $1 + $3;
-        printf("Calculo da Soma: %.1f + %.1f = %.1f\n", $1, $3, $$);
+        /* printf("%.1f + %.1f = %.1f\n", $1, $3, $$);*/
     }
     | expre '-' expre {
         $$ = $1 - $3;
-        printf("Calculo da Subtracao: %.1f - %.1f = %.1f\n", $1, $3, $$);
+        /* printf("%.1f - %.1f = %.1f\n", $1, $3, $$); */
     }
     | expre '*' expre {
         $$ = $1 * $3;
-        printf("Calculo do Produto: %.1f * %.1f = %.1f\n", $1, $3, $$);
+        /* printf("%.1f * %.1f = %.1f\n", $1, $3, $$); */
     }
     | expre '/' expre {
         $$ = $1 / $3;
-        printf("Calculo da Divisao: %.1f / %.1f = %.1f\n", $1, $3, $$);
+        /* printf("%.1f / %.1f = %.1f\n", $1, $3, $$); */
     }
     | '|' expre '|' {
         $$ = fabs($2);
-        printf("Calculo do modulo: %f = %f\n", $2, $$);
+        /* printf("%.1f = %.1f\n", $2, $$); */
     }
     | '(' expre ')' {
         $$ = $2;
     } 
     | expre '^' expre {
         $$ = pow($1, $3);
-        printf("Calculo de Exponenciacao: %.1f ^ %.1f = %.1f\n", $1, $3, $$);
+        /* printf("%.1f ^ %.1f = %.1f\n", $1, $3, $$); */
     } 
     | '-' expre %prec UMINUS {
         $$ = -$2;
@@ -129,10 +240,14 @@ expre:
     | valor { 
         $$ = $1; 
     }
-    | VARIAVEL {}
     ;  
-    valor: NUM_INTEGER { 
-        $$ = $1; 
+    valor: VARIAVEL {    
+        VARS * aux = srch(rvar, $1);
+        if (aux == NULL)
+            printf ("Variável '%s' não foi declarada\n", $1);
+        else {
+            $$ = aux->value;
+        }
     }
     | NUM_REAL {
         $$ = $1;
@@ -145,7 +260,7 @@ expre:
 
 int main(){
 
-    yyin=fopen("entrada_morg.txt", "r");
+    yyin=fopen("entrada_morg_semantico.txt", "r");
     do { yyparse(); }
     while (!feof(yyin));
     //yyparse();
