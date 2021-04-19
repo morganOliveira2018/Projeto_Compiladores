@@ -939,9 +939,10 @@ YY_RULE_SETUP
     return COMENTARIO;
 }
 	YY_BREAK
+/* O FOR É PARA PEGAR A STRING DENTRO DAS ASPAS */
 case 14:
 YY_RULE_SETUP
-#line 71 "calc_morgana.l"
+#line 73 "calc_morgana.l"
 {
     for(int x=0; x<strlen(yytext); x++){
         yytext[x] = yytext[x+1];
@@ -953,24 +954,24 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 79 "calc_morgana.l"
+#line 81 "calc_morgana.l"
 {
     /* ignore */
 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 82 "calc_morgana.l"
+#line 84 "calc_morgana.l"
 {
     /* ignore */
 }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 85 "calc_morgana.l"
+#line 87 "calc_morgana.l"
 ECHO;
 	YY_BREAK
-#line 973 "lex.yy.c"
+#line 974 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1987,5 +1988,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 85 "calc_morgana.l"
+#line 87 "calc_morgana.l"
 

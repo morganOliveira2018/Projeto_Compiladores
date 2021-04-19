@@ -2,7 +2,7 @@ real a, b, c
 real area, result
 
 Inicio
-  real B, H
+  real B, H, sub
 
   escreva("Calculo da area do retangulo:")
   escreva("") @@ escrevendo vazio na tela
@@ -17,6 +17,14 @@ Inicio
   escreva("A area do retangulo e: ")
   area << H * B
   escreva(area)
+
+  escreva("Operacao de subtracao e: ")
+  escreva("Digite o valor de a: ")
+  leia(a)
+  escreva("Digite o valor de b: ")
+  leia(b)
+  sub << (a - b)
+  escreva(sub)
 
   @@ escreva("Calculo de Bhaskara:")
   @@ escreva("Digite o valor de a: ")

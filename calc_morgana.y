@@ -259,11 +259,10 @@ expre:
 #include "lex.yy.c"
 
 int main(){
-
     yyin=fopen("entrada_morg_semantico.txt", "r");
-    do { yyparse(); }
-    while (!feof(yyin));
-    //yyparse();
+    // do { yyparse(); }
+    // while (!feof(yyin));
+    yyparse();
     yylex();
     fclose(yyin);
     

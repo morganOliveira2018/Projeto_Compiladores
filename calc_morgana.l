@@ -68,6 +68,8 @@ INVALIDO .
     strcpy(yylval.texto, yytext);
     return COMENTARIO;
 }
+
+ /* O FOR É PARA PEGAR A STRING DENTRO DAS ASPAS */
 {STRING} {
     for(int x=0; x<strlen(yytext); x++){
         yytext[x] = yytext[x+1];
