@@ -1,0 +1,28 @@
+texto nome << "Morgana", nome2 << "Willame"
+real a, b, c
+real area, result
+
+Inicio
+  inteiro B, H
+
+  escreva("Calculo da area do retangulo:")
+  escreva("") @@ escrevendo vazio na tela
+
+  escreva("Digite a base: ")
+  leia(B)
+
+  escreva("Digite a altura: ")
+  leia(H)
+
+  escreva("")
+  escreva("A area do retangulo e: ")
+  area << H * B
+  escreva(area)
+
+  (6 >= 3) @@ teste do maior e igual
+  (6 > 3) @@ teste do maior
+  (6 < 3) @@ teste do menor
+  ((3 == 3)||(B == H)) @@ teste do 'ou'
+  ((3 == 3)&&(B == H)) @@ teste do '&&'
+
+Fim do programa

@@ -1,0 +1,12 @@
+texto nome = "Morgana"
+real a
+real b
+
+Inicio
+  a = 2
+  b = 3
+  area = a * b
+  @@ escreva(area)
+
+
+Fim do programa
