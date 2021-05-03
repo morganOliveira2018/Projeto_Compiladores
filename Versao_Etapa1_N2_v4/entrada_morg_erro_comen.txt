@@ -1,0 +1,16 @@
+
+
+Inicio
+
+  inteiro a =3
+  real b 
+  real area
+  a = 2
+  b = 3
+  escreva (a)
+  area = a * b
+  @@ escreva(area)
+  escreva(area)
+
+
+Fim do programa
