@@ -21,7 +21,6 @@ VARIAVEL {LETRA}({LETRA}|{NUM_INT}|"-"|"_")*
 COMENTARIO "@@".*
 
 /* FORMATO DE ATRIBUIR UMA VARIAVEL OU VALOR */
-/* ATRIB "=" */
 
 /* CONDICIONAL E REPETIÇÃO */
 IF "IF"
@@ -30,11 +29,12 @@ WHILE "WHILE"
 FOR "FOR"
 
 /* LEITURA E ESCRITA */
-LEITURA "leia"
-ESCREVER "escreva"
+/*LEIAi "leia int"*/
+/*LEIAr "leia real"*/
+/*LEIAt "leia texto"*/
 
-/* OPERADORES LOGICOS */
-/* LOGICO ">"|"<"|">="|"<="|"=="|"!="|"||"|"&&" */
+LEITURA "leitura"
+ESCREVER "escreva"
 
 /* INICIO E FIM DO PROGRAMA EXECUTADO */
 INICIO "Inicio"
@@ -57,12 +57,18 @@ INVALIDO .
     yylval.inteiro = 't';
     return TIPO_TEXT;
 }
-[:;,()] {
-    return yytext[0];
+{COMENTARIO} {
+    strcpy(yylval.texto, yytext);
+    return COMENTARIO;
 }
-[-+/|*=^] {
-  return *yytext;
+ /* CARACTERES ARITMETICOS SIMPLES */
+[-+/|*=^:;,(){}] {
+    return *yytext;
 }
+{LEITURA} {
+    return LEITURA;
+}
+ /* OPERADORES LOGICOS */
 ">" {yylval.fn = 1; return CMP; }
 "<" {yylval.fn = 2; return CMP; }
 "!=" {yylval.fn = 3; return CMP; }
@@ -93,9 +99,6 @@ INVALIDO .
 {RAIZ} {
     return RAIZ;
 }
-{LEITURA} {
-    return LEITURA;
-}
 {ESCREVER} {
     return ESCREVER;
 }
@@ -114,10 +117,6 @@ INVALIDO .
 {VARIAVEL} {
     strcpy(yylval.texto, yytext);
     return VARIAVEL;
-}
-{COMENTARIO} {
-    strcpy(yylval.texto, yytext);
-    return COMENTARIO;
 }
  /* O FOR É PARA PEGAR A STRING DENTRO DAS ASPAS */
 {STRING} {

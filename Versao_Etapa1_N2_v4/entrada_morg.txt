@@ -1,15 +1,35 @@
 
 Inicio
 
-  inteiro a =3
-  real b 
+  inteiro a = 3
+  real b = 10
+  real c = 30
   real area
-  a = 2
-  b = 3
-  escreva (a)
-  area = a * b
+  leitura(a)
+  texto autor = "morgana"
+  escreva(a) @@ 5
+  escreva(b) @@ 10
   
-  escreva(area)
+  area = a * b
+  escreva(area) @@ 50
 
+  IF(a > b){ @@ 5 > 10
+    while(a*a>b){ @@ 15*15 > 10
+      escreva(b) @@ 10
+      b = b + b 
+    }
+  }ELSE{
+    escreva(a)
+  }
+
+  inteiro x 
+  
+  FOR x = 1; x < 10; x = x + 1 { 
+    x = x + 2 
+  } 
+
+  
+  escreva("autor")
+  escreva(autor)
 
 Fim do programa
