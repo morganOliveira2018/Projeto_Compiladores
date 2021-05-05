@@ -272,7 +272,7 @@
 	    return a;
     }
 
-    /*Função de que cria uma nova variável*/
+       /*Função de que cria uma nova variável*/
     // Ast *newvari(int nodetype, char nome[50]){ 
     //      Varval *a = (Varval *)malloc(sizeof(Varval));
     //      if (!a)
@@ -293,13 +293,13 @@
     }Flowfor;
 
     /*Função que cria um nó de FOR*/
-    Ast * newflowfor(int nodetype, Ast b1, Ast *b2, Ast *b3, Ast *tl, Ast *el){ 
-        Flow *a = (Flow)malloc(sizeof(Flow));
+    Ast * newflowfor(int nodetype, Ast *b1, Ast *b2, Ast *b3, Ast *tl, Ast *el){ 
+        Flow *a = (Flow*)malloc(sizeof(Flow));
         if(!a) {
             printf("out of space");
             exit(0);
         }
-        Flowfor *b = (Flowfor)malloc(sizeof(Flowfor));
+        Flowfor *b = (Flowfor*)malloc(sizeof(Flowfor));
         if(!b) {
             printf("out of space");
             exit(0);
@@ -562,7 +562,7 @@
                 break;
             
             case 'L': eval(a->l); v = eval(a->r); break; /*Lista de operções em um bloco IF/ELSE/WHILE. Assim o analisador não se perde entre os blocos*/
-            case 'n': /* PRINTAR A VARIAVEL CORRETAMENTE NA SAÌDA */
+            case 'n':; /* PRINTAR A VARIAVEL CORRETAMENTE NA SAÌDA */
                 VARS * auxn = (VARS*)malloc(sizeof(VARS));
                 auxn = srch(rvar, ((Varval*)a)->var);
                 if (!auxn){
