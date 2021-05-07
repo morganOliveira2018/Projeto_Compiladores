@@ -13,10 +13,9 @@ Inicio
   area = a * b
   escreva(area) @@ 50
 
-  IF(a > b){ @@ 5 > 10
-    while(a*a>b){ @@ 15*15 > 10
-      escreva(b) @@ 10
-      b = b + b 
+  IF(a > b){ 
+    while(a*a>b){ 
+      escreva(b) 
     }
   }ELSE{
     escreva(a)
@@ -28,6 +27,10 @@ Inicio
     x = x + 2 
   } 
   escreva(x)
+
+  @@ operador ternario
+  inteiro num = -5 
+  num < 0 ? escreva("sim") : escreva("nao") ; 
   
   escreva("autor")
   escreva(autor)

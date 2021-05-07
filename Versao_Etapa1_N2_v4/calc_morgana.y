@@ -202,6 +202,19 @@
 	    return a;
     }
 
+    /*Função para criar um nó para operador iterator*/
+    Ast * newastiterate(int nodetype, Ast *l, Ast *r){ 
+         Ast *a = (Ast*) malloc(sizeof(Ast));
+	    if(!a) {
+		    printf("out of space");
+		    exit(0);
+	}
+	    a->nodetype = nodetype;
+	    a->l = l;
+	    a->r = r;
+	    return a;
+    }
+
        /*Função de que cria uma nova variável*/
     // Ast *newvari(int nodetype, char nome[50]){ 
     //      Varval *a = (Varval *)malloc(sizeof(Varval));
@@ -348,6 +361,18 @@
         
     }
 
+    /* Verificar se a variavel existe na lista de variaveis */
+    bool varexiste(char v[]) {
+        VARS* xr = srch(rvar, v);
+        VARSI* xi = srchi(ivar, v);
+        VARST* xt = srcht(tvar, v);
+
+    if(!xr && !xi && !xt) 
+        return false; // se tudo NULL, var nao existe
+    else
+        return true;
+    }
+
     /*Função que executa operações a partir de um nó*/
     double eval(Ast *a) { 
         double v;
@@ -407,8 +432,10 @@
             case '6': v = (eval(a->l) <= eval(a->r))? 1 : 0; break;
             case '7': v = (eval(a->l) || eval(a->r))? 1 : 0; break;
             case '8': v = (eval(a->l) && eval(a->r))? 1 : 0; break;
+            case '?': (eval(((Flow *)a)->cond)) != 0 ? eval(((Flow *)a)->tl) : eval(((Flow *)a)->el); break; /* Case para operador iterator */
             
-            case '=':
+            /* Atribuicao */
+            case '=':; 
                 v = eval(((Symasgn *)a)->v); /*Recupera o valor*/
                 
                 VARS * x = (VARS*)malloc(sizeof(VARS));
@@ -431,7 +458,8 @@
                 } else
                     x->v = v;   /*Atribui à variável*/
                 break;
-            /*CASO IF*/
+
+            /* Caso if ou if/else */
             case 'I': 
                 if (eval(((Flow *)a)->cond) != 0) {	/*executa a condição / teste*/
                     if (((Flow *)a)->tl)		/*Se existir árvore*/
@@ -445,7 +473,8 @@
                         v = 0.0;
                     }
                 break;
-            /*CASO WHILE*/
+
+            /* caso while */
             case 'W':
                 v = 0.0;
                 if( ((Flow *)a)->tl) {
@@ -492,7 +521,8 @@
                 break;
             
             case 'L': eval(a->l); v = eval(a->r); break; /*Lista de operções em um bloco IF/ELSE/WHILE. Assim o analisador não se perde entre os blocos*/
-            case 'n':; /* PRINTAR A VARIAVEL CORRETAMENTE NA SAÌDA */
+            case 'n': 
+            { /* PRINTAR A VARIAVEL CORRETAMENTE NA SAÌDA */
                 VARS * auxn = (VARS*)malloc(sizeof(VARS));
                 auxn = srch(rvar, ((Varval*)a)->var);
                 if (!auxn){
@@ -539,6 +569,7 @@
                     v = auxn->v;
                 }
                 break;
+            }
             case 'P': 
                 //printf("P1: %c\nP2: %c\n", a->nodetype, a->l->nodetype);
                 if(!a->l)
@@ -572,58 +603,51 @@
                     }
                 }
                 break;
-
+            // declaracao da variavel inteira
             case 'i':;
-                ivar = insi(ivar, ((Symasgn *)a)->s);
-                VARSI * xi = (VARSI*)malloc(sizeof(VARSI));
-                if(!xi) {
-                    printf("out of space");
-                    exit(0);
-                }
-                xi = srchi(ivar, ((Symasgn *)a)->s);
-                if(xi){
-                    //printf("Variavel '%s' criada com sucesso.\n",((Symasgn *)a)->s);
-
-                }
-                if(((Symasgn *)a)->v){
-                    xi->v = (int)eval(((Symasgn *)a)->v); /*Atribui à variável*/
-                    //printf("Valor '%d'\n", xi->v);
+                if(!varexiste(((Symasgn *)a)->s)){
+                    ivar = insi(ivar, ((Symasgn *)a)->s);
+                    VARSI * xi = (VARSI*)malloc(sizeof(VARSI));
+                    if(!xi) {
+                        printf("out of space");
+                        exit(0);
+                    }
+                    xi = srchi(ivar, ((Symasgn *)a)->s);
+                    if(((Symasgn *)a)->v)
+                        xi->v = (int)eval(((Symasgn *)a)->v); /*Atribui à variável*/
+                }else{
+                    printf("Erro de redeclaracao: variavel '%s' ja existe.\n",((Symasgn *)a)->s);
                 }
                 break;
+            // declaracao da variavel real
             case 'r':;
-                //printf("var: %s\n", ((Symasgn *)a)->s);
-                rvar = ins(rvar, ((Symasgn *)a)->s);
-                VARS * xr = (VARS*)malloc(sizeof(VARS));
-                if(!xr) {
-                    printf("out of space");
-                    exit(0);
-                }
-                xr = srch(rvar, ((Symasgn *)a)->s);
-                if(xr){
-                    //printf("Variavel '%s' criada com sucesso.\n",((Symasgn *)a)->s);
-
-                }
-                if(((Symasgn *)a)->v){
-                    xr->v = eval(((Symasgn *)a)->v);
-                    //printf("Valor '%f'\n", xr->v);
-                }
+                if(!varexiste(((Symasgn *)a)->s)){
+                    rvar = ins(rvar, ((Symasgn *)a)->s);
+                    VARS * xr = (VARS*)malloc(sizeof(VARS));
+                    if(!xr) {
+                        printf("out of space");
+                        exit(0);
+                    }
+                    xr = srch(rvar, ((Symasgn *)a)->s);
+                    if(((Symasgn *)a)->v)
+                        xr->v = eval(((Symasgn *)a)->v);
+                }else
+                    printf("Erro de redeclaracao: variavel '%s' ja existe.\n",((Symasgn *)a)->s);
                 break;
+            // declara a variavel texto
             case 't':;
-                tvar = inst(tvar, ((Symasgn *)a)->s);
-                VARST * xt = (VARST*)malloc(sizeof(VARST));
-                if(!xt) {
-                    printf("out of space");
-                    exit(0);
-                }
-                xt = srcht(tvar, ((Symasgn *)a)->s);
-                if(xt){
-                    //printf("Variavel '%s' criada com sucesso.\n",((Symasgn *)a)->s);
-                    //printf("var: %s \n", xt->name);
-                }
-                if(((Symasgn*)a)->v){
-                    strcpy(xt->v, ((Textoval*)((Symasgn*)a)->v)->v);
-                    //printf("texto: %s\n", xt->v);
-                }
+                if(!varexiste(((Symasgn *)a)->s)){
+                    tvar = inst(tvar, ((Symasgn *)a)->s);
+                    VARST * xt = (VARST*)malloc(sizeof(VARST));
+                    if(!xt) {
+                        printf("out of space");
+                        exit(0);
+                    }
+                    xt = srcht(tvar, ((Symasgn *)a)->s);
+                    if((((Symasgn *)a)->v))
+                        strcpy(xt->v, ((Textoval*)((Symasgn*)a)->v)->v);
+                }else
+                    printf("Erro de redeclaracao: variavel '%s' ja existe.\n",((Symasgn *)a)->s);
                 break;
 
             default: printf("internal error: bad node %c\n", a->nodetype);
@@ -646,6 +670,7 @@
 %token <inteiro> NUM_INT
 %token <texto> VARIAVEL
 %token <texto> STRING
+%token <texto> PLUS LESS
 %token <inteiro> TIPO_REAL TIPO_INT TIPO_TEXT 
 %token IF ELSE WHILE FOR 
 %token INICIO FINAL 
@@ -656,13 +681,14 @@
 %token <fn> CMP
 
 // Declaração dos nos não-terminais
-%type <ast> list begin expre valor prog stm cmp var
+%type <ast> list begin expre valor prog stm var
 
 // Declaração de precedência dos operadores
 %left CMP
 %left '+' '-'
 %left '*' '/' 
 %right '^'
+%right PLUS LESS
 %left ')'
 %right '('
 
@@ -675,11 +701,11 @@
 //%Iniciando as regras do analisador sintático
 %%
 // inicio do programa
-begin: INICIO prog FINAL {printf("PROGRAMA FINALIZADO!");} 
+begin: INICIO prog FINAL {printf("PROGRAMA FINALIZADO!"); return 0;} 
      ;
 
 prog: stm {eval($1);}  /*Inicia e execução da árvore de derivação*/
-	| prog stm {eval($2);}	 /*Inicia e execução da árvore de derivação*/
+	| prog stm {eval($2);} /*Inicia e execução da árvore de derivação*/
 	;
 
 // variacoes dos codigos dessa linguagem
@@ -697,17 +723,15 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
     | ESCREVER '(' expre ')' {$$ = newast('P', $3, NULL);}
     | LEITURA '(' VARIAVEL ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
-    | FOR var ';' cmp ';' var '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);} 
+    | FOR var ';' expre ';' var '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
+    | expre '?' stm ':' stm ';' {$$ = newflow('?', $1, $3, $5);} // operador ternario
+    | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
+    | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
     | COMENTARIO {$$ = newast('P', NULL, NULL);}
     ;
 
 // Usado no FOR - 1 - Valor inicial e 2 - Incremento
 var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);};
-
-// Testes condicionais - Usado no stm 'FOR' 
-cmp: expre CMP expre { 
-        $$ = newcmp($2,$1,$3);}
-    ;
 
 // estrutura para multiplas linhas de codigo para estruturas de decisão/loop
 list: stm {eval($1);}
@@ -756,7 +780,7 @@ expre:
     }
     | expre CMP expre { /* Testes condicionais */
         $$ = newcmp($2,$1,$3);
-    }		
+    }
     | valor { 
         $$ = $1; 
     }

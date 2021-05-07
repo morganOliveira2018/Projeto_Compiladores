@@ -3,15 +3,11 @@
     
 %}
 
-/*TIPOS DAS VARIAVEIS */
-/*TIPO_REAL "real" */
-/*TIPO_INT "inteiro"*/
-/*TIPO_TEXT "texto"*/
-
+/**/
 LETRA [a-zA-Z]+
 NUM_INT [0-9]+
 NUM_REAL [0-9]*"."[0-9]+
-STRING \".*\"
+STRING \"[^\"]*\"
 RAIZ "raiz"
 
 /* DECLARACAO DA VARIAVEL */
@@ -19,8 +15,9 @@ VARIAVEL {LETRA}({LETRA}|{NUM_INT}|"-"|"_")*
 
 /* DECLARACAO DO COMENTARIO */
 COMENTARIO "@@".*
-
-/* FORMATO DE ATRIBUIR UMA VARIAVEL OU VALOR */
+/* INCREMENTO E DECREMENTO */ 
+PLUS "++"
+LESS "--"
 
 /* CONDICIONAL E REPETIÇÃO */
 IF "IF"
@@ -29,10 +26,6 @@ WHILE "WHILE"
 FOR "FOR"
 
 /* LEITURA E ESCRITA */
-/*LEIAi "leia int"*/
-/*LEIAr "leia real"*/
-/*LEIAt "leia texto"*/
-
 LEITURA "leitura"
 ESCREVER "escreva"
 
@@ -61,6 +54,12 @@ INVALIDO .
     strcpy(yylval.texto, yytext);
     return COMENTARIO;
 }
+{PLUS} {
+    return PLUS;
+}
+{LESS} {
+    return LESS;
+}
  /* CARACTERES ARITMETICOS SIMPLES */
 [-+/|*=^:;,(){}] {
     return *yytext;
@@ -77,6 +76,7 @@ INVALIDO .
 "<=" {yylval.fn = 6; return CMP; }
 "||" {yylval.fn = 7; return CMP; }
 "&&" {yylval.fn = 8; return CMP; }
+"?" { return '?'; }
 
 [\n] {
     /* CONTADOR PARA SALTO DE LINHAS */
