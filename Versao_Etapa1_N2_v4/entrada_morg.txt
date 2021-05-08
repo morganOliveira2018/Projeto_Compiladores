@@ -15,14 +15,14 @@ Inicio
 
   IF(a > b){ 
     while(a*a>b){ 
-      escreva(b) 
+      escreva(a) 
+      a-- 
     }
   }ELSE{
-    escreva(a)
+    escreva(b)
   }
 
   inteiro x 
-  
   FOR x = 1; x < 10; x = x + 1 { 
     x = x + 2 
   } 
