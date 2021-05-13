@@ -680,7 +680,7 @@
 %token <fn> CMP
 
 // Declaração dos nos não-terminais
-%type <ast> list begin expre valor prog stm declmult
+%type <ast> list begin expre valor prog stm var declmult declmult2
 
 // Declaração de precedência dos operadores
 %left CMP
@@ -713,35 +713,41 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | WHILE '(' expre ')' '{' list '}' {$$ = newflow('W', $3, $6, NULL);}
     | VARIAVEL '=' expre {$$ = newasgn($1, $3);} // declaração e atribuição de variavel
     | VARIAVEL '=' STRING {$$ = newasgn($1, newtexto($3));} // declaração e atribuição de variavel
-    | declmult { $$ = $1 ;}
+    | declmult { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - numero
+    | declmult2 { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - texto
     | ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
     | ESCREVER '(' expre ')' {$$ = newast('P', $3, NULL);}
-    | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4), NULL);} // declaracao de String e a atribuicao
     | LEITURA '(' VARIAVEL ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
-    | FOR stm ';' expre ';' stm '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
+    | FOR var ';' expre ';' var '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
     | expre '?' stm ':' stm ';' {$$ = newflow('?', $1, $3, $5);} // operador ternario
     | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
     | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
     | COMENTARIO {$$ = newast('P', NULL, NULL);}
     ;
 
-// declaracao simples ou multiplas variaveis
+// declaracao de multiplas variaveis do tipo numero inteiro ou float
 declmult:  declmult ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);} 
-    | declmult ',' VARIAVEL '=' expre {$$ = newvar($1->nodetype, $3, $5, $1);}
+    | declmult ',' VARIAVEL '=' expre {$$ = newvar($1->nodetype, $3, $5, $1);} 
     | TIPO_INT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} // declaracao de int
     | TIPO_INT VARIAVEL '=' expre {$$ = newvar($1, $2, $4, NULL);} // declaracao de int e atrib
     | TIPO_REAL VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} // declaracao do real
     | TIPO_REAL VARIAVEL '=' expre {$$ = newvar($1, $2, $4, NULL);} // declaracao do real e atrib
-    | TIPO_TEXT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} 
     ;
 
-// Usado no FOR - 1 - Valor inicial e 2 - Incremento
-// var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);};
+// declaracao de multiplas variaveis do tipo texto
+declmult2: declmult2 ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);} 
+    | declmult2 ',' VARIAVEL '=' STRING {$$ = newvar($1->nodetype, $3, newtexto($5), $1);} 
+    | TIPO_TEXT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} 
+    | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4), NULL);} // declaracao de String e a atribuicao
+    ;
 
 // estrutura para multiplas linhas de codigo para estruturas de decisão/loop
 list: stm {eval($1);}
     | list stm { $$ = newast('L', $1, $2);}
     ;
+
+// usado no FOR - 1º - Valor inicial e 3º - Valor incremento ou decrementado
+var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);};
 
 // expreções matematicas e comparação
 expre: 

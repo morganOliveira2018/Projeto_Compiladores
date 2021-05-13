@@ -4,7 +4,7 @@ Inicio
   inteiro a = 3
   real b = 10.5, c = 30.5, area = a * b * c
   leitura(a)
-  texto autor = "morgana"
+  texto autor = "morgana", autor2 = "marcos"
   escreva(a) @@ escreva o valor da variavel a
   escreva(b) @@ escreva o valor da variavel b
   escreva(c) @@ escreva o valor da variavel c
@@ -29,6 +29,6 @@ Inicio
   num < 0 ? escreva("sim") : escreva("nao") ; 
   
   escreva("autor")
-  escreva(autor)
+  escreva(autor2)
 
 Fim do programa
