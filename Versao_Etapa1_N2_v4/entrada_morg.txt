@@ -2,20 +2,16 @@
 Inicio
 
   inteiro a = 3
-  real b = 10
-  real c = 30
-  real area
+  real b = 10.5, c = 30.5, area = a * b * c
   leitura(a)
   texto autor = "morgana"
-  escreva(a) @@ 5
-  escreva(b) @@ 10
-  
-  area = a * b
-  escreva(area) @@ 50
+  escreva(a) @@ escreva o valor da variavel a
+  escreva(b) @@ escreva o valor da variavel b
+  escreva(c) @@ escreva o valor da variavel c
+  escreva(area) @@ 
 
   IF(a > b){ 
-    while(a*a>b){ 
-      escreva(a) 
+    while(a*a>b){  
       a-- 
     }
   }ELSE{

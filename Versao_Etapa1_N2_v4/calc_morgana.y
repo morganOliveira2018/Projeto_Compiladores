@@ -186,6 +186,7 @@
         int nodetype;
         char s[name_size];
         Ast *v;
+        Ast *n;
     }Symasgn;
 
     /*Função para criar um nó*/
@@ -215,20 +216,8 @@
 	    return a;
     }
 
-       /*Função de que cria uma nova variável*/
-    // Ast *newvari(int nodetype, char nome[50]){ 
-    //      Varval *a = (Varval *)malloc(sizeof(Varval));
-    //      if (!a)
-    //      {
-    //          printf("out of space");
-    //          exit(0);
-    //      }
-    //      a->nodetype = nodetype;
-    //      strcpy(a->v, nome);
-    //      return (Ast *)a;
-    // }
-
-    typedef struct flowfor{ /*Estrutura de um fluxo para o FOR*/
+    /*Estrutura de um fluxo para o FOR*/
+    typedef struct flowfor{ 
         int nodetype;
         Ast* v1;
         Ast* v2;
@@ -322,8 +311,8 @@
         return a;
     }
 
-    /* Funcão que cria um nó para inteiro ou real ou texto */
-    Ast * newvar(int t, char s[], Ast *v){
+    /* Funcão que cria um nó para a variavel do tipo inteiro ou real ou texto e atribui o valor */
+    Ast * newvar(int t, char s[], Ast *v, Ast *n){
         Symasgn *a = (Symasgn*)malloc(sizeof(Symasgn));
         if(!a) {
             printf("out of space");
@@ -332,6 +321,7 @@
         a->nodetype = t; /*tipo i, r ou t, conforme arquivo .l*/
         strcpy(a->s, s); /*Símbolo/variável*/
         a->v = v; /*Valor*/
+        a->n = n; /*proxima declaração*/
         return (Ast *)a;
     }
 
@@ -370,7 +360,7 @@
     if(!xr && !xi && !xt) 
         return false; // se tudo NULL, var nao existe
     else
-        return true;
+        return true;  // se tudo for TRUE, var existe
     }
 
     /*Função que executa operações a partir de um nó*/
@@ -459,7 +449,7 @@
                     x->v = v;   /*Atribui à variável*/
                 break;
 
-            /* Caso if ou if/else */
+            /* caso if ou if/else */
             case 'I': 
                 if (eval(((Flow *)a)->cond) != 0) {	/*executa a condição / teste*/
                     if (((Flow *)a)->tl)		/*Se existir árvore*/
@@ -605,6 +595,9 @@
                 break;
             // declaracao da variavel inteira
             case 'i':;
+                if(((Symasgn *)a)->n)
+                    eval(((Symasgn *)a)->n);
+
                 if(!varexiste(((Symasgn *)a)->s)){
                     ivar = insi(ivar, ((Symasgn *)a)->s);
                     VARSI * xi = (VARSI*)malloc(sizeof(VARSI));
@@ -621,6 +614,9 @@
                 break;
             // declaracao da variavel real
             case 'r':;
+                if(((Symasgn *)a)->n)
+                    eval(((Symasgn *)a)->n);
+
                 if(!varexiste(((Symasgn *)a)->s)){
                     rvar = ins(rvar, ((Symasgn *)a)->s);
                     VARS * xr = (VARS*)malloc(sizeof(VARS));
@@ -636,6 +632,9 @@
                 break;
             // declara a variavel texto
             case 't':;
+                if(((Symasgn *)a)->n)
+                    eval(((Symasgn *)a)->n);
+
                 if(!varexiste(((Symasgn *)a)->s)){
                     tvar = inst(tvar, ((Symasgn *)a)->s);
                     VARST * xt = (VARST*)malloc(sizeof(VARST));
@@ -681,7 +680,7 @@
 %token <fn> CMP
 
 // Declaração dos nos não-terminais
-%type <ast> list begin expre valor prog stm var
+%type <ast> list begin expre valor prog stm declmult
 
 // Declaração de precedência dos operadores
 %left CMP
@@ -704,8 +703,8 @@
 begin: INICIO prog FINAL {printf("PROGRAMA FINALIZADO!"); return 0;} 
      ;
 
-prog: stm {eval($1);}  /*Inicia e execução da árvore de derivação*/
-	| prog stm {eval($2);} /*Inicia e execução da árvore de derivação*/
+prog: stm {eval($1);}  /*Inicia e execucao da arvore de derivacao*/
+	| prog stm {eval($2);} /*Inicia e execucao da arvore de derivacao*/
 	;
 
 // variacoes dos codigos dessa linguagem
@@ -714,24 +713,30 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | WHILE '(' expre ')' '{' list '}' {$$ = newflow('W', $3, $6, NULL);}
     | VARIAVEL '=' expre {$$ = newasgn($1, $3);} // declaração e atribuição de variavel
     | VARIAVEL '=' STRING {$$ = newasgn($1, newtexto($3));} // declaração e atribuição de variavel
-    | TIPO_INT VARIAVEL {$$ = newvar($1, $2, NULL);} // declaracao de int
-    | TIPO_INT VARIAVEL '=' expre {$$ = newvar($1, $2, $4);} // declaracao de int e atrib
-    | TIPO_REAL VARIAVEL {$$ = newvar($1, $2, NULL);} // declaracao do real
-    | TIPO_REAL VARIAVEL '=' expre {$$ = newvar($1, $2, $4);} // declaracao do real e atrib
-    | TIPO_TEXT VARIAVEL {$$ = newvar($1, $2, NULL);} 
-    | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4));} // declaracao de String e a atribuicao
+    | declmult { $$ = $1 ;}
     | ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
     | ESCREVER '(' expre ')' {$$ = newast('P', $3, NULL);}
+    | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4), NULL);} // declaracao de String e a atribuicao
     | LEITURA '(' VARIAVEL ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
-    | FOR var ';' expre ';' var '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
+    | FOR stm ';' expre ';' stm '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
     | expre '?' stm ':' stm ';' {$$ = newflow('?', $1, $3, $5);} // operador ternario
     | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
     | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
     | COMENTARIO {$$ = newast('P', NULL, NULL);}
     ;
 
+// declaracao simples ou multiplas variaveis
+declmult:  declmult ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);} 
+    | declmult ',' VARIAVEL '=' expre {$$ = newvar($1->nodetype, $3, $5, $1);}
+    | TIPO_INT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} // declaracao de int
+    | TIPO_INT VARIAVEL '=' expre {$$ = newvar($1, $2, $4, NULL);} // declaracao de int e atrib
+    | TIPO_REAL VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} // declaracao do real
+    | TIPO_REAL VARIAVEL '=' expre {$$ = newvar($1, $2, $4, NULL);} // declaracao do real e atrib
+    | TIPO_TEXT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} 
+    ;
+
 // Usado no FOR - 1 - Valor inicial e 2 - Incremento
-var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);};
+// var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);};
 
 // estrutura para multiplas linhas de codigo para estruturas de decisão/loop
 list: stm {eval($1);}

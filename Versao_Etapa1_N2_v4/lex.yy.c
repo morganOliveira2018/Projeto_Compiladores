@@ -582,8 +582,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "calc_morgana.l"
-#line 3 "calc_morgana.l"
+#line 1 ".\\calc_morgana.l"
+#line 3 ".\\calc_morgana.l"
     
 #line 588 "lex.yy.c"
 /**/
@@ -810,7 +810,7 @@ YY_DECL
 		}
 
 	{
-#line 39 "calc_morgana.l"
+#line 39 ".\\calc_morgana.l"
 
 
 #line 816 "lex.yy.c"
@@ -882,7 +882,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 41 "calc_morgana.l"
+#line 41 ".\\calc_morgana.l"
 {
     yylval.inteiro = 'i';
     return TIPO_INT;
@@ -890,7 +890,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 45 "calc_morgana.l"
+#line 45 ".\\calc_morgana.l"
 {
     yylval.inteiro = 'r';
     return TIPO_REAL;
@@ -898,7 +898,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 49 "calc_morgana.l"
+#line 49 ".\\calc_morgana.l"
 {
     yylval.inteiro = 't';
     return TIPO_TEXT;
@@ -906,7 +906,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 53 "calc_morgana.l"
+#line 53 ".\\calc_morgana.l"
 {
     strcpy(yylval.texto, yytext);
     return COMENTARIO;
@@ -914,14 +914,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 57 "calc_morgana.l"
+#line 57 ".\\calc_morgana.l"
 {
     return PLUS;
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 60 "calc_morgana.l"
+#line 60 ".\\calc_morgana.l"
 {
     return LESS;
 }
@@ -929,14 +929,14 @@ YY_RULE_SETUP
 /* CARACTERES ARITMETICOS SIMPLES */
 case 7:
 YY_RULE_SETUP
-#line 64 "calc_morgana.l"
+#line 64 ".\\calc_morgana.l"
 {
     return *yytext;
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 67 "calc_morgana.l"
+#line 67 ".\\calc_morgana.l"
 {
     return LEITURA;
 }
@@ -944,53 +944,53 @@ YY_RULE_SETUP
 /* OPERADORES LOGICOS */
 case 9:
 YY_RULE_SETUP
-#line 71 "calc_morgana.l"
+#line 71 ".\\calc_morgana.l"
 {yylval.fn = 1; return CMP; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 72 "calc_morgana.l"
+#line 72 ".\\calc_morgana.l"
 {yylval.fn = 2; return CMP; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 73 "calc_morgana.l"
+#line 73 ".\\calc_morgana.l"
 {yylval.fn = 3; return CMP; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 74 "calc_morgana.l"
+#line 74 ".\\calc_morgana.l"
 {yylval.fn = 4; return CMP; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 75 "calc_morgana.l"
+#line 75 ".\\calc_morgana.l"
 {yylval.fn = 5; return CMP; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 76 "calc_morgana.l"
+#line 76 ".\\calc_morgana.l"
 {yylval.fn = 6; return CMP; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 77 "calc_morgana.l"
+#line 77 ".\\calc_morgana.l"
 {yylval.fn = 7; return CMP; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 78 "calc_morgana.l"
+#line 78 ".\\calc_morgana.l"
 {yylval.fn = 8; return CMP; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 79 "calc_morgana.l"
+#line 79 ".\\calc_morgana.l"
 { return '?'; }
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 81 "calc_morgana.l"
+#line 81 ".\\calc_morgana.l"
 {
     /* CONTADOR PARA SALTO DE LINHAS */
     yylineno++;
@@ -998,21 +998,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 85 "calc_morgana.l"
+#line 85 ".\\calc_morgana.l"
 {
     return INICIO;
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 88 "calc_morgana.l"
+#line 88 ".\\calc_morgana.l"
 {
     return FINAL;
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 91 "calc_morgana.l"
+#line 91 ".\\calc_morgana.l"
 {
     yylval.real = atof(yytext);
     return NUM_REAL;
@@ -1020,7 +1020,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 95 "calc_morgana.l"
+#line 95 ".\\calc_morgana.l"
 {
     yylval.inteiro = atoi(yytext);
     return NUM_INT;
@@ -1028,49 +1028,49 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 99 "calc_morgana.l"
+#line 99 ".\\calc_morgana.l"
 {
     return RAIZ;
 }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 102 "calc_morgana.l"
+#line 102 ".\\calc_morgana.l"
 {
     return ESCREVER;
 }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 105 "calc_morgana.l"
+#line 105 ".\\calc_morgana.l"
 {
     return IF;
 }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 108 "calc_morgana.l"
+#line 108 ".\\calc_morgana.l"
 {
     return ELSE;
 }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 111 "calc_morgana.l"
+#line 111 ".\\calc_morgana.l"
 {
     return WHILE;
 }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 114 "calc_morgana.l"
+#line 114 ".\\calc_morgana.l"
 {
     return FOR;
 }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 117 "calc_morgana.l"
+#line 117 ".\\calc_morgana.l"
 {
     strcpy(yylval.texto, yytext);
     return VARIAVEL;
@@ -1080,7 +1080,7 @@ YY_RULE_SETUP
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 122 "calc_morgana.l"
+#line 122 ".\\calc_morgana.l"
 {
     for(int x=0; x<strlen(yytext); x++){
         yytext[x] = yytext[x+1];
@@ -1092,21 +1092,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 130 "calc_morgana.l"
+#line 130 ".\\calc_morgana.l"
 {
     /* ignore */
 }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 133 "calc_morgana.l"
+#line 133 ".\\calc_morgana.l"
 {
     /* ignore */
 }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 136 "calc_morgana.l"
+#line 136 ".\\calc_morgana.l"
 ECHO;
 	YY_BREAK
 #line 1112 "lex.yy.c"
@@ -2126,5 +2126,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 136 "calc_morgana.l"
+#line 136 ".\\calc_morgana.l"
 
