@@ -5,30 +5,31 @@ Inicio
   real b = 10.5, c = 30.5, area = a * b * c
   leitura(a)
   texto autor = "morgana", autor2 = "marcos"
-  escreva(a) @@ escreva o valor da variavel a
-  escreva(b) @@ escreva o valor da variavel b
-  escreva(c) @@ escreva o valor da variavel c
-  escreva(area) @@ 
+  escreva("O valor de a = ", a) @@ escreva o valor da variavel a
+  escreva("b :", b," & "," c :", c) @@ escreva o valor da variavel b e c
+  escreva("O valor da area:", area) 
 
   IF(a > b){ 
     while(a*a>b){  
       a-- 
+      escreva("A")
     }
   }ELSE{
-    escreva(b)
+    escreva("B")
   }
 
   inteiro x 
   FOR x = 1; x < 10; x = x + 1 { 
     x = x + 2 
   } 
-  escreva(x)
+  @@ escreva(x)
 
   @@ operador ternario
   inteiro num = -5 
-  num < 0 ? escreva("sim") : escreva("nao") ; 
+  num < 0 ? escreva("sim") : escreva("nao") ;
+  num > 0 ? num++ : num-- ; escreva(num)
   
-  escreva("autor")
-  escreva(autor2)
+  escreva("autor:", autor)
+  escreva("autor2:", autor2)
 
 Fim do programa

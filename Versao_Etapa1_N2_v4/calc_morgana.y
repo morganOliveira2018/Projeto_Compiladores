@@ -377,7 +377,7 @@
             case 'k': v = ((Intval *)a)->v; break; 	/*Recupera um número inteiro*/
             case 'K': v = ((Realval *)a)->v; break; 	/*Recupera um número real*/
             case 'm': v = atof(((Textoval *)a)->v); break; 	/*Recupera um número real dentro de string*/
-            case 'N':;
+            case 'N':; /*  Verificar se foi realizado a declaracao da variavel corretamente */
                 VARS * aux = (VARS*)malloc(sizeof(VARS));
                 aux = srch(rvar, ((Varval*)a)->var);
                 if (!aux){
@@ -512,7 +512,7 @@
             
             case 'L': eval(a->l); v = eval(a->r); break; /*Lista de operções em um bloco IF/ELSE/WHILE. Assim o analisador não se perde entre os blocos*/
             case 'n': 
-            { /* PRINTAR A VARIAVEL CORRETAMENTE NA SAÌDA */
+            { /* printar os tipos de variaveis corretamente na saída */
                 VARS * auxn = (VARS*)malloc(sizeof(VARS));
                 auxn = srch(rvar, ((Varval*)a)->var);
                 if (!auxn){
@@ -529,9 +529,13 @@
                                 printf("out of space");
                                 exit(0);
                             }
+                            printf("%s", auxn3->v);
+                            /*
                             auxnt->nodetype = 'P';
                             auxnt->l = newtexto(auxn3->v);
+                            auxnt->r = newast('P', NULL, NULL); // nova alteracao do escreva
                             eval(auxnt);
+                            */
                             v = atof(auxn3->v);
                         }
                     }
@@ -541,9 +545,13 @@
                             printf("out of space");
                             exit(0);
                         }
+                        printf("%d", auxn2->v);
+                        /*
                         auxni->nodetype = 'P';
                         auxni->l = newint(auxn2->v);
+                        auxni->r = newast('P', NULL, NULL); // nova alteracao do escreva
                         eval(auxni);
+                        */
                         v = (double)auxn2->v;
                     }
                 }
@@ -553,35 +561,47 @@
                         printf("out of space");
                         exit(0);
                     }
+                    printf("%.2f", auxn->v);
+                    /*
                     auxnr->nodetype = 'P';
                     auxnr->l = newreal(auxn->v);
+                    auxnr->r = newast('P', NULL, NULL); // nova alteracao do escreva
                     eval(auxnr);
+                    */
                     v = auxn->v;
                 }
                 break;
             }
             case 'P': 
                 //printf("P1: %c\nP2: %c\n", a->nodetype, a->l->nodetype);
-                if(!a->l)
+                if(a->l==NULL)
                     break;
-                //printf("P - %c\n", a->l->nodetype);
+                else
+                    printf("", a->l->nodetype);
                 if(a->l->nodetype == 'N'){
                     a->l->nodetype = 'n';
                     v = eval(a->l);
+                    //printf("\nnodetype 'N'\n");
                 } else {
                     v = eval(a->l);
                     if(a->l->nodetype != 'n' && a->l->nodetype != 'k' && a->l->nodetype != 'K' && a->l->nodetype != 'm')
-                        printf("%.2f\n", v);
+                        printf("%.2f", v);
                 }
                 if(((Intval*)a->l)->nodetype == 'k')
-                    printf ("%d\n", ((Intval*)a->l)->v);		/*Recupera um valor inteiro*/
+                    printf ("%d", ((Intval*)a->l)->v);		/*Recupera um valor inteiro*/
                 else if(((Realval*)a->l)->nodetype == 'K')
-                    printf ("%.2f\n", ((Realval*)a->l)->v);		/*Recupera um valor real*/
+                    printf ("%.2f", ((Realval*)a->l)->v);		/*Recupera um valor real*/
                 else if(((Textoval*)a->l)->nodetype == 'm')
-                    printf ("%s\n", ((Textoval*)a->l)->v);		/*Recupera um valor texto*/
+                    printf ("%s", ((Textoval*)a->l)->v);		/*Recupera um valor texto*/
+                if(a->r==NULL){
+                    //printf("a->r null\n");
+                    printf("\n");
+                }else{
+                    //printf("a->r ok\n");
+                    v = eval(a->r);
+                }
                 break;  
-
-            /*CASO PARA A OPCAO FOR*/
+            /* caso para a opcao FOR */
             case 'F':
                 v = 0.0;
                 if( ((Flow *)a)->tl ) {
@@ -648,6 +668,16 @@
                 }else
                     printf("Erro de redeclaracao: variavel '%s' ja existe.\n",((Symasgn *)a)->s);
                 break;
+            case 'z':;
+                printf("Fim do programa (case z ok)\n");
+                free(ivar);
+                ivar = NULL;
+                free(rvar);
+                rvar = NULL;
+                free(tvar);
+                tvar = NULL;
+                exit(0);
+                break;
 
             default: printf("internal error: bad node %c\n", a->nodetype);
         }
@@ -680,7 +710,7 @@
 %token <fn> CMP
 
 // Declaração dos nos não-terminais
-%type <ast> list begin expre valor prog stm var declmult declmult2
+%type <ast> list begin expre valor prog stm stm2 escrever var declmult declmult2
 
 // Declaração de precedência dos operadores
 %left CMP
@@ -700,11 +730,12 @@
 //%Iniciando as regras do analisador sintático
 %%
 // inicio do programa
-begin: INICIO prog FINAL {printf("PROGRAMA FINALIZADO!"); return 0;} 
+begin: INICIO prog FINAL {eval(newast('z', NULL, NULL));} 
      ;
 
-prog: stm {eval($1);}  /*Inicia e execucao da arvore de derivacao*/
-	| prog stm {eval($2);} /*Inicia e execucao da arvore de derivacao*/
+// inicia e execucao da arvore de derivacao
+prog: stm {eval($1);}  
+	| prog stm {eval($2);} 
 	;
 
 // variacoes dos codigos dessa linguagem
@@ -715,14 +746,22 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | VARIAVEL '=' STRING {$$ = newasgn($1, newtexto($3));} // declaração e atribuição de variavel
     | declmult { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - numero
     | declmult2 { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - texto
-    | ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
-    | ESCREVER '(' expre ')' {$$ = newast('P', $3, NULL);}
+    | ESCREVER '(' escrever ')' {$$ = $3;} // derivacao para escrever
     | LEITURA '(' VARIAVEL ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
     | FOR var ';' expre ';' var '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
-    | expre '?' stm ':' stm ';' {$$ = newflow('?', $1, $3, $5);} // operador ternario
+    | expre '?' stm2 ':' stm2 ';' {$$ = newflow('?', $1, $3, $5);} // operador ternario
     | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
     | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
     | COMENTARIO {$$ = newast('P', NULL, NULL);}
+    ;
+//| ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
+//| ESCREVER '(' expre ')' {$$ = newast('P', $3, NULL);}
+
+// no nao-terminal exclusivo para stm2
+stm2: ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
+    | ESCREVER '(' expre ')' {$$ = newast('P', $3, NULL);}
+    | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
+    | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
     ;
 
 // declaracao de multiplas variaveis do tipo numero inteiro ou float
@@ -741,53 +780,47 @@ declmult2: declmult2 ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);}
     | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4), NULL);} // declaracao de String e a atribuicao
     ;
 
+// nó nao-terminal para escrever variaveis de tipos distintos
+escrever: expre {$$ = newast('P', $1, NULL);}
+    | expre ',' escrever {$$ = newast('P', $1, $3);}
+    | STRING {$$ = newast('P', newtexto($1), NULL);} 
+    | STRING ',' escrever {$$ = newast('P', newtexto($1), $3);}
+    ;
+
 // estrutura para multiplas linhas de codigo para estruturas de decisão/loop
 list: stm {eval($1);}
     | list stm { $$ = newast('L', $1, $2);}
     ;
 
 // usado no FOR - 1º - Valor inicial e 3º - Valor incremento ou decrementado
-var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);};
+var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);}
+    ;
 
 // expreções matematicas e comparação
 expre: 
     RAIZ '(' expre ')' { 
         {$$ = newast('R',$3,NULL);}
-        /* $$ = sqrt($3); */
-        /* printf("Efetuando raiz(%f):\n", $3);*/
     }
     | expre '+' expre {
         $$ = newast('+', $1, $3);
-        /* $$ = $1 + $3;*/
-        /* printf("%.1f + %.1f = %.1f\n", $1, $3, $$);*/
     }
     | expre '-' expre {
         $$ = newast('-',$1,$3);
-        /* $$ = $1 - $3; */
-        /* printf("%.1f - %.1f = %.1f\n", $1, $3, $$); */
     }
     | expre '*' expre {
         $$ = newast('*',$1,$3);
-        /* $$ = $1 * $3; */
-        /* printf("%.1f * %.1f = %.1f\n", $1, $3, $$); */
     }
     | expre '/' expre {
         $$ = newast('/',$1,$3);
-        /* $$ = $1 / $3; */
-        /* printf("%.1f / %.1f = %.1f\n", $1, $3, $$); */
     }
     | '(' expre ')' {
         $$ = $2;
     } 
     | expre '^' expre {
         $$ = newast('^',$1,$3);
-        /* $$ = pow($1, $3); */
-        /* printf("%.1f ^ %.1f = %.1f\n", $1, $3, $$); */
     } 
     | '-' expre %prec NEG {
-        $$ = newast('M',$2,NULL);
-        /* $$ = -$2;*/
-
+        $$ = newast('M',$2,NULL); 
     }
     | expre CMP expre { /* Testes condicionais */
         $$ = newcmp($2,$1,$3);
