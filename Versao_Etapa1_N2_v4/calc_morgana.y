@@ -669,7 +669,7 @@
                     printf("Erro de redeclaracao: variavel '%s' ja existe.\n",((Symasgn *)a)->s);
                 break;
             case 'z':;
-                printf("Fim do programa (case z ok)\n");
+                printf("Fim do programa\n");
                 free(ivar);
                 ivar = NULL;
                 free(rvar);
@@ -724,7 +724,7 @@
 
 // O '|' e 'UNIMUS' não tem associatividade, ou seja, left ou right e estão na mais alta precedência
 // O %nonassoc define a ordem de precedência do mais BAIXO para o mais ALTO
-%nonassoc IFX NEG
+%nonassoc IFX NEG 
 
 
 //%Iniciando as regras do analisador sintático
@@ -754,8 +754,6 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
     | COMENTARIO {$$ = newast('P', NULL, NULL);}
     ;
-//| ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
-//| ESCREVER '(' expre ')' {$$ = newast('P', $3, NULL);}
 
 // no nao-terminal exclusivo para stm2
 stm2: ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
@@ -788,7 +786,7 @@ escrever: expre {$$ = newast('P', $1, NULL);}
     ;
 
 // estrutura para multiplas linhas de codigo para estruturas de decisão/loop
-list: stm {eval($1);}
+list: stm {$$ = $1;}
     | list stm { $$ = newast('L', $1, $2);}
     ;
 
@@ -797,7 +795,7 @@ var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);}
     ;
 
 // expreções matematicas e comparação
-expre: 
+expre:
     RAIZ '(' expre ')' { 
         {$$ = newast('R',$3,NULL);}
     }
