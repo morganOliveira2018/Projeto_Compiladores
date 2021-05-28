@@ -1,12 +1,12 @@
 
 Inicio
 
-  @@ inteiro function teste() {
-  @@    escreva("-----------")
-  @@ }
+  inteiro function teste() {
+      escreva("qualquer coisa")
+      inteiro m = 3, n = 5, soma = m + n
+      escreva("A soma de m e n:", soma) 
+  }
 
-  @@ float vetor[3] = 10
-  @@ vet[0] = 2;
   inteiro a = 3
   real b = 10.5, c = 30.5, area = a * b * c
   leitura(a)
@@ -31,9 +31,9 @@ Inicio
   @@ escreva(x)
 
   @@ operador ternario
-  inteiro num = -5 
-  num < 0 ? escreva("sim") : escreva("nao") ;
-  num > 0 ? num++ : num-- ; escreva(num)
+  inteiro num = 5 
+  num > 0 ? num++ : num-- ; 
+  escreva("ternario:", num)
   
   escreva("autor:", autor)
   escreva("autor2:", autor2)

@@ -18,12 +18,19 @@
     #define name_size 50
     #define string_size 1000
 
+    typedef struct variavels {
+		char name[name_size];
+        int type; 
+        char tv[string_size];
+        int iv;
+        double rv;
+		struct variavels * prox;
+	} VARIAVELS;
+
     // Construção de uma struct para receber o nome e o valor para cada variavel do tipo real
     typedef struct vars {
-        int nodetype;
 		char name[name_size];
 		float v;
-        double *vet; /* variavel para vetor */
 		struct vars * prox;
 	} VARS;
 
@@ -34,19 +41,6 @@
 		new->prox = l;
 		return new;
 	}
-
-    // Insercao do tipo REAL dentro do Array
-    VARS *ins_a(VARS*l,char n[], int tamanho){
-		VARS*new =(VARS*)malloc(sizeof(VARS));
-		strcpy(new->name,n);
-		new->vet = (double*)malloc(tamanho * sizeof(double));
-		new->prox = l;
-		new->nodetype = 3; 
-		return new;
-	}
-
-    // Insercao da variavel do tipo STRING dentro do Array
-    // Insercao da variavel do tipo INT dentro do Array
     
     // Busca uma variável do tipo real na lista de variáveis
 	VARS *srch(VARS *l, char n[]){
@@ -149,7 +143,7 @@
         return true;
     }
 
-	VARS *rvar = NULL; 
+	VARS *rvar = NULL;
     VARSI *ivar = NULL;
     VARST *tvar = NULL;
 
@@ -178,8 +172,6 @@
     typedef struct varval { /*Estrutura de um nome de variável, nesse exemplo uma variável é um número no vetor var[26]*/
         int nodetype;
         char var[name_size];
-        int size;
-        Ast *length;
     }Varval;
 
     typedef struct flow { /*Estrutura de um desvio (if/else/while)*/
@@ -195,8 +187,6 @@
         char s[name_size];
         Ast *v;
         Ast *n;
-        int pos;
-        Ast *indice; /* ponteiro para referenciar o indice(posicao) no Array */
     }Symasgn;
 
     /*Função para criar um nó*/
@@ -335,20 +325,6 @@
         return (Ast *)a;
     }
 
-    /* Funcão que cria um nó para a variavel do tipo Array */
-    Ast * newarray(int nodetype, char nome[50], int tam) {			
-        Varval *a = (Varval*) malloc(sizeof(Varval));
-        if(!a) {
-            printf("out of space");
-            exit(0);
-        }
-        a->nodetype = nodetype;
-        strcpy(a->var,nome);
-        a->size = tam;
-        return (Ast*)a;
-        // a->length = tam;
-    }
-
     /*Função para um nó de atribuição*/
     Ast * newasgn(char s[], Ast *v) { 
         Symasgn *a = (Symasgn*)malloc(sizeof(Symasgn));
@@ -359,21 +335,6 @@
         a->nodetype = '=';
         strcpy(a->s, s); /*Símbolo/variável*/
         a->v = v; /*Valor*/
-        return (Ast *)a;
-    }
-
-    /*Função para um nó de atribuição de um numero a uma posicao do Array*/
-    /*Ex: vet[2] = 10*/
-    Ast * newasgn_a(char s[50], Ast *v, int indice) { 
-	    Symasgn *a = (Symasgn*)malloc(sizeof(Symasgn));
-        if(!a) {
-            printf("out of space");
-        exit(0);
-        }
-        a->nodetype = '=';
-        strcpy(a->s,s);
-        a->v = v; /*Valor*/
-        a->pos = indice; /* recebe o indice para atribuir o valor a esta posicao */
         return (Ast *)a;
     }
 
@@ -388,22 +349,6 @@
         strcpy(a->var, s);
         return (Ast*)a;
         
-    }
-
-    /*Função que recupera a variavel vet[indice===tam] do Array*/
-    Ast *newValorVal_a(char s[], int indice)
-    {
-        Varval *a = (Varval *)malloc(sizeof(Varval));
-        if (!a)
-        {
-            printf("out of space");
-            exit(0);
-        }
-        a->nodetype = 'a';
-        strcpy(a->var, s);
-        a->size = indice;
-
-        return (Ast *)a;
     }
 
     /* Verificar se a variavel existe na lista de variaveis */
@@ -422,8 +367,6 @@
     double eval(Ast *a) { 
         double v;
         char v1[50];
-        double value;
-        /*VARS *aux;*/
 
         if(!a) {
             printf("internal error, null eval\n");
@@ -463,46 +406,6 @@
                     v = aux->v;
                 }
                 break;
-            case 'a':; /* vet [10] = 20 */
-                VARST * xct = (VARST*)malloc(sizeof(VARST));
-                xct = srcht(tvar, ((Varval *)a->l)->var);
-                v = aux->vet[((Varval *)a)->size];
-
-                aux1 = srch(l1, ((Varval *)a)->var);
-                v = aux1->vet[(Varval *a)->size];
-                break;
-            // ----------------------------------------------------------------- // 
-            case 'p':
-                value = eval(a->l); /*Recupera um valor STRING*/
-                printf("%.2lf", value);
-                break;    
-
-            case 'v':; /* buscar a variavel STRING no Array */
-                aux = srch(rvar, ((Varval*)a)->var);
-                value = eval(((Varval *)a)->length);
-                v = aux->vet[(int)value];
-                break;
-    
-            case 'V':; /* vetor */
-                rvar = ins(rvar,((Varval*)a)->var);
-				break;
-
-            case 'A':;	/* vetor */
-                VARST * xct = (VARST*)malloc(sizeof(VARST));
-                xct = srcht(tvar, ((Varval*)a)->var);
-				// rvar = ins_a(rvar,((Varval*)a)->var,((Varval*)a)->size);
-                if (aux == NULL)
-                {
-                    // value = eval(((Varval *)a)->length);
-                    tvar = ins_a(tvar, ((Varval *)a)->var, ((Varval*)a)->size);
-                }
-                else
-                {
-                    printf("Redeclaração de variável: %s\n", ((Varval *)a)->var);
-                    exit(0);
-                }
-                break;
-            // ----------------------------------------------------------------- //
             case '+': v = eval(a->l) + eval(a->r); break;	/*Operações "árv esq   +   árv dir"*/
             case '-': v = eval(a->l) - eval(a->r); break;	/*Operações de subtração */
             case '*': v = eval(a->l) * eval(a->r); break;	/*Operações de multiplicação */
@@ -541,11 +444,9 @@
                     if(!xi){
                         printf("Erro 'atribuir valor'. Var '%s' nao declarada.\n", ((Symasgn *)a)->s);
                     } else
-                        xi->v = (int)v; /*Atribui à variável do tipo */
-                } else {
-                        x->v = v; /*Atribui à variável*/
-                    }
-                }
+                        xi->v = (int)v; /*Atribui à variável*/
+                } else
+                    x->v = v;   /*Atribui à variável*/
                 break;
 
             /* caso if ou if/else */
@@ -767,9 +668,11 @@
                 }else
                     printf("Erro de redeclaracao: variavel '%s' ja existe.\n",((Symasgn *)a)->s);
                 break;
+            /* Case referente a criacao da funcao */    
             case 'y':; 
-                if(a->l) eval(a->l)
-                printf('Entrou no case Y');
+                if(a->l) {
+                    eval(a->l);
+                }
                 break;
             case 'z':;
                 printf("Fim do programa\n");
@@ -793,15 +696,16 @@
     char texto[50];
     double real;
     int inteiro;
-    int fn; /* operadores lógicos */
+    int fn;
     Ast *ast;
 }
 
 // Declaração dos tokens - Nos terminais 
 %token <real> NUM_REAL 
 %token <inteiro> NUM_INT
-%token <texto> VARIAVEL
-%token <texto> STRING FUNC
+%token <texto> VARIAVEL 
+%token <texto> FUNC
+%token <texto> STRING
 %token <texto> PLUS LESS
 %token <inteiro> TIPO_REAL TIPO_INT TIPO_TEXT 
 %token IF ELSE WHILE FOR 
@@ -810,10 +714,10 @@
 %token LEITURA
 %token ESCREVER
 %token <texto> COMENTARIO
-%token <fn> CMP /* operadores lógicos */
+%token <fn> CMP
 
 // Declaração dos nos não-terminais
-%type <ast> list begin expre valor prog stm stm1 escrever var declmult declmult2
+%type <ast> list begin expre valor prog stm stm2 escrever ternario var declmult declmult2
 
 // Declaração de precedência dos operadores
 %left CMP
@@ -827,7 +731,7 @@
 
 // O '|' e 'UNIMUS' não tem associatividade, ou seja, left ou right e estão na mais alta precedência
 // O %nonassoc define a ordem de precedência do mais BAIXO para o mais ALTO
-%nonassoc IFX VARPREC DECLPREC NEG VET
+%nonassoc IFX NEG 
 
 
 //%Iniciando as regras do analisador sintático
@@ -845,28 +749,27 @@ prog: stm {eval($1);}
 stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | IF '(' expre ')' '{' list '}' ELSE '{' list '}' {$$ = newflow('I', $3, $6, $10);} 
     | WHILE '(' expre ')' '{' list '}' {$$ = newflow('W', $3, $6, NULL);}
-    | VARIAVEL '=' expre %prec VARPREC {$$ = newasgn($1, $3);} // declaração e atribuição de variavel
+    | VARIAVEL '=' expre {$$ = newasgn($1, $3);} // declaração e atribuição de variavel
     | VARIAVEL '=' STRING {$$ = newasgn($1, newtexto($3));} // declaração e atribuição de variavel
     | declmult { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - numero
     | declmult2 { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - texto
     | ESCREVER '(' escrever ')' {$$ = $3;} // derivacao para escrever
     | LEITURA '(' VARIAVEL ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
     | FOR var ';' expre ';' var '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
-    | expre '?' stm1 ':' stm1 ';' {$$ = newflow('?', $1, $3, $5);} // operador ternario
+    | ternario { $$ = $1; } // derivacao para o ternario 
     | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
     | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
     | COMENTARIO {$$ = newast('P', NULL, NULL);}
+    | TIPO_INT FUNC VARIAVEL '(' ')' '{' list '}'{ $$ = newast('y', $7, NULL); }
     ;
-//| TIPO_INT FUNC VARIAVEL '(' ')' { expre } { $$ = newast('y', $6, NULL); }
-//| TIPO_REAL FUNC VARIAVEL '(' ')' { expre } { $$ = newast('y', $6, NULL); }
-//| TIPO_REAL VARIAVEL '[' expre ']'{ $$ = newarray('a',$2,$4);} /* Array */
-//| VARIAVEL '['NUM_REAL']' '=' expre {$$ = newasgn_a($1,$6,$3);}
 
 // no nao-terminal exclusivo para stm2
-stm1: ESCREVER '(' STRING ')' {$$ = newast('P', newtexto($3), NULL);} 
-    | ESCREVER '(' expre ')' {$$ = newast('P', $3, NULL);}
-    | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
-    | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
+ternario: expre '?' stm2 ':' stm2 ';' {$$ = newflow('?', $1, $3, $5);} // operador ternario
+    ;
+
+stm2: VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
+    | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento
+    | expre { $$ = $1 ;}
     ;
 
 // declaracao de multiplas variaveis do tipo numero inteiro ou float
@@ -923,16 +826,13 @@ expre:
     } 
     | expre '^' expre {
         $$ = newast('^',$1,$3);
+    }
+    | expre CMP expre { /* Testes condicionais */
+        $$ = newcmp($2,$1,$3);
     } 
     | '-' expre %prec NEG {
         $$ = newast('M',$2,NULL); 
     }
-    | expre CMP expre { /* Testes condicionais */
-        $$ = newcmp($2,$1,$3);
-    }
-    | VARIAVEL '[' expre ']' {
-        $$ = newValorVal_a($1, $3);
-    } 
     | valor { 
         $$ = $1; 
     }

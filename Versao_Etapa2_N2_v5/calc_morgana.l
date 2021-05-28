@@ -61,6 +61,9 @@ INVALIDO .
 {LESS} {
     return LESS;
 }
+{FUNC} {
+    return FUNC;
+}
  /* CARACTERES ARITMETICOS SIMPLES */
 [-+/|*=^:;,(){}] {
     return *yytext;
