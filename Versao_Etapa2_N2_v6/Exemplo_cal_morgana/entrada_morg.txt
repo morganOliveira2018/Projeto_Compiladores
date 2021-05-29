@@ -1,19 +1,25 @@
 
 Inicio
 
-  inteiro function teste() {
-      escreva("qualquer coisa")
-      inteiro m = 3, n = 5, soma = m + n
-      escreva("A soma de m e n:", soma) 
-  }
+  inteiro vet1|5|
+  texto vet2|5|
+  real vet3|5|
+  inteiro k = 1, l = 2
+  
+  vet1|0| = k + l
+  vet2|1| = "Marcos"
+  vet3|2| = 2.5
 
+  escreva("O vet1|0| = ", vet1|0|)
+  escreva("O vet2|1| = ", vet2|1|)
+  
   inteiro a = 3
   real b = 10.5, c = 30.5, area = a * b * c
   leitura(a)
   texto autor = "morgana", autor2 = "marcos"
   escreva("O valor de a = ", a) @@ escreva o valor da variavel a
   escreva("b :", b," & "," c :", c) @@ escreva o valor da variavel b e c
-  escreva("O valor da area:", area) 
+  escreva("O valor da area:", area)
 
   IF(a > b){ 
     while(a*a>b){  
@@ -22,6 +28,7 @@ Inicio
     }
   }ELSE{
     escreva("B")
+    escreva("O vet3|2| = ", vet3|2|)
   }
 
   inteiro x 
@@ -37,5 +44,11 @@ Inicio
   
   escreva("autor:", autor)
   escreva("autor2:", autor2)
+
+  void function teste() {
+    escreva("=========================")
+    inteiro m = 3, n = 5, soma = m + n
+    escreva("A soma de m e n: ", soma) }
+  teste()
 
 Fim do programa

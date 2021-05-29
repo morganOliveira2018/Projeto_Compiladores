@@ -51,6 +51,10 @@ INVALIDO .
     yylval.inteiro = 't';
     return TIPO_TEXT;
 }
+"void" {
+    yylval.inteiro = 'v';
+    return VOID;
+}
 {COMENTARIO} {
     strcpy(yylval.texto, yytext);
     return COMENTARIO;

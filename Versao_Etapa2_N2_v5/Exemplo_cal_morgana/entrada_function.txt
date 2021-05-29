@@ -1,0 +1,12 @@
+
+Inicio
+
+  void function teste() {
+    escreva("=========================")
+    inteiro m = 3, n = 5, soma = m + n
+    escreva("A soma de m e n:", soma) 
+  }
+  
+  teste()
+
+Fim do programa

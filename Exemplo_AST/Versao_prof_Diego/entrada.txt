@@ -1,0 +1,25 @@
+a = 20
+b = 40
+c = 8
+
+	IF(a > b){
+		IF (a > c){
+			PRINT(a)
+		}ELSE{
+			PRINT(c)
+		}
+	}
+	ELSE{
+		IF(b > c){
+			PRINT(b)
+		}ELSE{
+			PRINT(c)
+		}
+	}
+		WHILE(c < b){
+			c = c + 2
+			PRINT(c)
+		}
+		
+FIM
+

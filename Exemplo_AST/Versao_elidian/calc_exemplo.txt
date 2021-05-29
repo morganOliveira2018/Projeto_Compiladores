@@ -1,0 +1,10 @@
+in
+
+  real a 
+  a = 3
+  real b = 7.5
+  texto c = "elidian"
+  >> c
+  >> a * b > b 
+
+ni

@@ -18,14 +18,14 @@
     #define name_size 50
     #define string_size 1000
 
-    typedef struct variavels {
+    /*typedef struct variavels {
 		char name[name_size];
         int type; 
         char tv[string_size];
         int iv;
         double rv;
 		struct variavels * prox;
-	} VARIAVELS;
+	} VARIAVELS;*/
 
     // Construção de uma struct para receber o nome e o valor para cada variavel do tipo real
     typedef struct vars {
@@ -33,6 +33,99 @@
 		float v;
 		struct vars * prox;
 	} VARS;
+
+    // Construção de uma struct para receber o nome e o valor para cada variavel do tipo inteiro
+    typedef struct varsi {
+		char name[name_size];
+		int v;
+		struct varsi * prox;
+	} VARSI;
+
+    // Construção de uma struct para receber o nome e o valor para cada variavel do tipo string
+    typedef struct VARST {
+		char name[name_size];
+		char v[string_size];
+		struct VARST * prox;
+	} VARST;
+
+    typedef struct varfunction {
+        int nodetype;
+		char name[name_size];
+        double v;
+		struct varfunction * prox;
+	} Varfunction;
+
+    /* Estrutura para funcao */
+    typedef struct function {
+        int nodetype;
+		char name[name_size];
+        struct varfunction *var;
+        /* Ast *args; */
+        /* Ast *v; */
+		struct function * prox;
+	} Function;
+
+    typedef struct func {
+        int nodetype;
+        int type;
+		char name[name_size];
+        /* Ast *args; */
+        /* Ast *v; */
+	} Func;
+
+    /* O nodetype serve para indicar o tipo de nó que está na árvore. Isso serve para a função eval entender o que realizar naquele no */
+    typedef struct ast { /*Estrutura de um nó*/
+        int nodetype;
+        struct ast *l; /*Esquerda*/
+        struct ast *r; /*Direita*/
+    }Ast; 
+
+    typedef struct intval { /*Estrutura de um número*/
+        int nodetype;
+        int v;
+    }Intval;
+
+    typedef struct realval { /* Estrutura de um número */
+        int nodetype;
+        double v;
+    }Realval;
+
+    typedef struct textoval { /*Estrutura de um número*/
+        int nodetype;
+        char v[string_size];
+    }Textoval;
+
+    /*Estrutura de um nome de variável, nesse exemplo uma variável é um número no vetor var[26]*/
+    typedef struct varval { 
+        int nodetype;
+        char var[name_size];
+    }Varval;
+
+    typedef struct listavar {
+        char name[name_size];
+        VARS *rvar; // real
+        VARSI *ivar; // inteiro
+        VARST *tvar; // texto
+        /* Veci * ivec; */
+        Function *function;
+        struct listavar * prox;
+    }Listavar;
+
+    /*Estrutura de um desvio (if/else/while)*/
+    typedef struct flow { 
+	    int nodetype;
+	    Ast *cond;		/*condição*/
+	    Ast *tl;		/*then, ou seja, verdade*/
+	    Ast *el;		/*else*/
+    }Flow;
+
+    /*Estrutura para um nó de atribuição. Para atrubuir o valor de v em s*/
+    typedef struct symasgn { 
+        int nodetype;
+        char s[name_size];
+        Ast *v;
+        Ast *n;
+    }Symasgn;    
 
     // Adicionar nova variavel do tipo real na lista
     VARS * ins(VARS *l, char n[]){
@@ -73,13 +166,6 @@
         return true;
     }
 
-    // Construção de uma struct para receber o nome e o valor para cada variavel do tipo string
-    typedef struct VARST {
-		char name[name_size];
-		char v[string_size];
-		struct VARST * prox;
-	} VARST;
-
     // Adicionar nova variável do tipo string na lista 
     VARST * inst(VARST *l, char n[]){
 		VARST *new =(VARST*)malloc(sizeof(VARST));
@@ -88,6 +174,56 @@
 		new->prox = l;
 		return new;
 	}
+
+    // Adiciona nova variável na lista do tipo function
+    // Function * insfunction(Function *l, Func *fun){
+	// 	Function *aux =(Function*)malloc(sizeof(Function));
+	// 	if(!aux) {
+    //         printf("out of space in insfuntion()\n");
+    //         exit(1);
+    //     }
+    //     aux->nodetype = fun->type;
+    //     strcpy(aux->name, fun->name);
+    //     aux->var = NULL;
+    //     aux->args = fun->args;
+    //     aux->v = fun->v;
+	// 	aux->prox = l;
+	// 	return aux;
+	// }
+
+    // Busca uma variável na lista de variáveis na Function
+    // Function *srchfunction(Function *l, char n[]){
+	// 	Function *aux = l;
+    //     //printf("open srchfuntion\n");
+	// 	while(aux != NULL){
+	// 		if(strcmp(n,aux->name)==0){
+	// 			return aux;
+	// 		}
+	// 		aux = aux->prox;
+	// 	}
+    //     //printf("function NULL\n");
+	// 	return aux;
+	// }
+
+    /*Verificar se tem uma funcao na lista de funcoes*/
+    // Function *srchfunctionall(Listavar *auxl, char n[]){
+    //     Function *auxf;
+    //     while(auxl != NULL){
+    //         auxf = auxl->function;
+    //         //printf("open srchfuntion\n");
+    //         while(auxf != NULL){
+    //             if(auxf->name)
+    //                 //printf("auxf->name = %s\n", auxf->name);
+    //             if(strcmp(n, auxf->name)==0){
+    //                 return auxf;
+    //             }
+    //             auxf = auxf->prox;
+    //         }
+    //         auxl = auxl->prox;
+    //     }
+    //     //printf("function NULL\n");
+	// 	return auxf;
+	// }
 
     // Busca uma nova variável do tipo string na lista de variáveis
     VARST *srcht(VARST *l, char n[]){
@@ -100,13 +236,6 @@
 		}
 		return aux;
 	}
-
-    // Construção de uma struct para receber o nome e o valor para cada variavel do tipo inteiro
-    typedef struct varsi {
-		char name[name_size];
-		int v;
-		struct varsi * prox;
-	} VARSI;
 
     // Adicionar nova variavel inteiro na lista de variáveis inteiro
     VARSI * insi(VARSI *l, char n[]){
@@ -143,51 +272,16 @@
         return true;
     }
 
-	VARS *rvar = NULL;
-    VARSI *ivar = NULL;
-    VARST *tvar = NULL;
+	/* VARS *rvar = NULL;*/
+    /* VARSI *ivar = NULL; */
+    /* VARST *tvar = NULL; */
 
-    /* O nodetype serve para indicar o tipo de nó que está na árvore. Isso serve para a função eval entender o que realizar naquele no */
-    typedef struct ast { /*Estrutura de um nó*/
-        int nodetype;
-        struct ast *l; /*Esquerda*/
-        struct ast *r; /*Direita*/
-    }Ast; 
-
-    typedef struct intval { /*Estrutura de um número*/
-        int nodetype;
-        int v;
-    }Intval;
-
-    typedef struct realval { /* Estrutura de um número */
-        int nodetype;
-        double v;
-    }Realval;
-
-    typedef struct textoval { /*Estrutura de um número*/
-        int nodetype;
-        char v[string_size];
-    }Textoval;
-
-    typedef struct varval { /*Estrutura de um nome de variável, nesse exemplo uma variável é um número no vetor var[26]*/
-        int nodetype;
-        char var[name_size];
-    }Varval;
-
-    typedef struct flow { /*Estrutura de um desvio (if/else/while)*/
-	    int nodetype;
-	    Ast *cond;		/*condição*/
-	    Ast *tl;		/*then, ou seja, verdade*/
-	    Ast *el;		/*else*/
-    }Flow;
-
-    /*Estrutura para um nó de atribuição. Para atrubuir o valor de v em s*/
-    typedef struct symasgn { 
-        int nodetype;
-        char s[name_size];
-        Ast *v;
-        Ast *n;
-    }Symasgn;
+    /*Estrutura para um nó de funcao.*/
+    /*typedef struct listvar {
+    //   char name[name_size];
+    //   /* Veci *ivec; vetor */
+    //   Function *function;
+    //   struct listavar *prox;} Listavar; 
 
     /*Função para criar um nó*/
     Ast * newast(int nodetype, Ast *l, Ast *r){ 
@@ -201,6 +295,35 @@
 	    a->l = l;
 	    a->r = r;
 	    return a;
+    }
+
+    // Busca uma variável na lista de variáveis na funcao
+    Function *srchfunction(Function *l, char n[]){
+		Function *aux = l;
+        //printf("open srchfuntion\n");
+		while(aux != NULL){
+			if(strcmp(n,aux->name)==0){
+				return aux;
+			}
+			aux = aux->prox;
+		}
+        //printf("function NULL\n");
+		return aux;
+	}
+
+    /*Função para criar um nó para salvar a funcao na lista de funcoes*/
+    Ast * newfunction(int type, char n[], Ast *a, Ast *fun){
+        Func *aux = (Func*)malloc(sizeof(Func));
+        if(!aux){
+            printf("out of space in newfuntion()");
+            exit(1);
+        }
+        aux->nodetype = 'f';
+        aux->type = type;
+        strcpy(aux->name, n);
+        /* aux->args = a;*/
+        /*aux->v = fun;*/
+        return (Ast*)aux;
     }
 
     /*Função para criar um nó para operador iterator*/
@@ -338,7 +461,7 @@
         return (Ast *)a;
     }
 
-    /*Função que recupera o nome/referência de uma variável, neste caso o número*/
+    /*Função que recupera o nome/referência de uma variável - inteiro, real e texto*/
     Ast * newValorVal(char s[]) { 
         Varval *a = (Varval*) malloc(sizeof(Varval));
         if(!a) {
@@ -351,26 +474,79 @@
         
     }
 
-    /* Verificar se a variavel existe na lista de variaveis */
-    bool varexiste(char v[]) {
-        VARS* xr = srch(rvar, v);
-        VARSI* xi = srchi(ivar, v);
-        VARST* xt = srcht(tvar, v);
+    Listavar * lista = NULL;
 
-    if(!xr && !xi && !xt) 
-        return false; // se tudo NULL, var nao existe
+    /* Verificar se a variavel existe na lista de variaveis */
+    bool varexiste(Listavar *l, char v[]) {
+        VARS* xr = (VARS*)malloc(sizeof(VARS));
+        VARSI* xi = (VARSI*)malloc(sizeof(VARSI));
+        VARST* xt = (VARST*)malloc(sizeof(VARST));
+    /* if(!xr && !xi && !xt) 
+        return false; // se tudo NULL, variavel nao existe
     else
-        return true;  // se tudo for TRUE, var existe
+        return true;  // se tudo for TRUE, variavel existe} */
+    while(l!=NULL){
+            xr = srch(l->rvar, v);
+            if(l->ivar==NULL)
+                xi = srchi(l->ivar, v);
+            xt = srcht(l->tvar, v);
+            //Veci* vi = srchveci(lista->ivec, v);
+
+            if (xr) {
+                printf("varexiste 1\n");
+                return true; // se tudo NULL, var nao existe
+            }
+            if (xi) {
+                printf("varexiste 2\n");
+                return true; // se tudo NULL, var nao existe
+            }
+            if (xt) {
+                printf("varexiste 3\n");
+                return true; // se tudo NULL, var nao existe
+            }
+            break;
+        }
+        //printf("varexiste end 4\n");
+        return false; // se tudo NULL, var nao existe
     }
 
     /*Função que executa operações a partir de um nó*/
     double eval(Ast *a) { 
-        double v;
+        double v = 0;
         char v1[50];
 
         if(!a) {
             printf("internal error, null eval\n");
             return 0.0;
+        }
+        if(!a) {
+            printf("internal error, null eval\n");
+            return 0.0;
+        }
+        VARS * auxr = (VARS*)malloc(sizeof(VARS));
+        if(!auxr) {
+            printf("out of space (eval 'auxr')");
+            exit(1);
+        }
+        VARSI * auxi = (VARSI*)malloc(sizeof(VARSI));
+        if(!auxi) {
+            printf("out of space (eval 'auxi')");
+            exit(1);
+        }
+        VARST * auxt = (VARST*)malloc(sizeof(VARST));
+        if(!auxt) {
+            printf("out of space (eval 'auxt')");
+            exit(1);
+        }
+        Function * auxf = (Function*)malloc(sizeof(Function));
+        if(!auxf) {
+            printf("out of space (eval 'auxf')");
+            exit(1);
+        }
+        Listavar * auxl = (Listavar*)malloc(sizeof(Listavar));
+        if(!auxl) {
+            printf("out of space (eval 'auxl')");
+            exit(1);
         }
         //printf("nodetype: %c\n", a->nodetype);
         switch(a->nodetype) {
@@ -378,34 +554,42 @@
             case 'K': v = ((Realval *)a)->v; break; 	/*Recupera um número real*/
             case 'm': v = atof(((Textoval *)a)->v); break; 	/*Recupera um número real dentro de string*/
             case 'N':; /*  Verificar se foi realizado a declaracao da variavel corretamente */
-                VARS * aux = (VARS*)malloc(sizeof(VARS));
-                aux = srch(rvar, ((Varval*)a)->var);
-                if (!aux){
-                    VARSI * aux2 = (VARSI*)malloc(sizeof(VARSI));
-                    aux2 = srchi(ivar, ((Varval*)a)->var);
-                    if (!aux2){
-                        VARST * aux3 = (VARST*)malloc(sizeof(VARST));
-                        if(!aux3){
-                                printf("out of space");
-                                exit(0);
+                auxl = lista;
+                if(auxl==NULL){
+                    printf ("\nErro (case 'N') - Lista Null. Variavel '%s' nao foi declarada.\n", ((Varval*)a)->var);
+                    v = 0.0;
+                    break;
+                }
+                while(auxl!=NULL){
+                    auxr = srch(auxl->rvar, ((Varval*)a)->var);
+                if (auxr==NULL){
+                        auxi = srchi(auxl->ivar, ((Varval*)a)->var);
+                        if (!auxi){
+                            auxt = srcht(auxl->tvar, ((Varval*)a)->var);
+                            if (!auxt){
+                                if(auxl->prox==NULL){
+                                    printf ("Erro (case 'N') - Variavel '%s' nao foi declarada.\n", ((Varval*)a)->var);
+                                    v = 0.0;
+                                    break;
+                                }
+                            } else {
+                                v = atof(auxt->v);
+                                break;
                             }
-                        aux3 = srcht(tvar, ((Varval*)a)->var);
-                        if (!aux3){
-                            printf ("Erro 'sem valor'. Variavel '%s' nao foi declarada.\n", ((Varval*)a)->var);
-                            v = 0.0;
-                        }
-                        else{
-                            v = atof(aux3->v);
+                        } else {
+                            v = (double)auxi->v;
+                            break;
                         }
                     }
                     else{
-                        v = (double)aux2->v;
+                        v = auxr->v;
+                        break;
                     }
+                    auxl = auxl->prox;
                 }
-                else{
-                    v = aux->v;
-                }
+                //printf("case N end\n");
                 break;
+                
             case '+': v = eval(a->l) + eval(a->r); break;	/*Operações "árv esq   +   árv dir"*/
             case '-': v = eval(a->l) - eval(a->r); break;	/*Operações de subtração */
             case '*': v = eval(a->l) * eval(a->r); break;	/*Operações de multiplicação */
@@ -668,11 +852,22 @@
                 }else
                     printf("Erro de redeclaracao: variavel '%s' ja existe.\n",((Symasgn *)a)->s);
                 break;
-            /* Case referente a criacao da funcao */    
-            case 'y':; 
-                if(a->l) {
-                    eval(a->l);
+            /* Case referente a execucao da funcao */    
+            /* case 'a':; 
+                if(a->l) { 
+                   eval(a->l); 
                 }
+                break;
+            */
+            /* Case para adicionar uma funcao em uma lista de funcoes */
+            case 'f':;
+                //printf("func %s\n", ((Func*)a)->name);
+                
+                if(srchfunction(lista->function, ((Func*)a)->name)==NULL){
+                    lista->function = insfunction(lista->function, ((Func*)a));
+                } else
+                    printf("\nErro (case 'B'): reescrita de funcao nao permitida\n");
+                //printf("Function %s\n", ((Func*)a)->name);
                 break;
             case 'z':;
                 printf("Fim do programa\n");
@@ -702,12 +897,12 @@
 
 // Declaração dos tokens - Nos terminais 
 %token <real> NUM_REAL 
-%token <inteiro> NUM_INT
+%token <inteiro> NUM_INT 
 %token <texto> VARIAVEL 
 %token <texto> FUNC
 %token <texto> STRING
 %token <texto> PLUS LESS
-%token <inteiro> TIPO_REAL TIPO_INT TIPO_TEXT 
+%token <inteiro> TIPO_REAL TIPO_INT TIPO_TEXT VOID
 %token IF ELSE WHILE FOR 
 %token INICIO FINAL 
 %token RAIZ
@@ -717,35 +912,35 @@
 %token <fn> CMP
 
 // Declaração dos nos não-terminais
-%type <ast> list begin expre valor prog stm stm2 escrever ternario var declmult declmult2
+%type <ast> list begin expre valor prog stm stm2 escrever 
+%type <ast> ternario var declmult declmult2 declfunction outfunc
 
 // Declaração de precedência dos operadores
-%left CMP
+%right '=' // erro do 4 shift/reduce
 %left '+' '-'
 %left '*' '/' 
 %right '^'
 %right PLUS LESS
+%left CMP
 %left ')'
 %right '('
 
-
 // O '|' e 'UNIMUS' não tem associatividade, ou seja, left ou right e estão na mais alta precedência
 // O %nonassoc define a ordem de precedência do mais BAIXO para o mais ALTO
-%nonassoc IFX NEG 
-
+%nonassoc IFX NEG FUN
 
 //%Iniciando as regras do analisador sintático
 %%
-// inicio do programa
+// Inicio do programa
 begin: INICIO prog FINAL {eval(newast('z', NULL, NULL));} 
      ;
 
-// inicia e execucao da arvore de derivacao
+// Inicia e execucao da arvore de derivacao
 prog: stm {eval($1);}  
 	| prog stm {eval($2);} 
 	;
 
-// variacoes dos codigos dessa linguagem
+// Variacoes dos codigos dessa linguagem
 stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | IF '(' expre ')' '{' list '}' ELSE '{' list '}' {$$ = newflow('I', $3, $6, $10);} 
     | WHILE '(' expre ')' '{' list '}' {$$ = newflow('W', $3, $6, NULL);}
@@ -753,6 +948,7 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | VARIAVEL '=' STRING {$$ = newasgn($1, newtexto($3));} // declaração e atribuição de variavel
     | declmult { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - numero
     | declmult2 { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - texto
+    | declfunction { $$ = $1; } // derivacao para declaracao de variaveis na Funcao
     | ESCREVER '(' escrever ')' {$$ = $3;} // derivacao para escrever
     | LEITURA '(' VARIAVEL ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
     | FOR var ';' expre ';' var '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
@@ -760,17 +956,28 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
     | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
     | COMENTARIO {$$ = newast('P', NULL, NULL);}
-    | TIPO_INT FUNC VARIAVEL '(' ')' '{' list '}'{ $$ = newast('y', $7, NULL); }
+    | outfunc { $$ = $1; }
     ;
 
-// no nao-terminal exclusivo para stm2
+// No nao-terminal para chamada do ternario
 ternario: expre '?' stm2 ':' stm2 ';' {$$ = newflow('?', $1, $3, $5);} // operador ternario
     ;
 
+// No nao-terminal exclusivo para execucao do ternario
 stm2: VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
     | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento
     | expre { $$ = $1 ;}
     ;
+
+// | TIPO_REAL FUNC VARIAVEL '(' ')' '{' list '}' %prec FUN { 
+// $$ = newfunction($1, $3, NULL, $7);} 
+// | TIPO_TEXT FUNC VARIAVEL '(' ')' '{' list '}' %prec FUN { 
+// $$ = newfunction($1, $3, NULL, $7);} 
+// | VOID FUNC VARIAVEL '(' ')' '{' list '}' %prec FUN { 
+// $$ = newfunction($1, $3, NULL, $7);};
+
+// Chamada da funcao em uma lista de funcoes 
+outfunc: VARIAVEL '(' ')' %prec FUN {$$ = newast('a', newtexto($1), NULL);}; 
 
 // declaracao de multiplas variaveis do tipo numero inteiro ou float
 declmult:  declmult ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);} 
@@ -788,25 +995,28 @@ declmult2: declmult2 ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);}
     | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4), NULL);} // declaracao de String e a atribuicao
     ;
 
-// nó nao-terminal para escrever variaveis de tipos distintos
+// Salvar a declaracao da estrutura da funcao
+declfunction: VOID FUNC VARIAVEL '(' ')' '{' list '}' %prec FUN { $$ = newfunction($1, $3, NULL, $7);}
+    ;
+
+// No nao-terminal para escrever variaveis de tipos distintos
 escrever: expre {$$ = newast('P', $1, NULL);}
     | expre ',' escrever {$$ = newast('P', $1, $3);}
     | STRING {$$ = newast('P', newtexto($1), NULL);} 
     | STRING ',' escrever {$$ = newast('P', newtexto($1), $3);}
     ;
 
-// estrutura para multiplas linhas de codigo para estruturas de decisão/loop
+// Estrutura para multiplas linhas de codigo para estruturas de decisão/loop
 list: stm {$$ = $1;}
     | list stm { $$ = newast('L', $1, $2);}
     ;
 
-// usado no FOR - 1º - Valor inicial e 3º - Valor incremento ou decrementado
+// Usado no FOR - 1º - Valor inicial e 3º - Valor incremento ou decrementado
 var:  VARIAVEL '=' expre {$$ = newasgn($1, $3);}
     ;
 
 // expreções matematicas e comparação
-expre:
-    RAIZ '(' expre ')' { 
+expre: RAIZ '(' expre ')' { 
         {$$ = newast('R',$3,NULL);}
     }
     | expre '+' expre {
@@ -851,7 +1061,7 @@ valor: NUM_INT { $$ = newint($1);}
 #include "lex.yy.c"
 
 int main(){
-    yyin=fopen("entrada_morg.txt", "r");
+    yyin=fopen("entrada_function.txt", "r");
     
     yyparse();
     yylex();
