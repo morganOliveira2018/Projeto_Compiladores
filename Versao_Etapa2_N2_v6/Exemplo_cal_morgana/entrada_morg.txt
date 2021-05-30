@@ -1,17 +1,17 @@
 
 Inicio
 
-  inteiro vet1|5|
-  texto vet2|5|
-  real vet3|5|
+  inteiro vet1[5]
+  texto vet2[5]
+  real vet3[5]
   inteiro k = 1, l = 2
   
-  vet1|0| = k + l
-  vet2|1| = "Marcos"
-  vet3|2| = 2.5
+  vet1[0] = k + l
+  vet2[1] = "Marcos"
+  vet3[2] = 2.5
 
-  escreva("O vet1|0| = ", vet1|0|)
-  escreva("O vet2|1| = ", vet2|1|)
+  escreva("O vet1|0| = ", vet1[0])
+  escreva("O vet2|1| = ", vet2[1])
   
   inteiro a = 3
   real b = 10.5, c = 30.5, area = a * b * c
@@ -28,7 +28,7 @@ Inicio
     }
   }ELSE{
     escreva("B")
-    escreva("O vet3|2| = ", vet3|2|)
+    escreva("O vet3|2| = ", vet3[2])
   }
 
   inteiro x 

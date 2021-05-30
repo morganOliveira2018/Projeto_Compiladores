@@ -69,7 +69,7 @@ INVALIDO .
     return FUNC;
 }
  /* CARACTERES ARITMETICOS SIMPLES */
-[-+/|*=^:;,(){}] {
+[-+/|*=^:;,\[\](){}] {
     return *yytext;
 }
 {LEITURA} {

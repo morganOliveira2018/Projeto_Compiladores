@@ -918,8 +918,8 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | WHILE '(' expre ')' '{' list '}' {$$ = newflow('W', $3, $6, NULL);}
     | VARIAVEL '=' expre {$$ = newasgn($1, $3);} // declaração e atribuição de variavel
     | VARIAVEL '=' STRING {$$ = newasgn($1, newtexto($3));} // declaração e atribuição de variavel
-    | VARIAVEL '|'NUM_INT'|' '=' expre {$$ = newasgn_a($1, $6, $3);} //atribuição de array
-    | VARIAVEL '|'NUM_INT'|' '=' STRING {$$ = newasgn_a($1, newtexto($6), $3);} //atribuição de array
+    | VARIAVEL '['NUM_INT']' '=' expre {$$ = newasgn_a($1, $6, $3);} //atribuição de array
+    | VARIAVEL '['NUM_INT']' '=' STRING {$$ = newasgn_a($1, newtexto($6), $3);} //atribuição de array
     | declmult { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - numero
     | declmult2 { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - texto
     | ESCREVER '(' escrever ')' {$$ = $3;} // derivacao para escrever
@@ -952,8 +952,8 @@ declmult:  declmult ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);}
     | TIPO_INT VARIAVEL '=' expre {$$ = newvar($1, $2, $4, NULL);} // declaracao de int e atrib
     | TIPO_REAL VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} // declaracao do real
     | TIPO_REAL VARIAVEL '=' expre {$$ = newvar($1, $2, $4, NULL);} // declaracao do real e atrib
-    | TIPO_INT VARIAVEL '|' NUM_INT '|' { $$ = newarray('A',$2, $4);} // declaracao de array int
-    | TIPO_REAL VARIAVEL '|' NUM_INT '|' { $$ = newarray('B',$2, $4);} // declaracao de array real
+    | TIPO_INT VARIAVEL '[' NUM_INT ']' { $$ = newarray('A',$2, $4);} // declaracao de array int
+    | TIPO_REAL VARIAVEL '[' NUM_INT ']' { $$ = newarray('B',$2, $4);} // declaracao de array real
     ;
 
 // declaracao de multiplas variaveis do tipo texto
@@ -961,7 +961,7 @@ declmult2: declmult2 ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);}
     | declmult2 ',' VARIAVEL '=' STRING {$$ = newvar($1->nodetype, $3, newtexto($5), $1);} 
     | TIPO_TEXT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} 
     | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4), NULL);} // declaracao de String e a atribuicao
-    | TIPO_TEXT VARIAVEL '|'NUM_INT'|' { $$ = newarray('C',$2, $4);} // declaracao de array texto
+    | TIPO_TEXT VARIAVEL '[' NUM_INT ']' { $$ = newarray('C',$2, $4);} // declaracao de array texto
     ;    
 
 // nó nao-terminal para escrever variaveis de tipos distintos
@@ -1017,7 +1017,7 @@ expre: RAIZ '(' expre ')' {
 valor: NUM_INT { $$ = newint($1);} 
     | NUM_REAL { $$ = newreal($1);} 
     | VARIAVEL %prec VET { $$ = newValorVal($1); }  /* Funcao da chamada newValorVal retorna um tipo Ast que dps e usado em eval */
-    | VARIAVEL '|'NUM_INT'|' {$$ = newValorVal_a($1,$3);}
+    | VARIAVEL '[' NUM_INT ']' {$$ = newValorVal_a($1,$3);}
     ;
 
 %%
