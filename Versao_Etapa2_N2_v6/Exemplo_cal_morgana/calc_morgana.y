@@ -660,11 +660,13 @@
                 }
                 break;
             }
+            /* O case P é um comando de print geral, mas ele não trabalha pesado,
+            *  o case 'n' ajuda quando precisar imprimir variaveis
+            */
             case 'P': 
                 //printf("P1: %c\nP2: %c\n", a->nodetype, a->l->nodetype);
                 if(a->l==NULL)
                     break;
-                // else
                 //     printf("node %c\n", a->l->nodetype);
                 if(a->l->nodetype == 'E') {
                     v = eval(a->l);
@@ -686,13 +688,16 @@
                     printf ("%.2f", ((Realval*)a->l)->v);		/*Recupera um valor real*/
                 }
                 else if(((Textoval*)a->l)->nodetype == 'm') {
-                    printf ("%s", ((Textoval*)a->l)->v);		/*Recupera um valor texto*/
+                    if(strcmp(((Textoval*)a->l)->v, "\\n")==0)
+                        printf("\n");
+                    else
+                        printf ("%s", ((Textoval*)a->l)->v);		/*Recupera um valor texto*/
                 }
                 if(a->r==NULL){
-                    //printf("a->r null\n");
-                    printf("\n");
+                    /*printf("Quebra linha entra variaveis");*/
+                    printf("\n"); 
                 }else{
-                    //printf("a->r ok\n");
+                    /*printf("a->r ok");*/
                     v = eval(a->r);
                 }
                 break;  
@@ -825,7 +830,13 @@
                 } else if (vxi != NULL) {
                     vxi->vet[((Symasgn *)a)->pos] = (int)v; /*Atribui à variável*/
                 } else if (vxt != NULL) {
-                    vxt->vet[((Symasgn *)a)->pos] = ((Textoval*)((Symasgn*)a)->v)->v; /*Atribui à variável*/
+                    VARST * auxVxt = srcht(tvar, ((Textoval*)((Symasgn*)a)->v)->v);
+                    if (auxVxt != NULL) {
+                        vxt->vet[((Symasgn *)a)->pos] = auxVxt->v;
+                    }
+                    else {
+                        vxt->vet[((Symasgn *)a)->pos] = ((Textoval*)((Symasgn*)a)->v)->v; /*Atribui à variável*/
+                    }
                 } else {
                     printf("Erro 'atribuir valor'. Var '%s' nao declarada.\n", ((Symasgn *)a)->s);
                 }

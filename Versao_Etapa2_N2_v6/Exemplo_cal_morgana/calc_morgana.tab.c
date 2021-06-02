@@ -730,11 +730,13 @@
                 }
                 break;
             }
+            /* O case P é um comando de print geral, mas ele não trabalha pesado,
+            *  o case 'n' ajuda quando precisar imprimir variaveis
+            */
             case 'P': 
                 //printf("P1: %c\nP2: %c\n", a->nodetype, a->l->nodetype);
                 if(a->l==NULL)
                     break;
-                // else
                 //     printf("node %c\n", a->l->nodetype);
                 if(a->l->nodetype == 'E') {
                     v = eval(a->l);
@@ -756,13 +758,16 @@
                     printf ("%.2f", ((Realval*)a->l)->v);		/*Recupera um valor real*/
                 }
                 else if(((Textoval*)a->l)->nodetype == 'm') {
-                    printf ("%s", ((Textoval*)a->l)->v);		/*Recupera um valor texto*/
+                    if(strcmp(((Textoval*)a->l)->v, "\\n")==0)
+                        printf("\n");
+                    else
+                        printf ("%s", ((Textoval*)a->l)->v);		/*Recupera um valor texto*/
                 }
                 if(a->r==NULL){
-                    //printf("a->r null\n");
-                    printf("\n");
+                    /*printf("Quebra linha entra variaveis");*/
+                    printf("\n"); 
                 }else{
-                    //printf("a->r ok\n");
+                    /*printf("a->r ok");*/
                     v = eval(a->r);
                 }
                 break;  
@@ -895,7 +900,13 @@
                 } else if (vxi != NULL) {
                     vxi->vet[((Symasgn *)a)->pos] = (int)v; /*Atribui à variável*/
                 } else if (vxt != NULL) {
-                    vxt->vet[((Symasgn *)a)->pos] = ((Textoval*)((Symasgn*)a)->v)->v; /*Atribui à variável*/
+                    VARST * auxVxt = srcht(tvar, ((Textoval*)((Symasgn*)a)->v)->v);
+                    if (auxVxt != NULL) {
+                        vxt->vet[((Symasgn *)a)->pos] = auxVxt->v;
+                    }
+                    else {
+                        vxt->vet[((Symasgn *)a)->pos] = ((Textoval*)((Symasgn*)a)->v)->v; /*Atribui à variável*/
+                    }
                 } else {
                     printf("Erro 'atribuir valor'. Var '%s' nao declarada.\n", ((Symasgn *)a)->s);
                 }
@@ -926,7 +937,7 @@
     }
 
 
-#line 930 "calc_morgana.tab.c"
+#line 941 "calc_morgana.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -1001,7 +1012,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 860 "calc_morgana.y"
+#line 871 "calc_morgana.y"
 
     char texto[50];
     double real;
@@ -1009,7 +1020,7 @@ union YYSTYPE
     int fn;
     Ast *ast;
 
-#line 1013 "calc_morgana.tab.c"
+#line 1024 "calc_morgana.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -1456,13 +1467,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   907,   907,   911,   912,   916,   917,   918,   919,   920,
-     921,   922,   923,   924,   925,   926,   927,   928,   929,   930,
-     931,   932,   936,   940,   941,   942,   944,   945,   949,   950,
-     951,   952,   953,   954,   955,   956,   960,   961,   962,   963,
-     964,   968,   969,   970,   971,   975,   976,   980,   984,   987,
-     990,   993,   996,   999,  1002,  1005,  1008,  1011,  1017,  1018,
-    1019,  1020
+       0,   918,   918,   922,   923,   927,   928,   929,   930,   931,
+     932,   933,   934,   935,   936,   937,   938,   939,   940,   941,
+     942,   943,   947,   951,   952,   953,   955,   956,   960,   961,
+     962,   963,   964,   965,   966,   967,   971,   972,   973,   974,
+     975,   979,   980,   981,   982,   986,   987,   991,   995,   998,
+    1001,  1004,  1007,  1010,  1013,  1016,  1019,  1022,  1028,  1029,
+    1030,  1031
 };
 #endif
 
@@ -2174,387 +2185,387 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* begin: INICIO prog FINAL  */
-#line 907 "calc_morgana.y"
+#line 918 "calc_morgana.y"
                          {eval(newast('z', NULL, NULL));}
-#line 2180 "calc_morgana.tab.c"
+#line 2191 "calc_morgana.tab.c"
     break;
 
   case 3: /* prog: stm  */
-#line 911 "calc_morgana.y"
+#line 922 "calc_morgana.y"
           {eval((yyvsp[0].ast));}
-#line 2186 "calc_morgana.tab.c"
+#line 2197 "calc_morgana.tab.c"
     break;
 
   case 4: /* prog: prog stm  */
-#line 912 "calc_morgana.y"
+#line 923 "calc_morgana.y"
                    {eval((yyvsp[0].ast));}
-#line 2192 "calc_morgana.tab.c"
+#line 2203 "calc_morgana.tab.c"
     break;
 
   case 5: /* stm: IF '(' expre ')' '{' list '}'  */
-#line 916 "calc_morgana.y"
+#line 927 "calc_morgana.y"
                                               {(yyval.ast) = newflow('I', (yyvsp[-4].ast), (yyvsp[-1].ast), NULL);}
-#line 2198 "calc_morgana.tab.c"
+#line 2209 "calc_morgana.tab.c"
     break;
 
   case 6: /* stm: IF '(' expre ')' '{' list '}' ELSE '{' list '}'  */
-#line 917 "calc_morgana.y"
+#line 928 "calc_morgana.y"
                                                       {(yyval.ast) = newflow('I', (yyvsp[-8].ast), (yyvsp[-5].ast), (yyvsp[-1].ast));}
-#line 2204 "calc_morgana.tab.c"
+#line 2215 "calc_morgana.tab.c"
     break;
 
   case 7: /* stm: WHILE '(' expre ')' '{' list '}'  */
-#line 918 "calc_morgana.y"
+#line 929 "calc_morgana.y"
                                        {(yyval.ast) = newflow('W', (yyvsp[-4].ast), (yyvsp[-1].ast), NULL);}
-#line 2210 "calc_morgana.tab.c"
+#line 2221 "calc_morgana.tab.c"
     break;
 
   case 8: /* stm: VARIAVEL '=' expre  */
-#line 919 "calc_morgana.y"
+#line 930 "calc_morgana.y"
                          {(yyval.ast) = newasgn((yyvsp[-2].texto), (yyvsp[0].ast));}
-#line 2216 "calc_morgana.tab.c"
+#line 2227 "calc_morgana.tab.c"
     break;
 
   case 9: /* stm: VARIAVEL '=' STRING  */
-#line 920 "calc_morgana.y"
+#line 931 "calc_morgana.y"
                           {(yyval.ast) = newasgn((yyvsp[-2].texto), newtexto((yyvsp[0].texto)));}
-#line 2222 "calc_morgana.tab.c"
+#line 2233 "calc_morgana.tab.c"
     break;
 
   case 10: /* stm: VARIAVEL '[' NUM_INT ']' '=' expre  */
-#line 921 "calc_morgana.y"
+#line 932 "calc_morgana.y"
                                        {(yyval.ast) = newasgn_a((yyvsp[-5].texto), (yyvsp[0].ast), (yyvsp[-3].inteiro));}
-#line 2228 "calc_morgana.tab.c"
+#line 2239 "calc_morgana.tab.c"
     break;
 
   case 11: /* stm: VARIAVEL '[' NUM_INT ']' '=' STRING  */
-#line 922 "calc_morgana.y"
+#line 933 "calc_morgana.y"
                                         {(yyval.ast) = newasgn_a((yyvsp[-5].texto), newtexto((yyvsp[0].texto)), (yyvsp[-3].inteiro));}
-#line 2234 "calc_morgana.tab.c"
+#line 2245 "calc_morgana.tab.c"
     break;
 
   case 12: /* stm: declmult  */
-#line 923 "calc_morgana.y"
+#line 934 "calc_morgana.y"
                { (yyval.ast) = (yyvsp[0].ast) ;}
-#line 2240 "calc_morgana.tab.c"
+#line 2251 "calc_morgana.tab.c"
     break;
 
   case 13: /* stm: declmult2  */
-#line 924 "calc_morgana.y"
+#line 935 "calc_morgana.y"
                 { (yyval.ast) = (yyvsp[0].ast) ;}
-#line 2246 "calc_morgana.tab.c"
+#line 2257 "calc_morgana.tab.c"
     break;
 
   case 14: /* stm: ESCREVER '(' escrever ')'  */
-#line 925 "calc_morgana.y"
+#line 936 "calc_morgana.y"
                                 {(yyval.ast) = (yyvsp[-1].ast);}
-#line 2252 "calc_morgana.tab.c"
+#line 2263 "calc_morgana.tab.c"
     break;
 
   case 15: /* stm: LEITURA '(' VARIAVEL ')'  */
-#line 926 "calc_morgana.y"
+#line 937 "calc_morgana.y"
                                {(yyval.ast) = newast('c', newValorVal((yyvsp[-1].texto)), NULL);}
-#line 2258 "calc_morgana.tab.c"
+#line 2269 "calc_morgana.tab.c"
     break;
 
   case 16: /* stm: FOR var ';' expre ';' var '{' list '}'  */
-#line 927 "calc_morgana.y"
+#line 938 "calc_morgana.y"
                                              { (yyval.ast) = newflowfor('F', (yyvsp[-7].ast), (yyvsp[-5].ast), (yyvsp[-3].ast), (yyvsp[-1].ast), NULL);}
-#line 2264 "calc_morgana.tab.c"
+#line 2275 "calc_morgana.tab.c"
     break;
 
   case 17: /* stm: ternario  */
-#line 928 "calc_morgana.y"
+#line 939 "calc_morgana.y"
                { (yyval.ast) = (yyvsp[0].ast); }
-#line 2270 "calc_morgana.tab.c"
+#line 2281 "calc_morgana.tab.c"
     break;
 
   case 18: /* stm: VARIAVEL PLUS  */
-#line 929 "calc_morgana.y"
+#line 940 "calc_morgana.y"
                                {(yyval.ast) = newasgn((yyvsp[-1].texto), newast('+',newValorVal((yyvsp[-1].texto)),newint(1)));}
-#line 2276 "calc_morgana.tab.c"
+#line 2287 "calc_morgana.tab.c"
     break;
 
   case 19: /* stm: VARIAVEL LESS  */
-#line 930 "calc_morgana.y"
+#line 941 "calc_morgana.y"
                                {(yyval.ast) = newasgn((yyvsp[-1].texto), newast('-',newValorVal((yyvsp[-1].texto)),newint(1)));}
-#line 2282 "calc_morgana.tab.c"
+#line 2293 "calc_morgana.tab.c"
     break;
 
   case 20: /* stm: COMENTARIO  */
-#line 931 "calc_morgana.y"
+#line 942 "calc_morgana.y"
                  {(yyval.ast) = newast('P', NULL, NULL);}
-#line 2288 "calc_morgana.tab.c"
+#line 2299 "calc_morgana.tab.c"
     break;
 
   case 21: /* stm: function  */
-#line 932 "calc_morgana.y"
+#line 943 "calc_morgana.y"
                { (yyval.ast) = (yyvsp[0].ast) ;}
-#line 2294 "calc_morgana.tab.c"
+#line 2305 "calc_morgana.tab.c"
     break;
 
   case 22: /* ternario: expre '?' stm2 ':' stm2 ';'  */
-#line 936 "calc_morgana.y"
+#line 947 "calc_morgana.y"
                                       {(yyval.ast) = newflow('?', (yyvsp[-5].ast), (yyvsp[-3].ast), (yyvsp[-1].ast));}
-#line 2300 "calc_morgana.tab.c"
+#line 2311 "calc_morgana.tab.c"
     break;
 
   case 23: /* stm2: VARIAVEL PLUS  */
-#line 940 "calc_morgana.y"
+#line 951 "calc_morgana.y"
                                {(yyval.ast) = newasgn((yyvsp[-1].texto), newast('+',newValorVal((yyvsp[-1].texto)),newint(1)));}
-#line 2306 "calc_morgana.tab.c"
+#line 2317 "calc_morgana.tab.c"
     break;
 
   case 24: /* stm2: VARIAVEL LESS  */
-#line 941 "calc_morgana.y"
+#line 952 "calc_morgana.y"
                                {(yyval.ast) = newasgn((yyvsp[-1].texto), newast('-',newValorVal((yyvsp[-1].texto)),newint(1)));}
-#line 2312 "calc_morgana.tab.c"
+#line 2323 "calc_morgana.tab.c"
     break;
 
   case 25: /* stm2: expre  */
-#line 942 "calc_morgana.y"
+#line 953 "calc_morgana.y"
             { (yyval.ast) = (yyvsp[0].ast) ;}
-#line 2318 "calc_morgana.tab.c"
+#line 2329 "calc_morgana.tab.c"
     break;
 
   case 26: /* function: VOID FUNC VARIAVEL '(' ')' '{' list '}'  */
-#line 944 "calc_morgana.y"
+#line 955 "calc_morgana.y"
                                                             {(yyval.ast) = newfunction((yyvsp[-7].inteiro), (yyvsp[-5].texto), (yyvsp[-1].ast));}
-#line 2324 "calc_morgana.tab.c"
+#line 2335 "calc_morgana.tab.c"
     break;
 
   case 27: /* function: VARIAVEL '(' ')'  */
-#line 945 "calc_morgana.y"
+#line 956 "calc_morgana.y"
                                  {(yyval.ast) = newast('a', newtexto((yyvsp[-2].texto)), NULL);}
-#line 2330 "calc_morgana.tab.c"
+#line 2341 "calc_morgana.tab.c"
     break;
 
   case 28: /* declmult: declmult ',' VARIAVEL  */
-#line 949 "calc_morgana.y"
+#line 960 "calc_morgana.y"
                                  {(yyval.ast) = newvar((yyvsp[-2].ast)->nodetype, (yyvsp[0].texto), NULL, (yyvsp[-2].ast));}
-#line 2336 "calc_morgana.tab.c"
+#line 2347 "calc_morgana.tab.c"
     break;
 
   case 29: /* declmult: declmult ',' VARIAVEL '=' expre  */
-#line 950 "calc_morgana.y"
+#line 961 "calc_morgana.y"
                                       {(yyval.ast) = newvar((yyvsp[-4].ast)->nodetype, (yyvsp[-2].texto), (yyvsp[0].ast), (yyvsp[-4].ast));}
-#line 2342 "calc_morgana.tab.c"
+#line 2353 "calc_morgana.tab.c"
     break;
 
   case 30: /* declmult: TIPO_INT VARIAVEL  */
-#line 951 "calc_morgana.y"
+#line 962 "calc_morgana.y"
                         {(yyval.ast) = newvar((yyvsp[-1].inteiro), (yyvsp[0].texto), NULL, NULL);}
-#line 2348 "calc_morgana.tab.c"
+#line 2359 "calc_morgana.tab.c"
     break;
 
   case 31: /* declmult: TIPO_INT VARIAVEL '=' expre  */
-#line 952 "calc_morgana.y"
+#line 963 "calc_morgana.y"
                                   {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), (yyvsp[0].ast), NULL);}
-#line 2354 "calc_morgana.tab.c"
+#line 2365 "calc_morgana.tab.c"
     break;
 
   case 32: /* declmult: TIPO_REAL VARIAVEL  */
-#line 953 "calc_morgana.y"
+#line 964 "calc_morgana.y"
                          {(yyval.ast) = newvar((yyvsp[-1].inteiro), (yyvsp[0].texto), NULL, NULL);}
-#line 2360 "calc_morgana.tab.c"
+#line 2371 "calc_morgana.tab.c"
     break;
 
   case 33: /* declmult: TIPO_REAL VARIAVEL '=' expre  */
-#line 954 "calc_morgana.y"
+#line 965 "calc_morgana.y"
                                    {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), (yyvsp[0].ast), NULL);}
-#line 2366 "calc_morgana.tab.c"
+#line 2377 "calc_morgana.tab.c"
     break;
 
   case 34: /* declmult: TIPO_INT VARIAVEL '[' NUM_INT ']'  */
-#line 955 "calc_morgana.y"
+#line 966 "calc_morgana.y"
                                         { (yyval.ast) = newarray('A',(yyvsp[-3].texto), (yyvsp[-1].inteiro));}
-#line 2372 "calc_morgana.tab.c"
+#line 2383 "calc_morgana.tab.c"
     break;
 
   case 35: /* declmult: TIPO_REAL VARIAVEL '[' NUM_INT ']'  */
-#line 956 "calc_morgana.y"
+#line 967 "calc_morgana.y"
                                          { (yyval.ast) = newarray('B',(yyvsp[-3].texto), (yyvsp[-1].inteiro));}
-#line 2378 "calc_morgana.tab.c"
+#line 2389 "calc_morgana.tab.c"
     break;
 
   case 36: /* declmult2: declmult2 ',' VARIAVEL  */
-#line 960 "calc_morgana.y"
+#line 971 "calc_morgana.y"
                                   {(yyval.ast) = newvar((yyvsp[-2].ast)->nodetype, (yyvsp[0].texto), NULL, (yyvsp[-2].ast));}
-#line 2384 "calc_morgana.tab.c"
+#line 2395 "calc_morgana.tab.c"
     break;
 
   case 37: /* declmult2: declmult2 ',' VARIAVEL '=' STRING  */
-#line 961 "calc_morgana.y"
+#line 972 "calc_morgana.y"
                                         {(yyval.ast) = newvar((yyvsp[-4].ast)->nodetype, (yyvsp[-2].texto), newtexto((yyvsp[0].texto)), (yyvsp[-4].ast));}
-#line 2390 "calc_morgana.tab.c"
+#line 2401 "calc_morgana.tab.c"
     break;
 
   case 38: /* declmult2: TIPO_TEXT VARIAVEL  */
-#line 962 "calc_morgana.y"
+#line 973 "calc_morgana.y"
                          {(yyval.ast) = newvar((yyvsp[-1].inteiro), (yyvsp[0].texto), NULL, NULL);}
-#line 2396 "calc_morgana.tab.c"
+#line 2407 "calc_morgana.tab.c"
     break;
 
   case 39: /* declmult2: TIPO_TEXT VARIAVEL '=' STRING  */
-#line 963 "calc_morgana.y"
+#line 974 "calc_morgana.y"
                                     {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), newtexto((yyvsp[0].texto)), NULL);}
-#line 2402 "calc_morgana.tab.c"
+#line 2413 "calc_morgana.tab.c"
     break;
 
   case 40: /* declmult2: TIPO_TEXT VARIAVEL '[' NUM_INT ']'  */
-#line 964 "calc_morgana.y"
+#line 975 "calc_morgana.y"
                                          { (yyval.ast) = newarray('C',(yyvsp[-3].texto), (yyvsp[-1].inteiro));}
-#line 2408 "calc_morgana.tab.c"
+#line 2419 "calc_morgana.tab.c"
     break;
 
   case 41: /* escrever: expre  */
-#line 968 "calc_morgana.y"
+#line 979 "calc_morgana.y"
                 {(yyval.ast) = newast('P', (yyvsp[0].ast), NULL);}
-#line 2414 "calc_morgana.tab.c"
+#line 2425 "calc_morgana.tab.c"
     break;
 
   case 42: /* escrever: expre ',' escrever  */
-#line 969 "calc_morgana.y"
+#line 980 "calc_morgana.y"
                          {(yyval.ast) = newast('P', (yyvsp[-2].ast), (yyvsp[0].ast));}
-#line 2420 "calc_morgana.tab.c"
+#line 2431 "calc_morgana.tab.c"
     break;
 
   case 43: /* escrever: STRING  */
-#line 970 "calc_morgana.y"
+#line 981 "calc_morgana.y"
              {(yyval.ast) = newast('P', newtexto((yyvsp[0].texto)), NULL);}
-#line 2426 "calc_morgana.tab.c"
+#line 2437 "calc_morgana.tab.c"
     break;
 
   case 44: /* escrever: STRING ',' escrever  */
-#line 971 "calc_morgana.y"
+#line 982 "calc_morgana.y"
                           {(yyval.ast) = newast('P', newtexto((yyvsp[-2].texto)), (yyvsp[0].ast));}
-#line 2432 "calc_morgana.tab.c"
+#line 2443 "calc_morgana.tab.c"
     break;
 
   case 45: /* list: stm  */
-#line 975 "calc_morgana.y"
+#line 986 "calc_morgana.y"
           {(yyval.ast) = (yyvsp[0].ast);}
-#line 2438 "calc_morgana.tab.c"
+#line 2449 "calc_morgana.tab.c"
     break;
 
   case 46: /* list: list stm  */
-#line 976 "calc_morgana.y"
+#line 987 "calc_morgana.y"
                { (yyval.ast) = newast('L', (yyvsp[-1].ast), (yyvsp[0].ast));}
-#line 2444 "calc_morgana.tab.c"
+#line 2455 "calc_morgana.tab.c"
     break;
 
   case 47: /* var: VARIAVEL '=' expre  */
-#line 980 "calc_morgana.y"
+#line 991 "calc_morgana.y"
                          {(yyval.ast) = newasgn((yyvsp[-2].texto), (yyvsp[0].ast));}
-#line 2450 "calc_morgana.tab.c"
+#line 2461 "calc_morgana.tab.c"
     break;
 
   case 48: /* expre: RAIZ '(' expre ')'  */
-#line 984 "calc_morgana.y"
+#line 995 "calc_morgana.y"
                           { 
         {(yyval.ast) = newast('R',(yyvsp[-1].ast),NULL);}
     }
-#line 2458 "calc_morgana.tab.c"
+#line 2469 "calc_morgana.tab.c"
     break;
 
   case 49: /* expre: expre '+' expre  */
-#line 987 "calc_morgana.y"
+#line 998 "calc_morgana.y"
                       {
         (yyval.ast) = newast('+', (yyvsp[-2].ast), (yyvsp[0].ast));
     }
-#line 2466 "calc_morgana.tab.c"
+#line 2477 "calc_morgana.tab.c"
     break;
 
   case 50: /* expre: expre '-' expre  */
-#line 990 "calc_morgana.y"
+#line 1001 "calc_morgana.y"
                       {
         (yyval.ast) = newast('-',(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2474 "calc_morgana.tab.c"
+#line 2485 "calc_morgana.tab.c"
     break;
 
   case 51: /* expre: expre '*' expre  */
-#line 993 "calc_morgana.y"
+#line 1004 "calc_morgana.y"
                       {
         (yyval.ast) = newast('*',(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2482 "calc_morgana.tab.c"
+#line 2493 "calc_morgana.tab.c"
     break;
 
   case 52: /* expre: expre '/' expre  */
-#line 996 "calc_morgana.y"
+#line 1007 "calc_morgana.y"
                       {
         (yyval.ast) = newast('/',(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2490 "calc_morgana.tab.c"
+#line 2501 "calc_morgana.tab.c"
     break;
 
   case 53: /* expre: '(' expre ')'  */
-#line 999 "calc_morgana.y"
+#line 1010 "calc_morgana.y"
                     {
         (yyval.ast) = (yyvsp[-1].ast);
     }
-#line 2498 "calc_morgana.tab.c"
+#line 2509 "calc_morgana.tab.c"
     break;
 
   case 54: /* expre: expre '^' expre  */
-#line 1002 "calc_morgana.y"
+#line 1013 "calc_morgana.y"
                       {
         (yyval.ast) = newast('^',(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2506 "calc_morgana.tab.c"
+#line 2517 "calc_morgana.tab.c"
     break;
 
   case 55: /* expre: expre CMP expre  */
-#line 1005 "calc_morgana.y"
+#line 1016 "calc_morgana.y"
                       { /* Testes condicionais */
         (yyval.ast) = newcmp((yyvsp[-1].fn),(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2514 "calc_morgana.tab.c"
+#line 2525 "calc_morgana.tab.c"
     break;
 
   case 56: /* expre: '-' expre  */
-#line 1008 "calc_morgana.y"
+#line 1019 "calc_morgana.y"
                           {
         (yyval.ast) = newast('M',(yyvsp[0].ast),NULL); 
     }
-#line 2522 "calc_morgana.tab.c"
+#line 2533 "calc_morgana.tab.c"
     break;
 
   case 57: /* expre: valor  */
-#line 1011 "calc_morgana.y"
+#line 1022 "calc_morgana.y"
             { 
         (yyval.ast) = (yyvsp[0].ast); 
     }
-#line 2530 "calc_morgana.tab.c"
+#line 2541 "calc_morgana.tab.c"
     break;
 
   case 58: /* valor: NUM_INT  */
-#line 1017 "calc_morgana.y"
+#line 1028 "calc_morgana.y"
                { (yyval.ast) = newint((yyvsp[0].inteiro));}
-#line 2536 "calc_morgana.tab.c"
+#line 2547 "calc_morgana.tab.c"
     break;
 
   case 59: /* valor: NUM_REAL  */
-#line 1018 "calc_morgana.y"
+#line 1029 "calc_morgana.y"
                { (yyval.ast) = newreal((yyvsp[0].real));}
-#line 2542 "calc_morgana.tab.c"
+#line 2553 "calc_morgana.tab.c"
     break;
 
   case 60: /* valor: VARIAVEL  */
-#line 1019 "calc_morgana.y"
+#line 1030 "calc_morgana.y"
                          { (yyval.ast) = newValorVal((yyvsp[0].texto)); }
-#line 2548 "calc_morgana.tab.c"
+#line 2559 "calc_morgana.tab.c"
     break;
 
   case 61: /* valor: VARIAVEL '[' NUM_INT ']'  */
-#line 1020 "calc_morgana.y"
+#line 1031 "calc_morgana.y"
                                {(yyval.ast) = newValorVal_a((yyvsp[-3].texto),(yyvsp[-1].inteiro));}
-#line 2554 "calc_morgana.tab.c"
+#line 2565 "calc_morgana.tab.c"
     break;
 
 
-#line 2558 "calc_morgana.tab.c"
+#line 2569 "calc_morgana.tab.c"
 
       default: break;
     }
@@ -2748,7 +2759,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 1023 "calc_morgana.y"
+#line 1034 "calc_morgana.y"
 
 
 #include "lex.yy.c"
