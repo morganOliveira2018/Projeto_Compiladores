@@ -192,6 +192,7 @@
         int nodetype;
         char var[name_size];
         int size;
+        Ast *pos;
     }Varval;
 
     typedef struct flow { /*Estrutura de um desvio (if/else/while)*/
@@ -207,7 +208,7 @@
         char s[name_size];
         Ast *v;
         Ast *n;
-        int pos;
+        Ast * pos;
     }Symasgn;
 
     typedef struct function {
@@ -368,7 +369,7 @@
     }
 
      /*Função para um nó de atribuição em um array*/
-    Ast * newasgn_a(char s[], Ast *v, int indice) { 
+    Ast * newasgn_a(char s[], Ast *v, Ast * pos) { 
         Symasgn *a = (Symasgn*)malloc(sizeof(Symasgn));
         if(!a) {
             printf("out of space");
@@ -377,7 +378,7 @@
         a->nodetype = 'D';
         strcpy(a->s, s); /*Símbolo/variável*/
         a->v = v; /*Valor*/
-        a->pos = indice;
+        a->pos = pos;
         return (Ast *)a;
     }
 
@@ -395,7 +396,7 @@
     }
 
     /*Função que recupera o nome/referência de um array */
-    Ast * newValorVal_a(char s[], int indice) { 
+    Ast * newValorVal_a(char s[], Ast * i) { 
         Varval *a = (Varval*) malloc(sizeof(Varval));
         if(!a) {
             printf("out of space");
@@ -403,7 +404,7 @@
         }
         a->nodetype = 'E';
         strcpy(a->var, s);
-        a->size = indice;
+        a->pos = i;
         return (Ast*)a;
         
     }
@@ -454,6 +455,7 @@
     double eval(Ast *a) { 
         double v;
         char v1[50];
+        int pos;
         Function *auxFunction; //armazena o resultado da busca na lista de funções
 
         if(!a) {
@@ -668,18 +670,22 @@
                 //printf("P1: %c\nP2: %c\n", a->nodetype, a->l->nodetype);
                 if(a->l==NULL)
                     break;
-                /* printf("node %c\n", a->l->nodetype);*/
-                if(a->l->nodetype == 'E') { /* vet1[3] */
+                //printf("node %c\n", a->l->nodetype);
+                // if(a->l->nodetype == 'E') { /* vet1[3] */
+                //     v = eval(a->l);
+                //     break;
+                // }
+                if (a->l->nodetype == 'E') {
+                    a->l->nodetype = 'H';
                     v = eval(a->l);
-                    break;
                 }
-                if(a->l->nodetype == 'N'){
+                else if(a->l->nodetype == 'N'){
                     a->l->nodetype = 'n';
                     v = eval(a->l);
                     //printf("\nnodetype 'N'\n");
                 } else {
                     v = eval(a->l);
-                    if(a->l->nodetype != 'n' && a->l->nodetype != 'k' && a->l->nodetype != 'K' && a->l->nodetype != 'm')
+                    if(a->l->nodetype != 'n' && a->l->nodetype != 'k' && a->l->nodetype != 'K' && a->l->nodetype != 'm' && a->l->nodetype != 'H')
                         printf("%.2f", v);
                 }
                 if(((Intval*)a->l)->nodetype == 'k') {
@@ -695,8 +701,7 @@
                         printf ("%s", ((Textoval*)a->l)->v);		/*Recupera um valor texto*/
                 }
                 if(a->r==NULL){
-                    printf("\n"); 
-                    /* printf("Quebra linha entra variaveis"); */
+                    /* printf("\n"); */
                 }else{
                     v = eval(a->r);
                     /* printf("\n");*/
@@ -821,43 +826,79 @@
                 }
                 break;
             case 'D':; //atribuir em um array 
-                v = eval(((Symasgn *)a)->v);  //valor que sera atriuido no array            
+                v = eval(((Symasgn *)a)->v);  //valor que sera atriuido no array
+                pos = (int)eval(((Symasgn *)a)->pos);
                 VARS * vx = srch(rvar, ((Symasgn *)a)->s);
                 VARSI * vxi = srchi(ivar, ((Symasgn *)a)->s);
                 VARST * vxt = srcht(tvar, ((Symasgn *)a)->s);
 
                 if(vx != NULL){
-                    vx->vet[((Symasgn *)a)->pos] = v; /*Atribui à variável*/
+                    vx->vet[pos] = v; /*Atribui à variável*/
                 } else if (vxi != NULL) {
-                    vxi->vet[((Symasgn *)a)->pos] = (int)v; /*Atribui à variável*/
+                    vxi->vet[pos] = (int)v; /*Atribui à variável*/
                 } else if (vxt != NULL) {
                     VARST * auxVxt = srcht(tvar, ((Textoval*)((Symasgn*)a)->v)->v);
                     if (auxVxt != NULL) {
-                        vxt->vet[((Symasgn *)a)->pos] = auxVxt->v;
+                        vxt->vet[pos] = auxVxt->v;
                     }
                     else {
-                        vxt->vet[((Symasgn *)a)->pos] = ((Textoval*)((Symasgn*)a)->v)->v; /*Atribui à variável*/
+                        vxt->vet[pos] = ((Textoval*)((Symasgn*)a)->v)->v; /*Atribui à variável*/
                     }
                 } else {
                     printf("Erro 'atribuir valor'. Var '%s' nao declarada.\n", ((Symasgn *)a)->s);
                 }
                 break;
             case 'E':; /*  Verificar se foi realizado a declaracao da variavel corretamente */
+                pos = (int)eval(((Varval *)a)->pos);
+                VARS * evx = srch(rvar, ((Varval *)a)->var);
+                VARSI * evxi = srchi(ivar, ((Varval *)a)->var);
+                VARST * evxt = srcht(tvar, ((Varval *)a)->var);
+
+                if(evx != NULL){
+                    v = evx->vet[pos];
+                } else if (evxi != NULL) {
+                    v = evxi->vet[pos];
+                } else if (evxt != NULL) {
+                    v = atof(evxt->vet[pos]);
+                }
+
+                break;
+
+                // leitura das variaveis: int, real e texto de um array array
+            case 'G':; 
+                VARSI * posvxi = srchi(ivar, ((Varval *)a->r)->var);
+                if(posvxi != NULL){
+                   pos = posvxi->v;
+                }
+    
+                VARS * apvx = srch(rvar, ((Varval *)a->l)->var);
+                VARSI * apvxi = srchi(ivar, ((Varval *)a->l)->var);
+                VARST * apvxt = srcht(tvar, ((Varval *)a->l)->var);
+
+                if(apvx != NULL){
+                    scanf("%f", &apvx->vet[pos]); 
+                } else if (apvxi != NULL) {
+                    scanf("%d", &apvxi->vet[pos]);
+                } else if (apvxt != NULL) {
+                    scanf("%s", &apvxt->vet[pos]);
+                }
+                break;
+
+            case 'H':; /*  imprimir array */
+                pos = (int)eval(((Varval *)a)->pos);
                 VARS * pvx = srch(rvar, ((Varval *)a)->var);
                 VARSI * pvxi = srchi(ivar, ((Varval *)a)->var);
                 VARST * pvxt = srcht(tvar, ((Varval *)a)->var);
 
                 if(pvx != NULL){
-                    printf("%.2f", pvx->vet[((Varval *)a)->size]); 
+                    v = pvx->vet[pos];
+                    printf("%.2f\n", pvx->vet[pos]); 
                 } else if (pvxi != NULL) {
-                    printf("%d", pvxi->vet[((Varval *)a)->size]);
-                    
+                    v = pvxi->vet[pos];
+                    printf("%d\n", pvxi->vet[pos]);
                 } else if (pvxt != NULL) {
-                    printf("%s", pvxt->vet[((Varval *)a)->size]);
-                }
-
-                if(a->r==NULL){ /* cada escreva ocorre uma quebra de linha */
-                    printf("\n");
+                    v = 0.0;
+                    printf("%s\n", pvxt->vet[pos]);
                 }
 
                 break;
@@ -930,13 +971,15 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | WHILE '(' expre ')' '{' list '}' {$$ = newflow('W', $3, $6, NULL);}
     | VARIAVEL '=' expre {$$ = newasgn($1, $3);} // declaração e atribuição de variavel
     | VARIAVEL '=' STRING {$$ = newasgn($1, newtexto($3));} // declaração e atribuição de variavel
-    | VARIAVEL '['NUM_INT']' '=' expre {$$ = newasgn_a($1, $6, $3);} //atribuição de array
-    | VARIAVEL '['NUM_INT']' '=' STRING {$$ = newasgn_a($1, newtexto($6), $3);} //atribuição de array
+    | VARIAVEL '['NUM_INT']' '=' expre {$$ = newasgn_a($1, $6, newint($3));} //atribuição de array
+    | VARIAVEL '['VARIAVEL']' '=' expre {$$ = newasgn_a($1, $6, newValorVal($3));} //atribuição de um valor na pos do array
+    | VARIAVEL '['NUM_INT']' '=' STRING {$$ = newasgn_a($1, newtexto($6), newint($3));} //atribuição de array
     | declmult { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - numero
     | declmult2 { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - texto
     | ESCREVER '(' escrever ')' {$$ = $3;} // derivacao para escrever
     | LEITURA '(' VARIAVEL ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
-    | LEITURA '(' VARIAVEL '[' NUM_INT ']' ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
+    | LEITURA '(' VARIAVEL '[' NUM_INT ']' ')' {$$ = newast('G', newValorVal($3), newint($5));} // variacoes da leitura
+    | LEITURA '(' VARIAVEL '[' VARIAVEL ']' ')' {$$ = newast('G', newValorVal($3), newValorVal($5));} // variacoes da leitura
     | FOR '(' var ';' expre ';' stm ')' '{' list '}' { $$ = newflowfor('F', $3, $5, $7, $10, NULL);}
     | ternario { $$ = $1; } // derivacao para o ternario 
     | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
@@ -1031,7 +1074,8 @@ expre: RAIZ '(' expre ')' {
 valor: NUM_INT { $$ = newint($1);} 
     | NUM_REAL { $$ = newreal($1);} 
     | VARIAVEL %prec VET { $$ = newValorVal($1); }  /* Funcao da chamada newValorVal retorna um tipo Ast que dps e usado em eval */
-    | VARIAVEL '[' NUM_INT ']' {$$ = newValorVal_a($1,$3);}
+    | VARIAVEL '[' NUM_INT ']' {$$ = newValorVal_a($1, newint($3));}
+    | VARIAVEL '[' VARIAVEL ']' {$$ = newValorVal_a($1, newValorVal($3));}
     ;
 
 %%
@@ -1039,7 +1083,7 @@ valor: NUM_INT { $$ = newint($1);}
 #include "lex.yy.c"
 
 int main(){
-    yyin=fopen("entrada.txt", "r");
+    yyin=fopen("subs_em_vetor.txt", "r");
     
     yyparse();
     yylex();

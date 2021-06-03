@@ -1,0 +1,12 @@
+
+Inicio
+
+  inteiro a = 3
+  real b = 10.7, c = 30.5, area = a * b * c
+  texto autor = "morgana"
+  escreva(a) @@ 3
+  escreva(b) @@ 10.7
+  escreva(c) @@ 30.5
+  escreva(area) 
+
+Fim do programa

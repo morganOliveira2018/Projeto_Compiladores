@@ -7,9 +7,9 @@ Inicio
   texto vet4[5]
   texto nome = "coisa1", nome2 = "coisa2", nome3 = "coisa3"
   inteiro k = 1, l = 2, m = 3, n = 4
-  vet1[0] = k + l
-  vet2[1] = "Marcos"
-  vet3[2] = 2.5
+  @@ vet1[0] = k + l
+  @@ vet2[1] = "Marcos"
+  @@ vet3[2] = 2.5
   k = m
   l = n
   vet4[1] = nome
@@ -18,13 +18,12 @@ Inicio
   vet1[0] = k 
   vet1[1] = l
 
-  /* escreva("O k = ", k, "O l = ", l)
-    escreva(vet4[1]) @@ string
-    escreva(vet4[2]) @@ string
-    escreva(vet4[3]) @@ string
-    escreva(vet1[0]) @@ inteiro
-    escreva(vet1[1]) @@ inteiro
-  */
+  escreva("O k = ", k, "O l = ", l)
+  escreva(vet4[1]) @@ string
+  escreva(vet4[2]) @@ string
+  escreva(vet4[3]) @@ string
+  escreva(vet1[0]) @@ inteiro
+  escreva(vet1[1]) @@ inteiro
 
 
   @@ escreva(vet4[2])
@@ -41,17 +40,17 @@ Inicio
   @@ escreva("b :", b," & "," c :", c) @@ escreva o valor da variavel b e c
   @@ escreva("O valor da area:", area)
 
-  /*IF(a > b){ 
-    while(a*a>b){  
-      a-- 
-      escreva("A")}
-  }ELSE{
-    escreva("B")
-    escreva("O vet3[2] = ", vet3[2])
-  } */
+  @@ IF(a > b){ 
+    @@ while(a*a>b){  
+      @@ a-- 
+      @@ escreva("A")}
+  @@ }ELSE{
+    @@ escreva("B")
+    @@ escreva("O vet3|2| = ", vet3[2])
+  @@}
 
   inteiro x 
-  FOR (x = 1; x <= 10; x++) {  
+  FOR x = 1; x <= 10; x++ {  
     escreva(x)
   } 
 
@@ -63,12 +62,10 @@ Inicio
   @@ escreva("autor:", autor)
   @@ escreva("autor2:", autor2)
 
-  /*
-    void function teste() {
-    escreva("=========================")
-    inteiro m = 3, n = 5, soma = m + n
-    escreva("A soma de m e n: ", soma) }
-  teste() 
-  */
+  @@ void function teste() {
+    @@ escreva("=========================")
+    @@ inteiro m = 3, n = 5, soma = m + n
+    @@ escreva("A soma de m e n: ", soma) }
+  @@ teste()
 
 Fim do programa
