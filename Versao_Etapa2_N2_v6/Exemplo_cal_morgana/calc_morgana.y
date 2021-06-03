@@ -126,6 +126,7 @@
 		return new;
 	}
 
+    // Insercao de inteiros no array
     VARSI * insi_a(VARSI *l, char n[], int tamanho){
 		VARSI *new =(VARSI*)malloc(sizeof(VARSI));
 		strcpy(new->name, n);
@@ -172,17 +173,17 @@
         struct ast *r; /*Direita*/
     }Ast; 
 
-    typedef struct intval { /*Estrutura de um número*/
+    typedef struct intval { /*Estrutura de uma variavel inteira*/
         int nodetype;
         int v;
     }Intval;
 
-    typedef struct realval { /* Estrutura de um número */
+    typedef struct realval { /* Estrutura de uma variavel real */
         int nodetype;
         double v;
     }Realval;
 
-    typedef struct textoval { /*Estrutura de um número*/
+    typedef struct textoval { /*Estrutura de uma variavel texto*/
         int nodetype;
         char v[string_size];
     }Textoval;
@@ -667,8 +668,8 @@
                 //printf("P1: %c\nP2: %c\n", a->nodetype, a->l->nodetype);
                 if(a->l==NULL)
                     break;
-                //     printf("node %c\n", a->l->nodetype);
-                if(a->l->nodetype == 'E') {
+                /* printf("node %c\n", a->l->nodetype);*/
+                if(a->l->nodetype == 'E') { /* vet1[3] */
                     v = eval(a->l);
                     break;
                 }
@@ -694,11 +695,11 @@
                         printf ("%s", ((Textoval*)a->l)->v);		/*Recupera um valor texto*/
                 }
                 if(a->r==NULL){
-                    /*printf("Quebra linha entra variaveis");*/
                     printf("\n"); 
+                    /* printf("Quebra linha entra variaveis"); */
                 }else{
-                    /*printf("a->r ok");*/
                     v = eval(a->r);
+                    /* printf("\n");*/
                 }
                 break;  
             /* caso para a opcao FOR */
@@ -935,7 +936,8 @@ stm:  IF '(' expre ')' '{' list '}' %prec IFX {$$ = newflow('I', $3, $6, NULL);}
     | declmult2 { $$ = $1 ;} // derivacao para declaracao de multiplas variaveis - texto
     | ESCREVER '(' escrever ')' {$$ = $3;} // derivacao para escrever
     | LEITURA '(' VARIAVEL ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
-    | FOR var ';' expre ';' var '{' list '}' { $$ = newflowfor('F', $2, $4, $6, $8, NULL);}
+    | LEITURA '(' VARIAVEL '[' NUM_INT ']' ')' {$$ = newast('c', newValorVal($3), NULL);} // variacoes da leitura
+    | FOR '(' var ';' expre ';' stm ')' '{' list '}' { $$ = newflowfor('F', $3, $5, $7, $10, NULL);}
     | ternario { $$ = $1; } // derivacao para o ternario 
     | VARIAVEL PLUS %prec PLUS {$$ = newasgn($1, newast('+',newValorVal($1),newint(1)));} // incremento
     | VARIAVEL LESS %prec LESS {$$ = newasgn($1, newast('-',newValorVal($1),newint(1)));} // decremento		
@@ -980,6 +982,7 @@ escrever: expre {$$ = newast('P', $1, NULL);}
     | expre ',' escrever {$$ = newast('P', $1, $3);}
     | STRING {$$ = newast('P', newtexto($1), NULL);} 
     | STRING ',' escrever {$$ = newast('P', newtexto($1), $3);}
+    //| VARIAVEL '['NUM_INT']' ',' escrever {$$ = newast('P', newValorVal_a($1,$3), $6);}
     ;
 
 // estrutura para multiplas linhas de codigo para estruturas de decisão/loop
@@ -1036,7 +1039,7 @@ valor: NUM_INT { $$ = newint($1);}
 #include "lex.yy.c"
 
 int main(){
-    yyin=fopen("entrada_morg.txt", "r");
+    yyin=fopen("entrada.txt", "r");
     
     yyparse();
     yylex();

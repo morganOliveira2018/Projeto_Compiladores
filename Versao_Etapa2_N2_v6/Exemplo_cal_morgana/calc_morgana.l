@@ -16,6 +16,7 @@ VARIAVEL {LETRA}({LETRA}|{NUM_INT}|"_")*
 
 /* DECLARACAO DO COMENTARIO */
 COMENTARIO "@@".*
+COMENT "/""*"(.|\n)*"*""/"
 /* INCREMENTO E DECREMENTO */ 
 PLUS "++"
 LESS "--"
@@ -56,8 +57,10 @@ INVALIDO .
     return VOID;
 }
 {COMENTARIO} {
-    strcpy(yylval.texto, yytext);
-    return COMENTARIO;
+    ;
+}
+{COMENT} {
+    ;
 }
 {PLUS} {
     return PLUS;
