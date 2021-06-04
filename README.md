@@ -1,20 +1,21 @@
 # Calculadora_Compiladores
-Para entender como funciona a usabilidade da linguagem da Morgana consulte o passo a passo a seguir.
-
-# Morgana Ribeiro -- 
-
-Esta linguagem está sendo desenvolvida na disciplina de compiladores. A linguagem ainda não está completa, foi somente feita a construção da linguagem léxica e sintática.
+Para entender como funciona a usabilidade da linguagem da Morgana consulte o passo a passo a seguir. Esta linguagem foi desenvolvida na disciplina de compiladores. A linguagem está completa, feita a construção da linguagem léxica, sintática e semântica.
 
 #### Marcadores de início e fim do programa
 ```
 Inicio
     @@ ...
+    /* ... */
 Fim do programa
 ```
 
-#### Comentários
+#### Comentário de linha única
 ```
-@@ para comentar uma linha, adicione dois arrobas na frente da linha
+  @@ para comentar uma linha, adicione dois arrobas na frente da linha
+```
+#### Comentário de múltiplas linhas
+```
+  /* ... */
 ```
 
 #### Tipos
@@ -101,38 +102,33 @@ escreva(|-10|)
 escreva(((a / b) + (a * b) - 1))
 ```
 
-#### Exemplo abaixo:
+#### Exemplo URI Online Judge | 1172 | Substituição em Vetor I abaixo:
+- Faça um programa que leia um vetor X[10]. Substitua a seguir, todos os valores nulos e negativos do vetor X por 1. Em seguida mostre o vetor X.
+#### Entrada:
+- A entrada contém 10 valores inteiros, podendo ser positivos ou negativos.
+#### Saída:
+- Para cada posição do vetor, escreva "X[i] = x", onde i é a posição do vetor e x é o valor armazenado naquela posição.
+
 ```
-real a, b, c
-real area1 << 5.5, result
-int num << 7.3, day << "dia", var1 << "m"
-
 Inicio
-  real B, H
-  
-  escreva("Calculo da area do retângulo:")
-  escreva("") @@ escrevendo vazio na tela
 
-  escreva("Digite a base: ")
-  leia(B)
+   int vetIn[10]
+   int i
 
-  escreva("Digite a altura: ")
-  leia(H)
+   FOR (i = 0; i < 10; i++) {
+       leitura(vetIn[i])
+   }
 
-  escreva("")
-  escreva("A area do retangulo é: ")
-  area << H * B
-  escreva(area)
+   FOR (i = 0; i < 10; i++) {
+       IF (vetIn[i] <= 0) {
+          vetIn[i] = 1 
+       }
+   }
 
-  escreva("Calculo de Bhaskara:")
-  escreva("Digite o valor de a: ")
-  leia(a)
-  escreva("Digite o valor de b: ")
-  leia(b)
-  escreva("Digite o valor de c: ")
-  leia(c)
-  result << raiz(b^2-4*2*c)/2*a
-  escreva(result)
+   FOR (i = 0; i < 10; i++) {
+       escreva("X [", i, "] = ", vetIn[i])
+   }
+    
 
 Fim do programa
 ```
