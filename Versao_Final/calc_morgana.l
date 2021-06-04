@@ -40,15 +40,15 @@ IGNORAR [\ \t\s]
 INVALIDO .
 %%
 
-"inteiro" {
+"int" {
     yylval.inteiro = 'i';
     return TIPO_INT;
 }
-"real" {
+"float" {
     yylval.inteiro = 'r';
     return TIPO_REAL;
 }
-"texto" {
+"string" {
     yylval.inteiro = 't';
     return TIPO_TEXT;
 }

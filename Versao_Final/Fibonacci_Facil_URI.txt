@@ -1,0 +1,29 @@
+Inicio
+
+    int n, i = 3, primeiroTermo = 0, segundoTermo = 1, proximoTermo
+    leitura(n)  /* Numero inteiro N */
+    
+    IF (n==0) {
+        escreva("Fib(0) = ", n, "\n")
+    }
+    IF (n==1) {
+        escreva("Fib(1) = ", primeiroTermo, "\n")
+    } ELSE {
+        IF (n==2) { 
+            escreva(primeiroTermo," ", segundoTermo, "\n") 
+        }ELSE {
+            escreva(primeiroTermo," ", segundoTermo, " ") 
+        } WHILE (i<=n){ 
+            proximoTermo = primeiroTermo + segundoTermo 
+            primeiroTermo = segundoTermo
+            segundoTermo = proximoTermo
+        IF (i==n) {
+            escreva(proximoTermo, "\n")
+        } ELSE {
+            escreva(proximoTermo, " ")
+        }
+          i++
+        }
+    }
+
+Fim do programa

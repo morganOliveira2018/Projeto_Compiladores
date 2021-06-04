@@ -1,12 +1,39 @@
 
 Inicio
 
-  inteiro a = 3
-  real b = 10.7, c = 30.5, area = a * b * c
-  texto autor = "morgana"
-  escreva(a) @@ 3
-  escreva(b) @@ 10.7
-  escreva(c) @@ 30.5
-  escreva(area) 
+  int vet1[5]
+  string vet2[5]
+  float vet3[5]
+  string vet4[5]
+  string nome = "coisa1", nome2 = "coisa2", nome3 = "coisa3"
+  int k = 1, l = 2, m = 3, n = 4
+  vet1[0] = k + l
+  vet2[1] = "Marcos"
+  vet3[2] = 2.5
+  k = m
+  l = n
+  vet4[1] = nome
+  vet4[2] = nome2
+  vet4[3] = nome3
+  vet1[0] = k 
+  vet1[1] = l
+
+  escreva("O k = ", k, "O l = ", l)
+  escreva("\n", vet4[1], vet4[2], vet4[3]) @@ string 
+  escreva(vet1[0]) @@ int
+  escreva(vet1[1]) @@ int
+  /* 
+  escreva(vet4[2])
+  escreva(vet4[3])
+  escreva("1","\n","2")
+  escreva("O vet1[0] = ", vet1[0])
+  escreva("O vet2[1] = ", vet2[1])
+  */
+  
+  float b = 10.5, c = 30.5, area = a * b * c
+  string autor = "morgana", autor2 = "marcos"
+  escreva("O valor de a = ", a) @@ escreva o valor da variavel a
+  escreva("b :", b," & "," c :", c) @@ escreva o valor da variavel b e c
+  escreva("O valor da area:", area)
 
 Fim do programa

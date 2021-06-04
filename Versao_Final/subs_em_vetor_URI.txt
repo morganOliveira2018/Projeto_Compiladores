@@ -1,7 +1,7 @@
 Inicio
 
-   inteiro vetIn[10]
-   inteiro i
+   int vetIn[10]
+   int i
 
    FOR (i = 0; i < 10; i++) {
        leitura(vetIn[i])
