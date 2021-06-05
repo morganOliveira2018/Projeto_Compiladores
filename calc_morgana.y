@@ -1060,7 +1060,7 @@ valor: NUM_INT { $$ = newint($1);}
 #include "lex.yy.c"
 
 int main(){
-    yyin=fopen("entrada_declmult.txt", "r");
+    yyin=fopen("subs_em_vetor_URI.txt", "r");
     
     yyparse();
     yylex();

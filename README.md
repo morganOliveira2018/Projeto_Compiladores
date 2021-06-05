@@ -74,55 +74,167 @@ float a = 10.0, b = 10.5, c = 30.5, area = a * b * c
 ```
 string nome = "morgana", nome2 = "marcos"
 ```
+- declarações do tipo vetor para variavel inteira, float e string
+```
+int vetIn[10]
+float vetFn[10]
+string vetS[5]
+```
 
 #### Atribuição de valores
 ```
-a << 5
-b << 5
-area << a * b
+a = 5
+b = 5
+c = 10
+area = a * b * c
 ```
 
 #### Operação de escrita
 ```
 escreva("Olá Mundo!")
-escreva(a)
-escreva(5.0)
-escreva(a + b)
+escreva("O valor de a: ", a, "\n")
+escreva("O valor de b: ", b, "\n")
+escreva("Soma de a + b", a + b, "\n")
+escreva("O vet3[0] = ", vet3[0], "\n")
+escreva("O vet3[1] = ", vet3[1], "\n")
+escreva("O vet3[2] = ", vet3[2], "\n")
 ```
 
 #### Operação de leitura
 ```
-real altura
+float altura
 escreva("Digite sua altura: ")
 leia(altura)
 ```
 #### Operação de leitura com comentário
 ```
 escreva("") @@ escrevendo vazio na tela
+escreva("") /* ... */
+```
+#### Operação de comentário em bloco
+```
+/* escreva("") 
+   escreva("")  
+*/
 ```
 
 #### Operações matemáticas
 ```
 escreva("Soma: ")
-escreva(5.0 + 10)
+escreva(5.0 + 10.0)
 
 escreva("Subtração: ")
-escreva(5.0 - 10)
+escreva(5.0 - 10.0)
 
 escreva("Multiplicação: ")
-escreva(5.0 * 10)
+escreva(5.0 * 10.0)
 
 escreva("Divisão: ")
-escreva(5.0 / 10)
+escreva(5.0 / 10.0)
 
 escreva("Exponenciação: ")
-escreva(5.0 ^ 10)
+escreva(5.0 ^ 10.0)
 
 escreva("Radiciação: ")
 escreva(raiz(4))
 
 escreva("Módulo:")
 escreva(|-10|)
+```
+#### Operação somente de IF 
+```
+IF (n==2) { 
+    escreva(primeiroTermo," ", segundoTermo, "\n") 
+}
+```
+#### Operação de If e Else
+```
+IF (n==2) { 
+      escreva(primeiroTermo," ", segundoTermo, "\n") 
+} ELSE {
+      escreva(primeiroTermo," ", segundoTermo, " ") 
+}
+```
+#### Operação de If, While e Else
+```
+int a, b
+leitura(a)
+leitura(b)
+
+IF(a > b){ 
+    WHILE(a*a>b){  
+      a-- 
+      escreva("A", "\n")
+    }
+  }ELSE{
+    escreva("B")
+  }
+```
+#### Operação do operador ternario 
+```
+  int num = 5 
+  num > 0 ? num++ : num-- ; 
+  escreva("ternario:", num, "\n")
+```
+#### Operação do FOR
+```
+  int x 
+  
+  FOR (x = 1; x <= 10; x++) {  
+    escreva(x, "\n")
+  }
+```
+#### Operação do FOR com leitura
+```
+  int vetIn[10]
+  int i
+
+  FOR (i = 0; i < 10; i++) {
+       leitura(vetIn[i])
+  }
+```
+#### Operação do FOR com IF e atribuicao de novos elementos no vetor
+```
+  FOR (i = 0; i < 10; i++) {
+       IF (vetIn[i] <= 0) {
+          vetIn[i] = 1 
+       }
+  }
+```
+#### Operação do FOR com escrita de cada elemento em seu respectiva posição
+```
+  FOR (i = 0; i < 10; i++) {
+       escreva("X [", i, "] = ", vetIn[i])
+  }
+```
+#### Operação de atribuição nas posições do vetor
+```
+  int k = 1, l = 2
+  string vet4[5]
+  string nome = "morgana", nome2 = "morg", nome3 = "morgan"
+
+  vet4[1] = nome
+  vet4[2] = nome2
+  vet4[3] = nome3
+  vet1[0] = k 
+  vet1[1] = l
+```
+#### Operação de escrita de cada posição do vetor
+```
+  escreva("O k = ", k, "O l = ", l) @@ int
+  escreva("\n", vet4[1], vet4[2], vet4[3]) @@ string 
+  escreva(vet1[0]) @@ int
+  escreva(vet1[1]) @@ int
+```
+#### Estrutura de uma função sem parametros e a chamada da função
+```
+    void function teste() {
+      escreva("=========================")
+      int m = 3, n = 5, soma = m + n
+      escreva("A soma de m e n: ", soma) 
+    }
+   
+    teste() @@ chamada da funcao acima
 ```
 
 #### Expressões matemáticas e precedência
@@ -205,7 +317,6 @@ Inicio
 Fim do programa
 
 ```
-
 
 ## Contato
 - [Linkedin](www.linkedin.com/in/morgana-ribeiro-dev)
