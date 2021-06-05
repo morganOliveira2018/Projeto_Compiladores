@@ -30,10 +30,10 @@ Inicio
   escreva("O vet2[1] = ", vet2[1])
   */
   
-  float b = 10.5, c = 30.5, area = a * b * c
+  float a = 10.0, b = 10.5, c = 30.5, area = a * b * c
   string autor = "morgana", autor2 = "marcos"
-  escreva("O valor de a = ", a) @@ escreva o valor da variavel a
-  escreva("b :", b," & "," c :", c) @@ escreva o valor da variavel b e c
-  escreva("O valor da area:", area)
+  escreva("O valor de a = ", a, "\n") @@ escreva o valor da variavel a
+  escreva("b = ", b," & ","c = ", c, "\n") @@ escreva o valor da variavel b e c
+  escreva("O valor da area: ", area, "\n")
 
 Fim do programa
