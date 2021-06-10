@@ -3,6 +3,9 @@ Inicio
    int vetIn[10]
    int i
 
+   escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
+   escreva("=======================================","\n")
+   escreva("Determine os elementos que compoe o vetor:","\n")
    FOR (i = 0; i < 10; i++) {
        leitura(vetIn[i])
    }

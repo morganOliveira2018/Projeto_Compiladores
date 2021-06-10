@@ -1,7 +1,7 @@
 
 Inicio
 
-  int a, b = 5
+  @@ int a, b = 5
   string autor = "morgana", autor2 = "antonio"
   leitura(a)
   IF(a > b){ 
@@ -32,6 +32,7 @@ Inicio
     escreva("=========================")
     int m = 3, n = 5, soma = m + n
     escreva("A soma de m e n: ", soma) }
+    
   teste() 
   */
 
