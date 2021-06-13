@@ -1,7 +1,6 @@
 Inicio
 
-   int vetIn[10]
-   int i
+   int vetIn[10], i 
 
    escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
    escreva("=======================================","\n")

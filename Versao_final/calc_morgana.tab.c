@@ -262,6 +262,7 @@
         int nodetype;
         char var[name_size];
         int size;
+        Ast * n;
         Ast * pos; /* posicao no vetor */
     }Varval;
 
@@ -372,7 +373,7 @@
     }
 
     /*Função de que cria uma nova variável array*/
-    Ast * newarray(int nodetype, char nome[], int tam) {
+    Ast * newarray(int nodetype, char nome[], int tam, Ast* n) {
         Varval *a = (Varval*) malloc(sizeof(Varval) * tam);
         if(!a) {
             printf("out of space");
@@ -381,6 +382,7 @@
         a->nodetype = nodetype;
         strcpy(a->var,nome);
         a->size = tam;
+        a->n = n;
         return (Ast*)a;
     }
 
@@ -854,6 +856,9 @@
                 exit(0);
                 break;
             case 'A':; //inserir uma array de inteiros
+                if(((Varval*)a)->n)
+                    eval(((Varval*)a)->n);
+
                 if(!varexiste(((Varval*)a)->var)){
                     ivar = insi_a(ivar,((Varval*)a)->var,((Varval*)a)->size);
                 }else{
@@ -861,6 +866,9 @@
                 }
                 break;
             case 'B':; //inserir uma array de real
+                if(((Varval*)a)->n)
+                    eval(((Varval*)a)->n);
+
                 if(!varexiste(((Varval*)a)->var)){
                     rvar  = ins_a(rvar,((Varval*)a)->var,((Varval*)a)->size);
                 }else{
@@ -957,7 +965,7 @@
     }
 
 
-#line 961 "calc_morgana.tab.c"
+#line 969 "calc_morgana.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -1032,7 +1040,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 891 "calc_morgana.y"
+#line 899 "calc_morgana.y"
 
     char texto[50];
     double real;
@@ -1040,7 +1048,7 @@ union YYSTYPE
     int fn;
     Ast *ast;
 
-#line 1044 "calc_morgana.tab.c"
+#line 1052 "calc_morgana.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -1426,16 +1434,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  27
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   387
+#define YYLAST   366
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  45
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  14
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  65
+#define YYNRULES  66
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  163
+#define YYNSTATES  166
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   283
@@ -1487,13 +1495,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   938,   938,   942,   943,   947,   948,   949,   950,   951,
-     952,   953,   954,   955,   956,   957,   958,   959,   960,   961,
-     962,   963,   964,   965,   966,   970,   974,   975,   976,   978,
-     979,   983,   984,   985,   986,   987,   988,   989,   990,   994,
-     995,   996,   997,   998,  1002,  1003,  1004,  1005,  1009,  1010,
-    1014,  1018,  1021,  1024,  1027,  1030,  1033,  1036,  1039,  1042,
-    1045,  1051,  1052,  1053,  1054,  1055
+       0,   946,   946,   950,   951,   955,   956,   957,   958,   959,
+     960,   961,   962,   963,   964,   965,   966,   967,   968,   969,
+     970,   971,   972,   973,   974,   978,   982,   983,   984,   986,
+     987,   991,   996,  1001,  1006,  1007,  1008,  1009,  1010,  1011,
+    1015,  1016,  1017,  1018,  1019,  1023,  1024,  1025,  1026,  1030,
+    1031,  1035,  1039,  1042,  1045,  1048,  1051,  1054,  1057,  1060,
+    1063,  1066,  1072,  1073,  1074,  1075,  1076
 };
 #endif
 
@@ -1539,7 +1547,7 @@ static const yytype_int16 yytoknum[] =
 };
 #endif
 
-#define YYPACT_NINF (-95)
+#define YYPACT_NINF (-119)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -1553,23 +1561,23 @@ static const yytype_int16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      -9,   255,    13,   -95,   -95,    49,    23,    42,    60,    48,
-      43,    44,    47,    53,    57,    58,   -95,   144,   144,   230,
-     -95,   -95,   -95,    36,    50,   308,   -95,   -95,   -95,   -95,
-       0,    61,    63,   -10,    -8,    -6,    90,   144,   144,    98,
-     144,   104,   276,    73,   -95,   107,   -95,   -95,   108,   113,
-     144,   144,   144,   144,   144,   144,   294,   -95,   357,   -95,
-      79,    80,   144,   118,   144,   119,   117,   121,    95,   332,
-     341,   103,    88,   349,   -23,    86,   124,   301,    65,   -95,
-     114,   141,   -95,    54,    54,   -18,   -18,   -18,     2,   122,
-     357,   143,   145,   357,   129,   357,   137,   -95,   139,   154,
-     151,   152,   144,   144,   -95,   -95,    68,   276,   -95,   276,
-     155,   156,   144,   187,   -95,   -95,   294,   285,   144,   -95,
-     -95,   -95,   161,   255,   255,   357,   325,   159,   160,   -95,
-     -95,   -95,   -95,   357,   -95,   165,   -95,   357,   357,   255,
-     -95,    39,    94,   255,   176,   178,   -95,   140,   186,   -95,
-     -95,   184,   -95,   -95,   -95,   181,   182,   255,   255,   170,
-     200,   -95,   -95
+      -9,   258,    13,  -119,  -119,    22,    12,    20,    23,    70,
+      58,    62,    68,    77,    80,    81,  -119,     0,     0,   233,
+    -119,  -119,  -119,     8,    28,    53,  -119,  -119,  -119,  -119,
+     279,    54,    40,   -10,    -6,    49,    87,     0,     0,   113,
+       0,   114,   288,    83,  -119,   109,  -119,  -119,   115,   118,
+       0,     0,     0,     0,     0,     0,   147,  -119,   336,  -119,
+      84,   128,     0,   130,     0,   137,   151,   165,   139,   311,
+     320,   148,   131,   328,   -23,   136,   157,   101,    60,  -119,
+      50,   166,  -119,   174,   174,   -18,   -18,   -18,     2,   149,
+     336,   172,   176,   336,   142,   336,   159,  -119,   169,   179,
+     175,   181,     0,     0,  -119,  -119,    66,   288,  -119,   288,
+     182,   187,     0,   217,   221,  -119,  -119,   147,   297,     0,
+    -119,  -119,  -119,   192,   258,   258,   336,   304,   191,   193,
+    -119,  -119,  -119,  -119,   336,   194,  -119,   198,  -119,   336,
+     336,   258,  -119,    46,    94,   258,   201,   209,  -119,  -119,
+     143,   227,  -119,  -119,   220,  -119,  -119,  -119,   211,   222,
+     258,   258,   173,   203,  -119,  -119
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -1577,37 +1585,37 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     0,     0,    62,    61,    63,     0,     0,     0,     0,
+       0,     0,     0,    63,    62,    64,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,    23,     0,     0,     0,
-       3,    20,    24,    13,    14,     0,    60,     1,    21,    22,
-       0,     0,     0,    35,    33,    41,     0,     0,     0,     0,
-       0,     0,     0,    63,    59,     0,     2,     4,     0,     0,
+       3,    20,    24,    13,    14,     0,    61,     1,    21,    22,
+       0,     0,     0,    36,    34,    42,     0,     0,     0,     0,
+       0,     0,     0,    64,    60,     0,     2,     4,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     9,     8,    30,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    46,     0,    44,     0,    56,
-      31,    39,    58,    52,    53,    54,    55,    57,    63,     0,
-      28,    64,    65,    36,     0,    34,     0,    42,     0,     0,
-       0,     0,     0,     0,    51,    16,     0,     0,    15,     0,
-       0,     0,     0,     0,    26,    27,     0,     0,     0,    38,
-      37,    43,     0,     0,     0,    50,     0,     0,     0,    47,
-      45,    64,    65,    32,    40,     0,    12,    10,    11,     0,
-      48,     0,     0,     0,     0,     0,    25,     0,     5,    49,
-       7,     0,    17,    18,    29,     0,     0,     0,     0,     0,
-       0,     6,    19
+       0,     0,     0,     0,     0,    47,     0,    45,     0,    57,
+      31,    40,    59,    53,    54,    55,    56,    58,    64,     0,
+      28,    65,    66,    37,     0,    35,     0,    43,     0,     0,
+       0,     0,     0,     0,    52,    16,     0,     0,    15,     0,
+       0,     0,     0,     0,     0,    26,    27,     0,     0,     0,
+      39,    38,    44,     0,     0,     0,    51,     0,     0,     0,
+      48,    46,    65,    66,    32,     0,    41,     0,    12,    10,
+      11,     0,    49,     0,     0,     0,     0,     0,    33,    25,
+       0,     5,    50,     7,     0,    17,    18,    29,     0,     0,
+       0,     0,     0,     0,     6,    19
 };
 
   /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int8 yypgoto[] =
+static const yytype_int16 yypgoto[] =
 {
-     -95,   -95,   -95,    -1,   -95,   109,   -95,   -95,   -95,   -84,
-     -94,   -95,   -16,   -95
+    -119,  -119,  -119,    -1,  -119,   140,  -119,  -119,  -119,   -54,
+    -118,  -119,   -16,  -119
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int16 yydefgoto[] =
 {
-      -1,     2,    19,   140,    21,    89,    22,    23,    24,    76,
-     141,    72,    25,    26
+      -1,     2,    19,   142,    21,    89,    22,    23,    24,    76,
+     143,    72,    25,    26
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -1615,88 +1623,84 @@ static const yytype_int16 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      20,    44,    45,     3,     4,    43,    50,    57,   105,     1,
-     114,   115,    55,    27,    58,    62,   106,    64,    47,    66,
-      13,    69,    70,   129,    73,   130,    77,    17,    33,    63,
-     142,    65,    18,    67,    82,    83,    84,    85,    86,    87,
-      90,    78,     3,     4,     5,   147,    93,    34,    95,     6,
-       7,     8,     9,    10,    36,    11,    12,    28,    29,    13,
-      14,    15,    16,   159,   160,    35,    17,    60,    61,   110,
-     111,    18,   127,   128,    30,    37,    38,   148,    50,    39,
-      48,    31,    53,    54,    55,    40,   125,   126,    32,    41,
-      42,    77,    59,    77,    49,    68,   133,     3,     4,     5,
-      90,   137,   138,    71,     6,     7,     8,     9,    10,    74,
-      11,    12,    78,    80,    13,    14,    15,    16,    81,    91,
-      92,    17,    94,    96,    97,    98,    18,    99,   102,   103,
-     107,    50,   150,    51,    52,    53,    54,    55,    79,   112,
-     149,   149,   151,     3,     4,     5,   149,     3,     4,    43,
-       6,     7,     8,     9,    10,   108,    11,    12,   149,   149,
-      13,    14,    15,    16,    13,   116,   113,    17,   117,   119,
-     118,    17,    18,     3,     4,     5,    18,   120,   154,   121,
-       6,     7,     8,     9,    10,   122,    11,    12,   123,   124,
-      13,    14,    15,    16,   134,   131,   132,    17,   139,   144,
-     145,   155,    18,     3,     4,     5,   146,   152,   161,   153,
-       6,     7,     8,     9,    10,   156,    11,    12,   157,   158,
-      13,    14,    15,    16,     0,   135,     0,    17,     0,     0,
-       0,     0,    18,     3,     4,     5,     0,     0,   162,     0,
-       6,     7,     8,     9,    10,     0,    11,    12,     0,    46,
-      13,    14,    15,    16,     0,     0,     0,    17,     3,     4,
-       5,     0,    18,     0,     0,     6,     7,     8,     9,    10,
-       0,    11,    12,     0,     0,    13,    14,    15,    16,     3,
-       4,    43,    17,    75,     0,     0,     0,    18,     3,     4,
-      43,     0,   136,     0,     0,     0,    13,     3,     4,    88,
-       0,     0,     0,    17,     0,    13,     0,     0,    18,     0,
-       0,     0,    17,     0,    13,     0,     0,    18,     0,     0,
-       0,    17,     0,     0,     0,    50,    18,    51,    52,    53,
-      54,    55,    50,     0,    51,    52,    53,    54,    55,     0,
-       0,     0,     0,     0,     0,   109,     0,     0,     0,    50,
-      56,    51,    52,    53,    54,    55,    50,     0,    51,    52,
-      53,    54,    55,   100,     0,    50,   143,    51,    52,    53,
-      54,    55,   101,    50,     0,    51,    52,    53,    54,    55,
-     104,    50,     0,    51,    52,    53,    54,    55
+      20,    44,    45,     3,     4,    43,    50,   144,   105,     1,
+     115,   116,    55,    27,    58,    62,   106,    33,    47,    64,
+      13,    69,    70,   150,    73,    34,    77,    17,    35,    63,
+      28,    29,    18,    65,    82,    83,    84,    85,    86,    87,
+      90,    78,   162,   163,    60,    61,    93,    30,    95,     3,
+       4,     5,    48,   130,    31,   131,     6,     7,     8,     9,
+      10,    32,    11,    12,   110,   111,    13,    14,    15,    16,
+     128,   129,    49,    17,    66,   112,    36,    50,    18,    51,
+      52,    53,    54,    55,   151,    59,   126,   127,    67,   113,
+      37,    77,    68,    77,    38,    56,   134,     3,     4,     5,
+      39,    90,   139,   140,     6,     7,     8,     9,    10,    40,
+      11,    12,    41,    42,    13,    14,    15,    16,    71,    74,
+      80,    17,    78,    81,    91,    50,    18,    51,    52,    53,
+      54,    55,   153,    50,    94,    51,    52,    53,    54,    55,
+      79,    96,   152,   152,   154,   109,     3,     4,     5,   152,
+       3,     4,    88,     6,     7,     8,     9,    10,    97,    11,
+      12,   152,   152,    13,    14,    15,    16,    13,    92,    98,
+      17,    99,   103,   102,    17,    18,     3,     4,     5,    18,
+     107,   157,   120,     6,     7,     8,     9,    10,   108,    11,
+      12,   114,   117,    13,    14,    15,    16,   118,    50,   121,
+      17,   119,    53,    54,    55,    18,     3,     4,     5,   122,
+     123,   164,   124,     6,     7,     8,     9,    10,   125,    11,
+      12,   135,   132,    13,    14,    15,    16,   133,   136,   141,
+      17,   146,   155,   147,   148,    18,     3,     4,     5,   149,
+     156,   165,   158,     6,     7,     8,     9,    10,   160,    11,
+      12,   159,    46,    13,    14,    15,    16,   137,     0,   161,
+      17,     3,     4,     5,     0,    18,     0,     0,     6,     7,
+       8,     9,    10,     0,    11,    12,     0,     0,    13,    14,
+      15,    16,     3,     4,    43,    17,    57,     0,     0,     0,
+      18,     3,     4,    43,     0,    75,     0,     0,     0,    13,
+       3,     4,    43,     0,   138,     0,    17,     0,    13,     0,
+       0,    18,     0,     0,     0,    17,     0,    13,     0,     0,
+      18,     0,     0,     0,    17,     0,     0,     0,    50,    18,
+      51,    52,    53,    54,    55,    50,     0,    51,    52,    53,
+      54,    55,   100,     0,    50,   145,    51,    52,    53,    54,
+      55,   101,    50,     0,    51,    52,    53,    54,    55,   104,
+      50,     0,    51,    52,    53,    54,    55
 };
 
 static const yytype_int16 yycheck[] =
 {
-       1,    17,    18,     3,     4,     5,    24,     7,    31,    18,
-       8,     9,    30,     0,    30,    25,    39,    25,    19,    25,
-      20,    37,    38,   107,    40,   109,    42,    27,     5,    39,
-     124,    39,    32,    39,    50,    51,    52,    53,    54,    55,
-      56,    39,     3,     4,     5,   139,    62,     5,    64,    10,
-      11,    12,    13,    14,     6,    16,    17,     8,     9,    20,
-      21,    22,    23,   157,   158,     5,    27,     4,     5,     4,
-       5,    32,     4,     5,    25,    32,    32,    38,    24,    32,
-      44,    32,    28,    29,    30,    32,   102,   103,    39,    32,
-      32,   107,    31,   109,    44,     5,   112,     3,     4,     5,
-     116,   117,   118,     5,    10,    11,    12,    13,    14,     5,
-      16,    17,    39,     5,    20,    21,    22,    23,     5,    40,
-      40,    27,     4,     4,     7,     4,    32,    32,    25,    41,
-      44,    24,    38,    26,    27,    28,    29,    30,    31,    25,
-     141,   142,   143,     3,     4,     5,   147,     3,     4,     5,
-      10,    11,    12,    13,    14,    31,    16,    17,   159,   160,
-      20,    21,    22,    23,    20,    43,    25,    27,    25,    40,
-      25,    27,    32,     3,     4,     5,    32,    40,    38,    40,
-      10,    11,    12,    13,    14,    31,    16,    17,    37,    37,
-      20,    21,    22,    23,     7,    40,    40,    27,    37,    40,
-      40,    15,    32,     3,     4,     5,    41,    31,    38,    31,
-      10,    11,    12,    13,    14,    31,    16,    17,    37,    37,
-      20,    21,    22,    23,    -1,   116,    -1,    27,    -1,    -1,
-      -1,    -1,    32,     3,     4,     5,    -1,    -1,    38,    -1,
-      10,    11,    12,    13,    14,    -1,    16,    17,    -1,    19,
-      20,    21,    22,    23,    -1,    -1,    -1,    27,     3,     4,
-       5,    -1,    32,    -1,    -1,    10,    11,    12,    13,    14,
-      -1,    16,    17,    -1,    -1,    20,    21,    22,    23,     3,
-       4,     5,    27,     7,    -1,    -1,    -1,    32,     3,     4,
-       5,    -1,     7,    -1,    -1,    -1,    20,     3,     4,     5,
-      -1,    -1,    -1,    27,    -1,    20,    -1,    -1,    32,    -1,
-      -1,    -1,    27,    -1,    20,    -1,    -1,    32,    -1,    -1,
-      -1,    27,    -1,    -1,    -1,    24,    32,    26,    27,    28,
-      29,    30,    24,    -1,    26,    27,    28,    29,    30,    -1,
-      -1,    -1,    -1,    -1,    -1,    44,    -1,    -1,    -1,    24,
-      42,    26,    27,    28,    29,    30,    24,    -1,    26,    27,
-      28,    29,    30,    31,    -1,    24,    41,    26,    27,    28,
-      29,    30,    31,    24,    -1,    26,    27,    28,    29,    30,
-      31,    24,    -1,    26,    27,    28,    29,    30
+       1,    17,    18,     3,     4,     5,    24,   125,    31,    18,
+       8,     9,    30,     0,    30,    25,    39,     5,    19,    25,
+      20,    37,    38,   141,    40,     5,    42,    27,     5,    39,
+       8,     9,    32,    39,    50,    51,    52,    53,    54,    55,
+      56,    39,   160,   161,     4,     5,    62,    25,    64,     3,
+       4,     5,    44,   107,    32,   109,    10,    11,    12,    13,
+      14,    39,    16,    17,     4,     5,    20,    21,    22,    23,
+       4,     5,    44,    27,    25,    25,     6,    24,    32,    26,
+      27,    28,    29,    30,    38,    31,   102,   103,    39,    39,
+      32,   107,     5,   109,    32,    42,   112,     3,     4,     5,
+      32,   117,   118,   119,    10,    11,    12,    13,    14,    32,
+      16,    17,    32,    32,    20,    21,    22,    23,     5,     5,
+       5,    27,    39,     5,    40,    24,    32,    26,    27,    28,
+      29,    30,    38,    24,     4,    26,    27,    28,    29,    30,
+      31,     4,   143,   144,   145,    44,     3,     4,     5,   150,
+       3,     4,     5,    10,    11,    12,    13,    14,     7,    16,
+      17,   162,   163,    20,    21,    22,    23,    20,    40,     4,
+      27,    32,    41,    25,    27,    32,     3,     4,     5,    32,
+      44,    38,    40,    10,    11,    12,    13,    14,    31,    16,
+      17,    25,    43,    20,    21,    22,    23,    25,    24,    40,
+      27,    25,    28,    29,    30,    32,     3,     4,     5,    40,
+      31,    38,    37,    10,    11,    12,    13,    14,    37,    16,
+      17,     4,    40,    20,    21,    22,    23,    40,     7,    37,
+      27,    40,    31,    40,    40,    32,     3,     4,     5,    41,
+      31,    38,    15,    10,    11,    12,    13,    14,    37,    16,
+      17,    31,    19,    20,    21,    22,    23,   117,    -1,    37,
+      27,     3,     4,     5,    -1,    32,    -1,    -1,    10,    11,
+      12,    13,    14,    -1,    16,    17,    -1,    -1,    20,    21,
+      22,    23,     3,     4,     5,    27,     7,    -1,    -1,    -1,
+      32,     3,     4,     5,    -1,     7,    -1,    -1,    -1,    20,
+       3,     4,     5,    -1,     7,    -1,    27,    -1,    20,    -1,
+      -1,    32,    -1,    -1,    -1,    27,    -1,    20,    -1,    -1,
+      32,    -1,    -1,    -1,    27,    -1,    -1,    -1,    24,    32,
+      26,    27,    28,    29,    30,    24,    -1,    26,    27,    28,
+      29,    30,    31,    -1,    24,    41,    26,    27,    28,    29,
+      30,    31,    24,    -1,    26,    27,    28,    29,    30,    31,
+      24,    -1,    26,    27,    28,    29,    30
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -1714,12 +1718,12 @@ static const yytype_int8 yystos[] =
        5,     5,    57,    57,    57,    57,    57,    57,     5,    50,
       57,    40,    40,    57,     4,    57,     4,     7,     4,    32,
       31,    31,    25,    41,    31,    31,    39,    44,    31,    44,
-       4,     5,    25,    25,     8,     9,    43,    25,    25,    40,
-      40,    40,    31,    37,    37,    57,    57,     4,     5,    54,
-      54,    40,    40,    57,     7,    50,     7,    57,    57,    37,
-      48,    55,    55,    41,    40,    40,    41,    55,    38,    48,
-      38,    48,    31,    31,    38,    15,    31,    37,    37,    55,
-      55,    38,    38
+       4,     5,    25,    39,    25,     8,     9,    43,    25,    25,
+      40,    40,    40,    31,    37,    37,    57,    57,     4,     5,
+      54,    54,    40,    40,    57,     4,     7,    50,     7,    57,
+      57,    37,    48,    55,    55,    41,    40,    40,    40,    41,
+      55,    38,    48,    38,    48,    31,    31,    38,    15,    31,
+      37,    37,    55,    55,    38,    38
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -1728,10 +1732,10 @@ static const yytype_int8 yyr1[] =
        0,    45,    46,    47,    47,    48,    48,    48,    48,    48,
       48,    48,    48,    48,    48,    48,    48,    48,    48,    48,
       48,    48,    48,    48,    48,    49,    50,    50,    50,    51,
-      51,    52,    52,    52,    52,    52,    52,    52,    52,    53,
-      53,    53,    53,    53,    54,    54,    54,    54,    55,    55,
-      56,    57,    57,    57,    57,    57,    57,    57,    57,    57,
-      57,    58,    58,    58,    58,    58
+      51,    52,    52,    52,    52,    52,    52,    52,    52,    52,
+      53,    53,    53,    53,    53,    54,    54,    54,    54,    55,
+      55,    56,    57,    57,    57,    57,    57,    57,    57,    57,
+      57,    57,    58,    58,    58,    58,    58
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -1740,10 +1744,10 @@ static const yytype_int8 yyr2[] =
        0,     2,     3,     1,     2,     7,    11,     7,     3,     3,
        6,     6,     6,     1,     1,     4,     4,     7,     7,    11,
        1,     2,     2,     1,     1,     6,     2,     2,     1,     8,
-       3,     3,     5,     2,     4,     2,     4,     5,     5,     3,
-       5,     2,     4,     5,     1,     3,     1,     3,     1,     2,
-       3,     4,     3,     3,     3,     3,     3,     3,     3,     2,
-       1,     1,     1,     1,     4,     4
+       3,     3,     5,     6,     2,     4,     2,     4,     5,     5,
+       3,     5,     2,     4,     5,     1,     3,     1,     3,     1,
+       2,     3,     4,     3,     3,     3,     3,     3,     3,     3,
+       2,     1,     1,     1,     1,     4,     4
 };
 
 
@@ -2211,411 +2215,429 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* begin: INICIO prog FINAL  */
-#line 938 "calc_morgana.y"
+#line 946 "calc_morgana.y"
                          {eval(newast('z', NULL, NULL));}
-#line 2217 "calc_morgana.tab.c"
+#line 2221 "calc_morgana.tab.c"
     break;
 
   case 3: /* prog: stm  */
-#line 942 "calc_morgana.y"
+#line 950 "calc_morgana.y"
           {eval((yyvsp[0].ast));}
-#line 2223 "calc_morgana.tab.c"
+#line 2227 "calc_morgana.tab.c"
     break;
 
   case 4: /* prog: prog stm  */
-#line 943 "calc_morgana.y"
+#line 951 "calc_morgana.y"
                    {eval((yyvsp[0].ast));}
-#line 2229 "calc_morgana.tab.c"
+#line 2233 "calc_morgana.tab.c"
     break;
 
   case 5: /* stm: IF '(' expre ')' '{' list '}'  */
-#line 947 "calc_morgana.y"
+#line 955 "calc_morgana.y"
                                               {(yyval.ast) = newflow('I', (yyvsp[-4].ast), (yyvsp[-1].ast), NULL);}
-#line 2235 "calc_morgana.tab.c"
+#line 2239 "calc_morgana.tab.c"
     break;
 
   case 6: /* stm: IF '(' expre ')' '{' list '}' ELSE '{' list '}'  */
-#line 948 "calc_morgana.y"
+#line 956 "calc_morgana.y"
                                                       {(yyval.ast) = newflow('I', (yyvsp[-8].ast), (yyvsp[-5].ast), (yyvsp[-1].ast));}
-#line 2241 "calc_morgana.tab.c"
+#line 2245 "calc_morgana.tab.c"
     break;
 
   case 7: /* stm: WHILE '(' expre ')' '{' list '}'  */
-#line 949 "calc_morgana.y"
+#line 957 "calc_morgana.y"
                                        {(yyval.ast) = newflow('W', (yyvsp[-4].ast), (yyvsp[-1].ast), NULL);}
-#line 2247 "calc_morgana.tab.c"
+#line 2251 "calc_morgana.tab.c"
     break;
 
   case 8: /* stm: VARIAVEL '=' expre  */
-#line 950 "calc_morgana.y"
+#line 958 "calc_morgana.y"
                          {(yyval.ast) = newasgn((yyvsp[-2].texto), (yyvsp[0].ast));}
-#line 2253 "calc_morgana.tab.c"
+#line 2257 "calc_morgana.tab.c"
     break;
 
   case 9: /* stm: VARIAVEL '=' STRING  */
-#line 951 "calc_morgana.y"
+#line 959 "calc_morgana.y"
                           {(yyval.ast) = newasgn((yyvsp[-2].texto), newtexto((yyvsp[0].texto)));}
-#line 2259 "calc_morgana.tab.c"
+#line 2263 "calc_morgana.tab.c"
     break;
 
   case 10: /* stm: VARIAVEL '[' NUM_INT ']' '=' expre  */
-#line 952 "calc_morgana.y"
+#line 960 "calc_morgana.y"
                                        {(yyval.ast) = newasgn_a((yyvsp[-5].texto), (yyvsp[0].ast), newint((yyvsp[-3].inteiro)));}
-#line 2265 "calc_morgana.tab.c"
+#line 2269 "calc_morgana.tab.c"
     break;
 
   case 11: /* stm: VARIAVEL '[' VARIAVEL ']' '=' expre  */
-#line 953 "calc_morgana.y"
+#line 961 "calc_morgana.y"
                                         {(yyval.ast) = newasgn_a((yyvsp[-5].texto), (yyvsp[0].ast), newValorVal((yyvsp[-3].texto)));}
-#line 2271 "calc_morgana.tab.c"
+#line 2275 "calc_morgana.tab.c"
     break;
 
   case 12: /* stm: VARIAVEL '[' NUM_INT ']' '=' STRING  */
-#line 954 "calc_morgana.y"
+#line 962 "calc_morgana.y"
                                         {(yyval.ast) = newasgn_a((yyvsp[-5].texto), newtexto((yyvsp[0].texto)), newint((yyvsp[-3].inteiro)));}
-#line 2277 "calc_morgana.tab.c"
+#line 2281 "calc_morgana.tab.c"
     break;
 
   case 13: /* stm: declmult  */
-#line 955 "calc_morgana.y"
+#line 963 "calc_morgana.y"
                { (yyval.ast) = (yyvsp[0].ast) ;}
-#line 2283 "calc_morgana.tab.c"
+#line 2287 "calc_morgana.tab.c"
     break;
 
   case 14: /* stm: declmult2  */
-#line 956 "calc_morgana.y"
+#line 964 "calc_morgana.y"
                 { (yyval.ast) = (yyvsp[0].ast) ;}
-#line 2289 "calc_morgana.tab.c"
+#line 2293 "calc_morgana.tab.c"
     break;
 
   case 15: /* stm: ESCREVER '(' escrever ')'  */
-#line 957 "calc_morgana.y"
+#line 965 "calc_morgana.y"
                                 {(yyval.ast) = (yyvsp[-1].ast);}
-#line 2295 "calc_morgana.tab.c"
+#line 2299 "calc_morgana.tab.c"
     break;
 
   case 16: /* stm: LEITURA '(' VARIAVEL ')'  */
-#line 958 "calc_morgana.y"
+#line 966 "calc_morgana.y"
                                {(yyval.ast) = newast('c', newValorVal((yyvsp[-1].texto)), NULL);}
-#line 2301 "calc_morgana.tab.c"
+#line 2305 "calc_morgana.tab.c"
     break;
 
   case 17: /* stm: LEITURA '(' VARIAVEL '[' NUM_INT ']' ')'  */
-#line 959 "calc_morgana.y"
+#line 967 "calc_morgana.y"
                                                {(yyval.ast) = newast('G', newValorVal((yyvsp[-4].texto)), newint((yyvsp[-2].inteiro)));}
-#line 2307 "calc_morgana.tab.c"
+#line 2311 "calc_morgana.tab.c"
     break;
 
   case 18: /* stm: LEITURA '(' VARIAVEL '[' VARIAVEL ']' ')'  */
-#line 960 "calc_morgana.y"
+#line 968 "calc_morgana.y"
                                                 {(yyval.ast) = newast('G', newValorVal((yyvsp[-4].texto)), newValorVal((yyvsp[-2].texto)));}
-#line 2313 "calc_morgana.tab.c"
+#line 2317 "calc_morgana.tab.c"
     break;
 
   case 19: /* stm: FOR '(' var ';' expre ';' stm ')' '{' list '}'  */
-#line 961 "calc_morgana.y"
+#line 969 "calc_morgana.y"
                                                      { (yyval.ast) = newflowfor('F', (yyvsp[-8].ast), (yyvsp[-6].ast), (yyvsp[-4].ast), (yyvsp[-1].ast), NULL);}
-#line 2319 "calc_morgana.tab.c"
+#line 2323 "calc_morgana.tab.c"
     break;
 
   case 20: /* stm: ternario  */
-#line 962 "calc_morgana.y"
+#line 970 "calc_morgana.y"
                { (yyval.ast) = (yyvsp[0].ast); }
-#line 2325 "calc_morgana.tab.c"
+#line 2329 "calc_morgana.tab.c"
     break;
 
   case 21: /* stm: VARIAVEL PLUS  */
-#line 963 "calc_morgana.y"
+#line 971 "calc_morgana.y"
                                {(yyval.ast) = newasgn((yyvsp[-1].texto), newast('+',newValorVal((yyvsp[-1].texto)),newint(1)));}
-#line 2331 "calc_morgana.tab.c"
+#line 2335 "calc_morgana.tab.c"
     break;
 
   case 22: /* stm: VARIAVEL LESS  */
-#line 964 "calc_morgana.y"
+#line 972 "calc_morgana.y"
                                {(yyval.ast) = newasgn((yyvsp[-1].texto), newast('-',newValorVal((yyvsp[-1].texto)),newint(1)));}
-#line 2337 "calc_morgana.tab.c"
+#line 2341 "calc_morgana.tab.c"
     break;
 
   case 23: /* stm: COMENTARIO  */
-#line 965 "calc_morgana.y"
+#line 973 "calc_morgana.y"
                  {(yyval.ast) = newast('P', NULL, NULL);}
-#line 2343 "calc_morgana.tab.c"
+#line 2347 "calc_morgana.tab.c"
     break;
 
   case 24: /* stm: function  */
-#line 966 "calc_morgana.y"
+#line 974 "calc_morgana.y"
                { (yyval.ast) = (yyvsp[0].ast) ;}
-#line 2349 "calc_morgana.tab.c"
+#line 2353 "calc_morgana.tab.c"
     break;
 
   case 25: /* ternario: expre '?' stm2 ':' stm2 ';'  */
-#line 970 "calc_morgana.y"
+#line 978 "calc_morgana.y"
                                       {(yyval.ast) = newflow('?', (yyvsp[-5].ast), (yyvsp[-3].ast), (yyvsp[-1].ast));}
-#line 2355 "calc_morgana.tab.c"
+#line 2359 "calc_morgana.tab.c"
     break;
 
   case 26: /* stm2: VARIAVEL PLUS  */
-#line 974 "calc_morgana.y"
+#line 982 "calc_morgana.y"
                                {(yyval.ast) = newasgn((yyvsp[-1].texto), newast('+',newValorVal((yyvsp[-1].texto)),newint(1)));}
-#line 2361 "calc_morgana.tab.c"
+#line 2365 "calc_morgana.tab.c"
     break;
 
   case 27: /* stm2: VARIAVEL LESS  */
-#line 975 "calc_morgana.y"
+#line 983 "calc_morgana.y"
                                {(yyval.ast) = newasgn((yyvsp[-1].texto), newast('-',newValorVal((yyvsp[-1].texto)),newint(1)));}
-#line 2367 "calc_morgana.tab.c"
+#line 2371 "calc_morgana.tab.c"
     break;
 
   case 28: /* stm2: expre  */
-#line 976 "calc_morgana.y"
+#line 984 "calc_morgana.y"
             { (yyval.ast) = (yyvsp[0].ast) ;}
-#line 2373 "calc_morgana.tab.c"
+#line 2377 "calc_morgana.tab.c"
     break;
 
   case 29: /* function: VOID FUNC VARIAVEL '(' ')' '{' list '}'  */
-#line 978 "calc_morgana.y"
+#line 986 "calc_morgana.y"
                                                             {(yyval.ast) = newfunction((yyvsp[-7].inteiro), (yyvsp[-5].texto), (yyvsp[-1].ast));}
-#line 2379 "calc_morgana.tab.c"
+#line 2383 "calc_morgana.tab.c"
     break;
 
   case 30: /* function: VARIAVEL '(' ')'  */
-#line 979 "calc_morgana.y"
+#line 987 "calc_morgana.y"
                                  {(yyval.ast) = newast('a', newtexto((yyvsp[-2].texto)), NULL);}
-#line 2385 "calc_morgana.tab.c"
+#line 2389 "calc_morgana.tab.c"
     break;
 
   case 31: /* declmult: declmult ',' VARIAVEL  */
-#line 983 "calc_morgana.y"
-                                 {(yyval.ast) = newvar((yyvsp[-2].ast)->nodetype, (yyvsp[0].texto), NULL, (yyvsp[-2].ast));}
-#line 2391 "calc_morgana.tab.c"
+#line 991 "calc_morgana.y"
+                                 {
+        if ((yyvsp[-2].ast)->nodetype=='A') (yyval.ast) = newvar('i', (yyvsp[0].texto), NULL, (yyvsp[-2].ast));
+        else if ((yyvsp[-2].ast)->nodetype=='B') (yyval.ast) = newvar('r', (yyvsp[0].texto), NULL, (yyvsp[-2].ast));
+        else (yyval.ast) = newvar((yyvsp[-2].ast)->nodetype, (yyvsp[0].texto), NULL, (yyvsp[-2].ast));
+    }
+#line 2399 "calc_morgana.tab.c"
     break;
 
   case 32: /* declmult: declmult ',' VARIAVEL '=' expre  */
-#line 984 "calc_morgana.y"
-                                      {(yyval.ast) = newvar((yyvsp[-4].ast)->nodetype, (yyvsp[-2].texto), (yyvsp[0].ast), (yyvsp[-4].ast));}
-#line 2397 "calc_morgana.tab.c"
-    break;
-
-  case 33: /* declmult: TIPO_INT VARIAVEL  */
-#line 985 "calc_morgana.y"
-                        {(yyval.ast) = newvar((yyvsp[-1].inteiro), (yyvsp[0].texto), NULL, NULL);}
-#line 2403 "calc_morgana.tab.c"
-    break;
-
-  case 34: /* declmult: TIPO_INT VARIAVEL '=' expre  */
-#line 986 "calc_morgana.y"
-                                  {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), (yyvsp[0].ast), NULL);}
+#line 996 "calc_morgana.y"
+                                      {
+        if ((yyvsp[-4].ast)->nodetype=='A') (yyval.ast) = newvar('i', (yyvsp[-2].texto), (yyvsp[0].ast), (yyvsp[-4].ast));
+        else if ((yyvsp[-4].ast)->nodetype=='B') (yyval.ast) = newvar('r', (yyvsp[-2].texto), (yyvsp[0].ast), (yyvsp[-4].ast));
+        else (yyval.ast) = newvar((yyvsp[-4].ast)->nodetype, (yyvsp[-2].texto), (yyvsp[0].ast), (yyvsp[-4].ast));
+    }
 #line 2409 "calc_morgana.tab.c"
     break;
 
-  case 35: /* declmult: TIPO_REAL VARIAVEL  */
-#line 987 "calc_morgana.y"
+  case 33: /* declmult: declmult ',' VARIAVEL '[' NUM_INT ']'  */
+#line 1001 "calc_morgana.y"
+                                            {
+        if ((yyvsp[-5].ast)->nodetype=='i') (yyval.ast) = newarray('A', (yyvsp[-3].texto), (yyvsp[-1].inteiro), (yyvsp[-5].ast));
+        else if ((yyvsp[-5].ast)->nodetype=='r') (yyval.ast) = newarray('B', (yyvsp[-3].texto), (yyvsp[-1].inteiro), (yyvsp[-5].ast));
+        else (yyval.ast) = newarray((yyvsp[-5].ast)->nodetype, (yyvsp[-3].texto), (yyvsp[-1].inteiro), (yyvsp[-5].ast));
+    }
+#line 2419 "calc_morgana.tab.c"
+    break;
+
+  case 34: /* declmult: TIPO_INT VARIAVEL  */
+#line 1006 "calc_morgana.y"
+                        {(yyval.ast) = newvar((yyvsp[-1].inteiro), (yyvsp[0].texto), NULL, NULL);}
+#line 2425 "calc_morgana.tab.c"
+    break;
+
+  case 35: /* declmult: TIPO_INT VARIAVEL '=' expre  */
+#line 1007 "calc_morgana.y"
+                                  {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), (yyvsp[0].ast), NULL);}
+#line 2431 "calc_morgana.tab.c"
+    break;
+
+  case 36: /* declmult: TIPO_REAL VARIAVEL  */
+#line 1008 "calc_morgana.y"
                          {(yyval.ast) = newvar((yyvsp[-1].inteiro), (yyvsp[0].texto), NULL, NULL);}
-#line 2415 "calc_morgana.tab.c"
+#line 2437 "calc_morgana.tab.c"
     break;
 
-  case 36: /* declmult: TIPO_REAL VARIAVEL '=' expre  */
-#line 988 "calc_morgana.y"
-                                   {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), (yyvsp[0].ast), NULL);}
-#line 2421 "calc_morgana.tab.c"
-    break;
-
-  case 37: /* declmult: TIPO_INT VARIAVEL '[' NUM_INT ']'  */
-#line 989 "calc_morgana.y"
-                                        { (yyval.ast) = newarray('A',(yyvsp[-3].texto), (yyvsp[-1].inteiro));}
-#line 2427 "calc_morgana.tab.c"
-    break;
-
-  case 38: /* declmult: TIPO_REAL VARIAVEL '[' NUM_INT ']'  */
-#line 990 "calc_morgana.y"
-                                         { (yyval.ast) = newarray('B',(yyvsp[-3].texto), (yyvsp[-1].inteiro));}
-#line 2433 "calc_morgana.tab.c"
-    break;
-
-  case 39: /* declmult2: declmult2 ',' VARIAVEL  */
-#line 994 "calc_morgana.y"
-                                  {(yyval.ast) = newvar((yyvsp[-2].ast)->nodetype, (yyvsp[0].texto), NULL, (yyvsp[-2].ast));}
-#line 2439 "calc_morgana.tab.c"
-    break;
-
-  case 40: /* declmult2: declmult2 ',' VARIAVEL '=' STRING  */
-#line 995 "calc_morgana.y"
-                                        {(yyval.ast) = newvar((yyvsp[-4].ast)->nodetype, (yyvsp[-2].texto), newtexto((yyvsp[0].texto)), (yyvsp[-4].ast));}
-#line 2445 "calc_morgana.tab.c"
-    break;
-
-  case 41: /* declmult2: TIPO_TEXT VARIAVEL  */
-#line 996 "calc_morgana.y"
-                         {(yyval.ast) = newvar((yyvsp[-1].inteiro), (yyvsp[0].texto), NULL, NULL);}
-#line 2451 "calc_morgana.tab.c"
-    break;
-
-  case 42: /* declmult2: TIPO_TEXT VARIAVEL '=' STRING  */
-#line 997 "calc_morgana.y"
-                                    {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), newtexto((yyvsp[0].texto)), NULL);}
-#line 2457 "calc_morgana.tab.c"
-    break;
-
-  case 43: /* declmult2: TIPO_TEXT VARIAVEL '[' NUM_INT ']'  */
-#line 998 "calc_morgana.y"
-                                         { (yyval.ast) = newarray('C',(yyvsp[-3].texto), (yyvsp[-1].inteiro));}
-#line 2463 "calc_morgana.tab.c"
-    break;
-
-  case 44: /* escrever: expre  */
-#line 1002 "calc_morgana.y"
-                {(yyval.ast) = newast('P', (yyvsp[0].ast), NULL);}
-#line 2469 "calc_morgana.tab.c"
-    break;
-
-  case 45: /* escrever: expre ',' escrever  */
-#line 1003 "calc_morgana.y"
-                         {(yyval.ast) = newast('P', (yyvsp[-2].ast), (yyvsp[0].ast));}
-#line 2475 "calc_morgana.tab.c"
-    break;
-
-  case 46: /* escrever: STRING  */
-#line 1004 "calc_morgana.y"
-             {(yyval.ast) = newast('P', newtexto((yyvsp[0].texto)), NULL);}
-#line 2481 "calc_morgana.tab.c"
-    break;
-
-  case 47: /* escrever: STRING ',' escrever  */
-#line 1005 "calc_morgana.y"
-                          {(yyval.ast) = newast('P', newtexto((yyvsp[-2].texto)), (yyvsp[0].ast));}
-#line 2487 "calc_morgana.tab.c"
-    break;
-
-  case 48: /* list: stm  */
+  case 37: /* declmult: TIPO_REAL VARIAVEL '=' expre  */
 #line 1009 "calc_morgana.y"
-          {(yyval.ast) = (yyvsp[0].ast);}
-#line 2493 "calc_morgana.tab.c"
+                                   {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), (yyvsp[0].ast), NULL);}
+#line 2443 "calc_morgana.tab.c"
     break;
 
-  case 49: /* list: list stm  */
+  case 38: /* declmult: TIPO_INT VARIAVEL '[' NUM_INT ']'  */
 #line 1010 "calc_morgana.y"
-               { (yyval.ast) = newast('L', (yyvsp[-1].ast), (yyvsp[0].ast));}
-#line 2499 "calc_morgana.tab.c"
+                                        { (yyval.ast) = newarray('A', (yyvsp[-3].texto), (yyvsp[-1].inteiro), NULL);}
+#line 2449 "calc_morgana.tab.c"
     break;
 
-  case 50: /* var: VARIAVEL '=' expre  */
-#line 1014 "calc_morgana.y"
-                         {(yyval.ast) = newasgn((yyvsp[-2].texto), (yyvsp[0].ast));}
-#line 2505 "calc_morgana.tab.c"
+  case 39: /* declmult: TIPO_REAL VARIAVEL '[' NUM_INT ']'  */
+#line 1011 "calc_morgana.y"
+                                         { (yyval.ast) = newarray('B', (yyvsp[-3].texto), (yyvsp[-1].inteiro), NULL);}
+#line 2455 "calc_morgana.tab.c"
     break;
 
-  case 51: /* expre: RAIZ '(' expre ')'  */
+  case 40: /* declmult2: declmult2 ',' VARIAVEL  */
+#line 1015 "calc_morgana.y"
+                                  {(yyval.ast) = newvar((yyvsp[-2].ast)->nodetype, (yyvsp[0].texto), NULL, (yyvsp[-2].ast));}
+#line 2461 "calc_morgana.tab.c"
+    break;
+
+  case 41: /* declmult2: declmult2 ',' VARIAVEL '=' STRING  */
+#line 1016 "calc_morgana.y"
+                                        {(yyval.ast) = newvar((yyvsp[-4].ast)->nodetype, (yyvsp[-2].texto), newtexto((yyvsp[0].texto)), (yyvsp[-4].ast));}
+#line 2467 "calc_morgana.tab.c"
+    break;
+
+  case 42: /* declmult2: TIPO_TEXT VARIAVEL  */
+#line 1017 "calc_morgana.y"
+                         {(yyval.ast) = newvar((yyvsp[-1].inteiro), (yyvsp[0].texto), NULL, NULL);}
+#line 2473 "calc_morgana.tab.c"
+    break;
+
+  case 43: /* declmult2: TIPO_TEXT VARIAVEL '=' STRING  */
 #line 1018 "calc_morgana.y"
-                          { 
-        {(yyval.ast) = newast('R',(yyvsp[-1].ast),NULL);}
-    }
-#line 2513 "calc_morgana.tab.c"
+                                    {(yyval.ast) = newvar((yyvsp[-3].inteiro), (yyvsp[-2].texto), newtexto((yyvsp[0].texto)), NULL);}
+#line 2479 "calc_morgana.tab.c"
     break;
 
-  case 52: /* expre: expre '+' expre  */
-#line 1021 "calc_morgana.y"
-                      {
-        (yyval.ast) = newast('+', (yyvsp[-2].ast), (yyvsp[0].ast));
-    }
+  case 44: /* declmult2: TIPO_TEXT VARIAVEL '[' NUM_INT ']'  */
+#line 1019 "calc_morgana.y"
+                                         { (yyval.ast) = newarray('C',(yyvsp[-3].texto), (yyvsp[-1].inteiro), NULL);}
+#line 2485 "calc_morgana.tab.c"
+    break;
+
+  case 45: /* escrever: expre  */
+#line 1023 "calc_morgana.y"
+                {(yyval.ast) = newast('P', (yyvsp[0].ast), NULL);}
+#line 2491 "calc_morgana.tab.c"
+    break;
+
+  case 46: /* escrever: expre ',' escrever  */
+#line 1024 "calc_morgana.y"
+                         {(yyval.ast) = newast('P', (yyvsp[-2].ast), (yyvsp[0].ast));}
+#line 2497 "calc_morgana.tab.c"
+    break;
+
+  case 47: /* escrever: STRING  */
+#line 1025 "calc_morgana.y"
+             {(yyval.ast) = newast('P', newtexto((yyvsp[0].texto)), NULL);}
+#line 2503 "calc_morgana.tab.c"
+    break;
+
+  case 48: /* escrever: STRING ',' escrever  */
+#line 1026 "calc_morgana.y"
+                          {(yyval.ast) = newast('P', newtexto((yyvsp[-2].texto)), (yyvsp[0].ast));}
+#line 2509 "calc_morgana.tab.c"
+    break;
+
+  case 49: /* list: stm  */
+#line 1030 "calc_morgana.y"
+          {(yyval.ast) = (yyvsp[0].ast);}
+#line 2515 "calc_morgana.tab.c"
+    break;
+
+  case 50: /* list: list stm  */
+#line 1031 "calc_morgana.y"
+               { (yyval.ast) = newast('L', (yyvsp[-1].ast), (yyvsp[0].ast));}
 #line 2521 "calc_morgana.tab.c"
     break;
 
-  case 53: /* expre: expre '-' expre  */
-#line 1024 "calc_morgana.y"
+  case 51: /* var: VARIAVEL '=' expre  */
+#line 1035 "calc_morgana.y"
+                         {(yyval.ast) = newasgn((yyvsp[-2].texto), (yyvsp[0].ast));}
+#line 2527 "calc_morgana.tab.c"
+    break;
+
+  case 52: /* expre: RAIZ '(' expre ')'  */
+#line 1039 "calc_morgana.y"
+                          { 
+        {(yyval.ast) = newast('R',(yyvsp[-1].ast),NULL);}
+    }
+#line 2535 "calc_morgana.tab.c"
+    break;
+
+  case 53: /* expre: expre '+' expre  */
+#line 1042 "calc_morgana.y"
+                      {
+        (yyval.ast) = newast('+', (yyvsp[-2].ast), (yyvsp[0].ast));
+    }
+#line 2543 "calc_morgana.tab.c"
+    break;
+
+  case 54: /* expre: expre '-' expre  */
+#line 1045 "calc_morgana.y"
                       {
         (yyval.ast) = newast('-',(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2529 "calc_morgana.tab.c"
+#line 2551 "calc_morgana.tab.c"
     break;
 
-  case 54: /* expre: expre '*' expre  */
-#line 1027 "calc_morgana.y"
+  case 55: /* expre: expre '*' expre  */
+#line 1048 "calc_morgana.y"
                       {
         (yyval.ast) = newast('*',(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2537 "calc_morgana.tab.c"
+#line 2559 "calc_morgana.tab.c"
     break;
 
-  case 55: /* expre: expre '/' expre  */
-#line 1030 "calc_morgana.y"
+  case 56: /* expre: expre '/' expre  */
+#line 1051 "calc_morgana.y"
                       {
         (yyval.ast) = newast('/',(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2545 "calc_morgana.tab.c"
+#line 2567 "calc_morgana.tab.c"
     break;
 
-  case 56: /* expre: '(' expre ')'  */
-#line 1033 "calc_morgana.y"
+  case 57: /* expre: '(' expre ')'  */
+#line 1054 "calc_morgana.y"
                     {
         (yyval.ast) = (yyvsp[-1].ast);
     }
-#line 2553 "calc_morgana.tab.c"
+#line 2575 "calc_morgana.tab.c"
     break;
 
-  case 57: /* expre: expre '^' expre  */
-#line 1036 "calc_morgana.y"
+  case 58: /* expre: expre '^' expre  */
+#line 1057 "calc_morgana.y"
                       {
         (yyval.ast) = newast('^',(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2561 "calc_morgana.tab.c"
+#line 2583 "calc_morgana.tab.c"
     break;
 
-  case 58: /* expre: expre CMP expre  */
-#line 1039 "calc_morgana.y"
+  case 59: /* expre: expre CMP expre  */
+#line 1060 "calc_morgana.y"
                       { /* Testes condicionais */
         (yyval.ast) = newcmp((yyvsp[-1].fn),(yyvsp[-2].ast),(yyvsp[0].ast));
     }
-#line 2569 "calc_morgana.tab.c"
-    break;
-
-  case 59: /* expre: '-' expre  */
-#line 1042 "calc_morgana.y"
-                          {
-        (yyval.ast) = newast('M',(yyvsp[0].ast),NULL); 
-    }
-#line 2577 "calc_morgana.tab.c"
-    break;
-
-  case 60: /* expre: valor  */
-#line 1045 "calc_morgana.y"
-            { 
-        (yyval.ast) = (yyvsp[0].ast); 
-    }
-#line 2585 "calc_morgana.tab.c"
-    break;
-
-  case 61: /* valor: NUM_INT  */
-#line 1051 "calc_morgana.y"
-               { (yyval.ast) = newint((yyvsp[0].inteiro));}
 #line 2591 "calc_morgana.tab.c"
     break;
 
-  case 62: /* valor: NUM_REAL  */
-#line 1052 "calc_morgana.y"
+  case 60: /* expre: '-' expre  */
+#line 1063 "calc_morgana.y"
+                          {
+        (yyval.ast) = newast('M',(yyvsp[0].ast),NULL); 
+    }
+#line 2599 "calc_morgana.tab.c"
+    break;
+
+  case 61: /* expre: valor  */
+#line 1066 "calc_morgana.y"
+            { 
+        (yyval.ast) = (yyvsp[0].ast); 
+    }
+#line 2607 "calc_morgana.tab.c"
+    break;
+
+  case 62: /* valor: NUM_INT  */
+#line 1072 "calc_morgana.y"
+               { (yyval.ast) = newint((yyvsp[0].inteiro));}
+#line 2613 "calc_morgana.tab.c"
+    break;
+
+  case 63: /* valor: NUM_REAL  */
+#line 1073 "calc_morgana.y"
                { (yyval.ast) = newreal((yyvsp[0].real));}
-#line 2597 "calc_morgana.tab.c"
-    break;
-
-  case 63: /* valor: VARIAVEL  */
-#line 1053 "calc_morgana.y"
-                         { (yyval.ast) = newValorVal((yyvsp[0].texto)); }
-#line 2603 "calc_morgana.tab.c"
-    break;
-
-  case 64: /* valor: VARIAVEL '[' NUM_INT ']'  */
-#line 1054 "calc_morgana.y"
-                               {(yyval.ast) = newValorVal_a((yyvsp[-3].texto), newint((yyvsp[-1].inteiro)));}
-#line 2609 "calc_morgana.tab.c"
-    break;
-
-  case 65: /* valor: VARIAVEL '[' VARIAVEL ']'  */
-#line 1055 "calc_morgana.y"
-                                {(yyval.ast) = newValorVal_a((yyvsp[-3].texto), newValorVal((yyvsp[-1].texto)));}
-#line 2615 "calc_morgana.tab.c"
-    break;
-
-
 #line 2619 "calc_morgana.tab.c"
+    break;
+
+  case 64: /* valor: VARIAVEL  */
+#line 1074 "calc_morgana.y"
+                         { (yyval.ast) = newValorVal((yyvsp[0].texto)); }
+#line 2625 "calc_morgana.tab.c"
+    break;
+
+  case 65: /* valor: VARIAVEL '[' NUM_INT ']'  */
+#line 1075 "calc_morgana.y"
+                               {(yyval.ast) = newValorVal_a((yyvsp[-3].texto), newint((yyvsp[-1].inteiro)));}
+#line 2631 "calc_morgana.tab.c"
+    break;
+
+  case 66: /* valor: VARIAVEL '[' VARIAVEL ']'  */
+#line 1076 "calc_morgana.y"
+                                {(yyval.ast) = newValorVal_a((yyvsp[-3].texto), newValorVal((yyvsp[-1].texto)));}
+#line 2637 "calc_morgana.tab.c"
+    break;
+
+
+#line 2641 "calc_morgana.tab.c"
 
       default: break;
     }
@@ -2809,7 +2831,7 @@ yyreturn:
   return yyresult;
 }
 
-#line 1058 "calc_morgana.y"
+#line 1079 "calc_morgana.y"
 
 
 #include "lex.yy.c"

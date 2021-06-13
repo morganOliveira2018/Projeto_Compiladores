@@ -257,9 +257,11 @@ escreva(((a / b) + (a * b) - 1))
 ```
 Inicio
 
-   int vetIn[10]
-   int i
+   int vetIn[10], i
 
+   escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
+   escreva("=======================================","\n")
+   escreva("Determine os elementos que compoe o vetor:","\n")
    FOR (i = 0; i < 10; i++) {
        leitura(vetIn[i])
    }
@@ -288,8 +290,11 @@ Fim do programa
 ```
 Inicio
 
+    escreva("===============================","\n", "| Fibonnaci Facil - URI - 1151|", "\n")        
+    escreva("===============================","\n")        
     int n, i = 3, primeiroTermo = 0, segundoTermo = 1, proximoTermo
-    leitura(n)  /* Numero inteiro N */
+    escreva("Escreva um valor inteiro para N", "\n")
+    leitura(n)  /* Numero inteiro */ 
     
     IF (n==0) {
         escreva("Fib(0) = ", n, "\n")

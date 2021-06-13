@@ -192,6 +192,7 @@
         int nodetype;
         char var[name_size];
         int size;
+        Ast * n;
         Ast * pos; /* posicao no vetor */
     }Varval;
 
@@ -302,7 +303,7 @@
     }
 
     /*Função de que cria uma nova variável array*/
-    Ast * newarray(int nodetype, char nome[], int tam) {
+    Ast * newarray(int nodetype, char nome[], int tam, Ast* n) {
         Varval *a = (Varval*) malloc(sizeof(Varval) * tam);
         if(!a) {
             printf("out of space");
@@ -311,6 +312,7 @@
         a->nodetype = nodetype;
         strcpy(a->var,nome);
         a->size = tam;
+        a->n = n;
         return (Ast*)a;
     }
 
@@ -784,6 +786,9 @@
                 exit(0);
                 break;
             case 'A':; //inserir uma array de inteiros
+                if(((Varval*)a)->n)
+                    eval(((Varval*)a)->n);
+
                 if(!varexiste(((Varval*)a)->var)){
                     ivar = insi_a(ivar,((Varval*)a)->var,((Varval*)a)->size);
                 }else{
@@ -791,6 +796,9 @@
                 }
                 break;
             case 'B':; //inserir uma array de real
+                if(((Varval*)a)->n)
+                    eval(((Varval*)a)->n);
+
                 if(!varexiste(((Varval*)a)->var)){
                     rvar  = ins_a(rvar,((Varval*)a)->var,((Varval*)a)->size);
                 }else{
@@ -980,14 +988,27 @@ function: VOID FUNC VARIAVEL '(' ')' '{' list '}' %prec FUN {$$ = newfunction($1
     ;
 
 // declaracao de multiplas variaveis do tipo numero inteiro ou float
-declmult:  declmult ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);} 
-    | declmult ',' VARIAVEL '=' expre {$$ = newvar($1->nodetype, $3, $5, $1);} 
+declmult:  declmult ',' VARIAVEL {
+        if ($1->nodetype=='A') $$ = newvar('i', $3, NULL, $1);
+        else if ($1->nodetype=='B') $$ = newvar('r', $3, NULL, $1);
+        else $$ = newvar($1->nodetype, $3, NULL, $1);
+    } 
+    | declmult ',' VARIAVEL '=' expre {
+        if ($1->nodetype=='A') $$ = newvar('i', $3, $5, $1);
+        else if ($1->nodetype=='B') $$ = newvar('r', $3, $5, $1);
+        else $$ = newvar($1->nodetype, $3, $5, $1);
+    } 
+    | declmult ',' VARIAVEL '[' NUM_INT ']' {
+        if ($1->nodetype=='i') $$ = newarray('A', $3, $5, $1);
+        else if ($1->nodetype=='r') $$ = newarray('B', $3, $5, $1);
+        else $$ = newarray($1->nodetype, $3, $5, $1);
+    }
     | TIPO_INT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} // declaracao de int
     | TIPO_INT VARIAVEL '=' expre {$$ = newvar($1, $2, $4, NULL);} // declaracao de int e atrib
     | TIPO_REAL VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} // declaracao do real
     | TIPO_REAL VARIAVEL '=' expre {$$ = newvar($1, $2, $4, NULL);} // declaracao do real e atrib
-    | TIPO_INT VARIAVEL '[' NUM_INT ']' { $$ = newarray('A',$2, $4);} // declaracao de array int
-    | TIPO_REAL VARIAVEL '[' NUM_INT ']' { $$ = newarray('B',$2, $4);} // declaracao de array real
+    | TIPO_INT VARIAVEL '[' NUM_INT ']' { $$ = newarray('A', $2, $4, NULL);} // declaracao de array int
+    | TIPO_REAL VARIAVEL '[' NUM_INT ']' { $$ = newarray('B', $2, $4, NULL);} // declaracao de array real
     ;
 
 // declaracao de multiplas variaveis do tipo texto
@@ -995,7 +1016,7 @@ declmult2: declmult2 ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);}
     | declmult2 ',' VARIAVEL '=' STRING {$$ = newvar($1->nodetype, $3, newtexto($5), $1);} 
     | TIPO_TEXT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} 
     | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4), NULL);} // declaracao de String e a atribuicao
-    | TIPO_TEXT VARIAVEL '[' NUM_INT ']' { $$ = newarray('C',$2, $4);} // declaracao de array texto
+    | TIPO_TEXT VARIAVEL '[' NUM_INT ']' { $$ = newarray('C',$2, $4, NULL);} // declaracao de array texto
     ;    
 
 // nó nao-terminal para escrever variaveis de tipos distintos
