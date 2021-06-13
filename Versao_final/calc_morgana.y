@@ -806,6 +806,9 @@
                 }
                 break;
             case 'C':; //inserir uma array de texto
+                if(((Varval*)a)->n)
+                    eval(((Varval*)a)->n);
+
                 if(!varexiste(((Varval*)a)->var)){
                     tvar = inst_a(tvar,((Varval*)a)->var,((Varval*)a)->size);
                 }else{
@@ -1012,8 +1015,9 @@ declmult:  declmult ',' VARIAVEL {
     ;
 
 // declaracao de multiplas variaveis do tipo texto
-declmult2: declmult2 ',' VARIAVEL {$$ = newvar($1->nodetype, $3, NULL, $1);} 
-    | declmult2 ',' VARIAVEL '=' STRING {$$ = newvar($1->nodetype, $3, newtexto($5), $1);} 
+declmult2: declmult2 ',' VARIAVEL {$$ = newvar('t', $3, NULL, $1);}
+    | declmult2 ',' VARIAVEL '[' NUM_INT ']' { $$ = newarray('C', $3, $5, $1);}
+    | declmult2 ',' VARIAVEL '=' STRING {$$ = newvar('t', $3, newtexto($5), $1);} 
     | TIPO_TEXT VARIAVEL {$$ = newvar($1, $2, NULL, NULL);} 
     | TIPO_TEXT VARIAVEL '=' STRING {$$ = newvar($1, $2, newtexto($4), NULL);} // declaracao de String e a atribuicao
     | TIPO_TEXT VARIAVEL '[' NUM_INT ']' { $$ = newarray('C',$2, $4, NULL);} // declaracao de array texto
