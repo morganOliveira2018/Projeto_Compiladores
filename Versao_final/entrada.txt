@@ -1,20 +1,19 @@
 
 Inicio
 
-  @@ int a, b = 5
+  int a, b = 5, x
   string autor = "morgana", autor2 = "antonio"
   leitura(a)
+
   IF(a > b){ 
     WHILE(a*a>b){  
       a-- 
       escreva("A", "\n")
     }
   }ELSE{
-    escreva("B")
-    /* escreva("O vet3[2] = ", vet3[2]) */
+    escreva("B", "\n")
   }
 
-  int x 
   FOR (x = 1; x <= 10; x++) {  
     escreva(x, "\n")
   } 
@@ -27,13 +26,12 @@ Inicio
   escreva("autor:", autor, "\n")
   escreva("autor2:", autor2, "\n")
 
-  /*
-    void function teste() {
-    escreva("=========================")
+  void function teste() {
+    escreva("=========================", "\n")
     int m = 3, n = 5, soma = m + n
-    escreva("A soma de m e n: ", soma) }
-    
+    escreva("A soma de m e n: ", soma, "\n") 
+    escreva("=========================", "\n")
+  }    
   teste() 
-  */
 
 Fim do programa
