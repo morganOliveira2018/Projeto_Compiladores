@@ -1,9 +1,13 @@
 Inicio
 
-    escreva("===============================","\n", "| Fibonnaci Facil - URI - 1151|", "\n")        
-    escreva("===============================","\n")        
+    void function fib(){
+       escreva("===============================","\n", "| Fibonnaci Facil - URI - 1151|", "\n")        
+       escreva("===============================","\n")        
+    }
+    fib() @@ chamada da funcao para mostrar o titulo da questao
+    
     int n, i = 3, primeiroTermo = 0, segundoTermo = 1, proximoTermo
-    escreva("Escreva um valor inteiro para N", "\n")
+    escreva("Escreva um valor inteiro para N:", "\n")
     leitura(n)  /* Numero inteiro */ 
     
     IF (n==0) {
