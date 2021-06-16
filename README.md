@@ -58,7 +58,7 @@ float a
 ```
 float soma 
 ```
-- misturando letras e números
+- o nome da variavel inicia com letra, seguinte de um número ou um '_'
 ```
 float area1
 ```
@@ -209,6 +209,7 @@ IF(a > b){
 ```
 #### Operação de atribuição nas posições do vetor
 ```
+  int vet1[2]
   int k = 1, l = 2
   string vet4[5]
   string nome = "morgana", nome2 = "morg", nome3 = "morgan"
@@ -243,6 +244,7 @@ IF(a > b){
 - 2°: Exponenciação
 - 3°: Multiplicação e divisão tem mesmo grau de precedência
 - 4°: Soma e subtração tem mesmo grau de precedência
+- 5º: Expressões lógicas
 
 ```
 escreva(((a / b) + (a * b) - 1))
@@ -259,9 +261,13 @@ Inicio
 
    int vetIn[10], i
 
-   escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
-   escreva("=======================================","\n")
-   escreva("Determine os elementos que compoe o vetor:","\n")
+   void function fib(){
+      escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
+      escreva("=======================================","\n")
+   }
+
+   escreva("Determine os elementos que compoe cada posicao do vetor",":","\n")
+   
    FOR (i = 0; i < 10; i++) {
        leitura(vetIn[i])
    }
@@ -290,10 +296,16 @@ Fim do programa
 ```
 Inicio
 
-    escreva("===============================","\n", "| Fibonnaci Facil - URI - 1151|", "\n")        
-    escreva("===============================","\n")        
+Inicio
+
+    void function fib(){
+       escreva("===============================","\n", "| Fibonnaci Facil - URI - 1151|", "\n")        
+       escreva("===============================","\n")        
+    }
+    fib() @@ chamada da funcao para mostrar o titulo da questao
+    
     int n, i = 3, primeiroTermo = 0, segundoTermo = 1, proximoTermo
-    escreva("Escreva um valor inteiro para N", "\n")
+    escreva("Escreva um valor inteiro para N:", "\n")
     leitura(n)  /* Numero inteiro */ 
     
     IF (n==0) {
