@@ -1,10 +1,14 @@
 Inicio
 
-   int vetIn[10], i 
+   int vetIn[10], i
 
-   escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
-   escreva("=======================================","\n")
-   escreva("Determine os elementos que compoe o vetor:","\n")
+   void function fib(){
+      escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
+      escreva("=======================================","\n")
+   }
+
+   escreva("Determine os elementos que compoe cada posicao do vetor",":","\n")
+   
    FOR (i = 0; i < 10; i++) {
        leitura(vetIn[i])
    }
@@ -18,6 +22,5 @@ Inicio
    FOR (i = 0; i < 10; i++) {
        escreva("X [", i, "] = ", vetIn[i])
    }
-    
 
 Fim do programa

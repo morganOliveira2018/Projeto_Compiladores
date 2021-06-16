@@ -2844,7 +2844,7 @@ yyreturn:
 #include "lex.yy.c"
 
 int main(){
-    yyin=fopen("Fibonacci_Facil_URI.txt", "r");
+    yyin=fopen("subs_em_vetor_URI.txt", "r");
     
     yyparse();
     yylex();
