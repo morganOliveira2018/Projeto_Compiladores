@@ -209,6 +209,7 @@ IF(a > b){
 ```
 #### Operação de atribuição nas posições do vetor
 ```
+  int vet1[2]
   int k = 1, l = 2
   string vet4[5]
   string nome = "morgana", nome2 = "morg", nome3 = "morgan"

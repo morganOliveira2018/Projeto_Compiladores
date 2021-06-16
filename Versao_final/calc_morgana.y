@@ -192,7 +192,7 @@
         int nodetype;
         char var[name_size];
         int size;
-        Ast * n;
+        Ast * n; /* carrega as declaracoes do mesmo tipo na mesma linha */
         Ast * pos; /* posicao no vetor */
     }Varval;
 
@@ -1085,7 +1085,7 @@ valor: NUM_INT { $$ = newint($1);}
 #include "lex.yy.c"
 
 int main(){
-    yyin=fopen("Fibonacci_Facil_URI.txt", "r");
+    yyin=fopen("subs_em_vetor_URI.txt", "r");
     
     yyparse();
     yylex();
