@@ -244,6 +244,7 @@ IF(a > b){
 - 2°: Exponenciação
 - 3°: Multiplicação e divisão tem mesmo grau de precedência
 - 4°: Soma e subtração tem mesmo grau de precedência
+- 5º: Expressões lógicas
 
 ```
 escreva(((a / b) + (a * b) - 1))
