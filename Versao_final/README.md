@@ -58,7 +58,7 @@ float a
 ```
 float soma 
 ```
-- misturando letras e números
+- o nome da variavel inicia com letra, seguinte de um número ou um '_'
 ```
 float area1
 ```
