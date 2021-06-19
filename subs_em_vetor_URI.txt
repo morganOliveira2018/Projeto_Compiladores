@@ -2,11 +2,12 @@ Inicio
 
    int vetIn[10], i
 
-   void function fib(){
+   void function vector(){
       escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
       escreva("=======================================","\n")
    }
 
+   vector() @@ chamada da funcao
    escreva("Determine os elementos que compoe cada posicao do vetor",":","\n")
    
    FOR (i = 0; i < 10; i++) {
