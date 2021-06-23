@@ -6,8 +6,13 @@ Inicio
       escreva("=======================================","\n", "| Substituicao em Vetor I - URI - 1172|", "\n")        
       escreva("=======================================","\n")
    }
+<<<<<<< HEAD
    vector() @@ chamada da funcao
    
+=======
+
+   vector() @@ chamada da funcao
+>>>>>>> fe8b1beafabb16f16d5a68d960e091199e9ad61f
    escreva("Determine os elementos que compoe cada posicao do vetor",":","\n")
    
    FOR (i = 0; i < 10; i++) {
